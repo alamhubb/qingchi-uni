@@ -1,0 +1,183 @@
+.border-none {
+  border: none;
+}
+
+.bd-none ,.bd-none:after {
+  border: none;
+}
+
+.bd-radius {
+  border-radius: 10rpx;
+}
+
+.bt-box-radius {
+  border-top-right-radius: 20rpx;
+  border-top-left-radius: 20rpx;
+}
+
+.btr {
+  border-top-right-radius: 30rpx;
+  border-top-left-radius: 30rpx;
+}
+.btr-lg {
+  border-top-right-radius: 40rpx;
+  border-top-left-radius: 40rpx;
+}
+.bd-box-radius {
+  border-radius: 20rpx;
+}
+
+.bg-top-radius{
+  border-top-left-radius: 40rpx;
+  border-top-right-radius: 40rpx;
+}
+
+.bd-round {
+  border-radius: 5000rpx;
+}
+
+.bd-circle {
+  border-radius: 50%;
+}
+
+.bd-green {
+  border: solid 1rpx #39b54a;
+  color: #39b54a;
+  @extend .bg-white;
+}
+
+
+.bd-orange {
+  border: solid 1rpx #f37b1d;
+  color: #f37b1d;
+  @extend .bg-white;
+}
+
+.bd-red {
+  border: solid 1rpx #e54d42;
+  color: #e54d42;
+  @extend .bg-white;
+}
+.bd-gray {
+  border: solid 1rpx #aaaaaa;
+  color: #aaaaaa;
+  @extend .bg-white;
+}
+
+.bd-blue {
+  border: solid 1rpx #0081ff;
+  color: #0081ff;
+  @extend .bg-white;
+}
+.bd-1 {
+  border: solid 0.5px #333;
+}
+
+.bd-bl-radius {
+  border-bottom-left-radius: 10rpx;
+}
+
+.bd-r-radius {
+  border-top-right-radius: 10rpx;
+  border-bottom-right-radius: 10rpx;
+}
+
+/*
+.border-none:after {
+  border: none;
+}*/
+
+/* ==================
+          边框
+ ==================== */
+
+/* -- 实线 -- */
+.q-solid {
+  border: 1upx solid rgba(0, 0, 0, 0.1);
+}
+
+.q-solid-top {
+  border-top: 1upx solid rgba(0, 0, 0, 0.1);
+}
+
+.q-solid-right {
+  border-right: 1upx solid rgba(0, 0, 0, 0.1);
+}
+
+.q-solid-bottom {
+  border-bottom: 1upx solid rgba(0, 0, 0, 0.1);
+}
+
+.q-solids-bottom {
+  border-bottom: 1px solid gainsboro;
+}
+
+.q-solid-left {
+  border-left: 1upx solid rgba(0, 0, 0, 0.1);
+}
+
+.solids {
+  border: 8upx solid #eee;
+}
+
+.solids-top {
+  border-top: 8upx solid #eee;
+}
+
+.solids-right {
+  border-right: 8upx solid #eee;
+}
+
+.solids-bottom {
+  border-bottom: 8upx solid #eee;
+}
+
+.solids-left {
+  border-left: 8upx solid #eee;
+}
+
+/* -- 虚线 -- */
+
+.dashed {
+  border: 1upx dashed #ddd;
+}
+
+.dashed-top {
+  border-top: 1upx dashed #ddd;
+}
+
+.dashed-right {
+  border-right: 1upx dashed #ddd;
+}
+
+.dashed-bottom {
+  border-bottom: 1upx dashed #ddd;
+}
+
+.dashed-left {
+  border-left: 1upx dashed #ddd;
+}
+
+/* -- 阴影 -- */
+
+.shadow[class*='white'] {
+  --ShadowSize: 0 1upx 6upx;
+}
+
+.shadow-lg {
+  --ShadowSize: 0upx 40upx 100upx 0upx;
+}
+
+.shadow-warp {
+  position: relative;
+  box-shadow: 0 0 10upx rgba(0, 0, 0, 0.1);
+}
+
+.shadow-warp:before,
+.shadow-warp:after {
+  position: absolute;
+  content: "";
+  top: 20upx;
+  bottom: 30upx;
+  left: 20upx;
+}

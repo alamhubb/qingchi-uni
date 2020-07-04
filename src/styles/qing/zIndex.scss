@@ -1,0 +1,28 @@
+//遮罩
+//吸顶1000
+.modal-index {
+  z-index: 1001;
+}
+
+.popup-bg-index {
+  z-index: 999;
+}
+
+.popup-index{
+  z-index: 1005;
+}
+
+//吸顶
+.nav-index {
+  z-index: 991;
+}
+
+//吸顶
+.sticky-index {
+  z-index: 1;
+}
+
+//999为h5原生
+.fixed-index {
+  z-index: 10;
+}

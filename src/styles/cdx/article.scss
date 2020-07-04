@@ -1,0 +1,35 @@
+.article {
+  @extend .bg-white;
+  @extend .py-10px;
+  @extend .px-15px;
+  @extend .text-lg;
+}
+
+.article-bro {
+  @extend .bg-white;
+  @extend .px-15px;
+  @extend .text-lg;
+}
+
+.article > view + view {
+  @extend .pt-10px;
+}
+
+.article-row {
+  @extend .bg-white;
+  @extend .py-10px;
+  @extend .px-15px;
+  @extend .text-lg;
+}
+
+.article-row > view {
+  @extend .pr-10px;
+}
+
+.article-row > button {
+  @extend .pr-10px;
+}
+
+.article-row > * {
+  @extend .pr-10px;
+}

@@ -1,0 +1,11 @@
+.q-row-bar {
+  @extend .row-between;
+  @extend .px;
+  @extend .py-sm;
+  @extend .bg-white;
+  @extend .flex-none;
+}
+
+.q-row-bar + .q-row-bar {
+  @extend .q-solid-top;
+}

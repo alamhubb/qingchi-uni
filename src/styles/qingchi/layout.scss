@@ -1,0 +1,84 @@
+ul {
+  list-style: none;
+}
+
+.block-nowrap {
+  white-space: nowrap;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.body-main {
+  pd-bottom: 50px;
+  list-style: none;
+}
+
+//大于qqmsg页面的消息菱形
+.fixed-105 {
+  position: fixed;
+  z-index: 105;
+}
+
+.fixed-game {
+  top: 100px;
+  position: fixed;
+  right: 15px;
+  z-index: 9;
+}
+
+.fixed-header {
+  top: 0;
+  position: fixed;
+  width: 100vw;
+}
+
+.fixed-footer {
+  bottom: 0;
+  position: fixed;
+  width: 100vw;
+  @extend .z-index-footer;
+}
+
+.emoji-model {
+  top: 0;
+  position: fixed;
+  width: 100vw;
+  @extend .z-index-footer;
+}
+
+.fixed-input {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  z-index: 1024;
+  box-shadow: 0 -1upx 6upx rgba(0, 0, 0, 0.1);
+}
+
+.fixed-center {
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.z-index-button {
+  z-index: 10;
+}
+
+.z-index-footer {
+  z-index: 1024;
+}
+
+
+.v-block-full {
+  @extend .w100r;
+}
+
+.divider {
+  border-bottom: 1rpx solid #eee;
+}
+
+.divider-primary {
+  border-bottom: 1px solid $u-type-primary;
+}

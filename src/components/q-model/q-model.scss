@@ -1,0 +1,10 @@
+.q-modal {
+  @extend .w100r;
+  @extend .h100r;
+  @extend .position-fixed;
+  @extend .modal-index;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}

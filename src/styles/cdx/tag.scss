@@ -1,0 +1,10 @@
+.v-tag {
+  @extend .text-df;
+  @extend .row-all-center;
+  @extend .py-5px;
+  @extend .px-10px;
+}
+
+.v-tag.v-round {
+  @extend .bd-round;
+}

@@ -1,0 +1,7 @@
+.q-row {
+  @extend .flex-row;
+  @extend .w100r;
+  @extend .px;
+  @extend .py-sm;
+  @extend .bg-white;
+}

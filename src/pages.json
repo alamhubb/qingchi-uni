@@ -1,0 +1,189 @@
+{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
+      "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+    }
+  },
+  "pages": [
+    {
+      "path": "pages/talk/talk",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/talk/empty"
+    },
+    {
+      "path": "pages/user/mine",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/match/match",
+      "style": {
+        "navigationBarTitleText": "匹配",
+        "enablePullDownRefresh": true,
+        "onReachBottomDistance": 800
+      }
+    },
+    {
+      "path": "pages/chat/chat",
+      "style": {
+        "navigationBarTitleText": "消息",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/user/Login",
+      "style": {
+        "navigationBarTitleText": "登陆"
+      }
+    }
+  ],
+  "subPackages": [
+    {
+      "root": "pagesLazy",
+      "pages": [
+        {
+          "path": "web/webBrowser",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "share/share",
+          "style": {
+            "navigationStyle": "custom",
+            "app-plus": {
+              "animationType": "fade-in",
+              "background": "transparent",
+              "backgroundColor": "rgba(0,0,0,0)",
+              "popGesture": "none"
+            }
+          }
+        },
+        {
+          "path": "talk/talkAdd",
+          "style": {
+            "navigationBarTitleText": "发布动态"
+          }
+        },
+        {
+          "path": "user/userDetail",
+          "style": {
+            "navigationBarTitleText": "用户详情"
+          }
+        },
+        {
+          "path": "chat/message",
+          "style": {
+            "navigationBarTitleText": "聊天"
+          }
+        },
+        {
+          "path": "match/faceValueInfo",
+          "style": {
+            "navigationBarTitleText": "颜值评分"
+          }
+        },
+        {
+          "path": "user/userAvatar",
+          "style": {
+            "navigationBarTitleText": "更换头像"
+          }
+        },
+        {
+          "path": "more/more",
+          "style": {
+            "navigationBarTitleText": "广告"
+          }
+        },
+        {
+          "path": "user/follow",
+          "style": {
+            "navigationBarTitleText": "关注和粉丝",
+            "enablePullDownRefresh": true
+          }
+        },
+        {
+          "path": "user/loveValue",
+          "style": {
+            "navigationBarTitleText": "爱心值"
+          }
+        },
+        {
+          "path": "user/vip",
+          "style": {
+            "navigationBarTitleText": "vip"
+          }
+        },
+        {
+          "path": "talk/talkDetail",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "notify/notify",
+          "style": {
+            "navigationBarTitleText": "通知列表"
+          }
+        },
+        {
+          "path": "user/identityAuth",
+          "style": {
+            "navigationBarTitleText": "身份认证"
+          }
+        }
+      ]
+    }
+  ],
+  "tabBar": {
+    "color": "#9E9E9E",
+    "selectedColor": "#2196F3",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "fontSize": "14px",
+    "iconWidth": "30px",
+    "height": "52px",
+    "list": [
+      {
+        "pagePath": "pages/talk/talk",
+        "iconPath": "static/img/deck-gray-36dp.png",
+        "selectedIconPath": "static/img/deck-blue-36dp.png",
+        "text": "社区"
+      },
+      {
+        "pagePath": "pages/match/match",
+        "iconPath": "static/img/favorite-gray-36dp.png",
+        "selectedIconPath": "static/img/favorite-blue-36dp.png",
+        "text": "匹配"
+      },
+      {
+        "pagePath": "pages/chat/chat",
+        "iconPath": "static/img/question_answer-gray-36dp.png",
+        "selectedIconPath": "static/img/question_answer-blue-36dp.png",
+        "text": "消息"
+      },
+      {
+        "pagePath": "pages/user/mine",
+        "iconPath": "static/img/account_box-gray-36dp.png",
+        "selectedIconPath": "static/img/account_box-blue-36dp.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "清池app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8",
+    "app-plus": {
+      "softinputNavBar": "none"
+    }
+  }
+}

@@ -1,0 +1,680 @@
+<template>
+  <view v-if="user" class="overflow-scroll bg-default">
+    <view class="bg-white">
+      <swiper v-if="imgUrls.length" class="square-dot size100vw">
+        <swiper-item v-for="(img,index) in imgUrls" :key="img">
+          <image class="size100vw" @longpress="showBottomMenuClick(index)"
+                 :data-src="img"
+                 @click="previewImage"
+                 mode="aspectFill"
+                 :src="img"
+          ></image>
+        </swiper-item>
+      </swiper>
+      <image v-else class="size100vw" @click="showBottomMenuClick(0)"
+             mode="aspectFill"
+             src="https://cdxapp-1257733245.cos.ap-beijing.myqcloud.com/qingchi/static/uploadimgmini.png"
+      ></image>
+      <view v-if="showUploadImgHint && imgUrls.length" class="row-col-center bg-orange">
+        <view class="flex-auto card-text-row">
+          单击图片预览，长按图片进行操作
+        </view>
+        <view class="flex-none mr-10px">
+          <q-icon icon="close-circle-fill" size="36" @click="closeUploadImgHint"></q-icon>
+        </view>
+      </view>
+
+      <view class="card solid-top">
+        <view class="card-title">
+          <image
+              class="card-title-avatar"
+              mode="aspectFill"
+              :src="user.avatar"
+          />
+          <view class="flex-auto row-between">
+            <view class="card-title-content">
+              <view v-if="user.vipFlag" class="text-red text-lg">
+                {{user.nickname}}
+              </view>
+              <view v-else class="text-lg">
+                {{user.nickname}}
+              </view>
+              <view>
+                <view v-if="isMine" class="cu-tag bd-red radius sm mr-10px bg-white"
+                      @click.stop="toFollowVue">
+                  关注：{{user.followNum}}
+                </view>
+
+                <view class="cu-tag bd-orange radius sm mr-10px bg-white" @click.stop="toFollowVue">
+                  粉丝：{{user.fansNum}}
+                </view>
+              </view>
+            </view>
+            <!--                不为自己且未关注-->
+            <view v-if="!isMine" class="col-center">
+              <button class="cu-btn round px-15px bg-white"
+                      :class="'bd-'+getFollowStatusColor(followStatus)"
+                      @click.stop="addFollow">
+                <text>{{followStatus}}</text>
+              </button>
+            </view>
+            <view v-if="isMine">
+              <button class="v-btn-mini" @click="moreAction" type="primary" plain="true">
+                <q-icon size="28" icon="edit-pen" class="mr-xs"/>
+                操作
+              </button>
+            </view>
+          </view>
+        </view>
+        <view class="card-text mt-xs">
+          <view>
+            <view class="cu-tag radius text-df"
+                  :class="[getGenderBgColor(user)]">
+              {{user.age}}
+              <q-icon class="row-col-start ml-2px" size="24"
+                      :icon="getGenderIcon(user)"/>
+            </view>
+            <view v-if="user.vipFlag" class="cu-tag bg-red radius" @click="openVip">VIP</view>
+            <view v-else class="cu-tag bg-grey radius" @click="openVip">VIP</view>
+            <view class="ml-5px cu-capsule radius" @click="hintJusticeInfo">
+              <view class='cu-tag bg-green'>
+                <q-icon size="24" icon="mdi-sword-cross"/>
+              </view>
+              <view class="cu-tag bg-white bd-green bd-r-radius">
+                {{user.justiceValue}}
+              </view>
+            </view>
+            <view class="ml-5px cu-capsule radius" @click="toLoveValuePage">
+              <view class='cu-tag bg-red'>
+                <q-icon size="24" icon="heart-fill"/>
+              </view>
+              <view class="cu-tag bg-white bd-red bd-r-radius">
+                {{user.loveValue}}
+              </view>
+            </view>
+            <view class="ml-5px cu-capsule radius" @click="toFaceValuePage">
+              <view class='cu-tag bg-orange'>
+                <q-icon size="26" icon="mdi-face"/>
+              </view>
+              <view class="cu-tag bg-white bd-orange bd-r-radius">
+                {{user.faceRatio}}
+              </view>
+            </view>
+          </view>
+
+          <view class="mt-5px">地区：{{user.location}}</view>
+          <view v-if="isMine" class="row-col-center">
+            手机号(仅自己可见)：
+            <view v-if="user.phoneNum">
+              {{user.phoneNum}}
+              <view class="ml-10px sm cu-tag bg-white bd-gray radius">
+                已绑定
+              </view>
+            </view>
+            <view v-else>
+              <!-- #ifdef MP-WEIXIN -->
+              <button class="cu-btn radius sm bg-orange" :disabled="phoneBtnDisabled"
+                      open-type="getPhoneNumber"
+                      @getphonenumber="getPhoneNumberByWx">绑定
+              </button>
+              <q-icon class="ml-10px text-gray" size="26" icon="error-circle"
+                      @click="hintBindTwice"></q-icon>
+              <text class="text-gray" @click="hintBindTwice">
+                (老用户需操作两次)
+              </text>
+              <!-- #endif -->
+              <!-- #ifndef MP-WEIXIN -->
+              <button class="cu-btn radius sm bg-orange"
+                      @click="toPhonePage">绑定
+              </button>
+              <!-- #endif -->
+            </view>
+          </view>
+          <!-- #ifndef MP-WEIXIN -->
+          <view class="mb-5px row-col-center">
+            照片认证：
+            <!-- 为自己且未绑定-->
+            <view v-if="user.isMine && !user.isSelfAuth">
+              未认证(认证后可使用匹配功能)
+              <button class="ml-10px cu-btn radius sm bg-orange"
+                      @click="toIdentityAuth">认证
+              </button>
+            </view>
+            <view v-else>
+              <view class="ml-10px sm cu-tag bg-blue radius" v-if="user.isSelfAuth">
+                已认证
+              </view>
+              <view class="ml-10px sm cu-tag bg-white bd-gray radius" v-else>
+                未认证
+              </view>
+            </view>
+          </view>
+          <!-- #endif -->
+          <view v-if="user.wxAccount" class="row-col-center mb-5px">
+            微信：
+            <text selectable>{{user.wxAccount}}</text>
+            <button class="cu-btn radius sm bd-blue ml-10px bg-white"
+                    @click="copyText(user.wxAccount)">
+              复制
+            </button>
+          </view>
+          <!-- #ifndef MP-QQ -->
+          <view v-if="user.qqAccount" class="row-col-center mb-5px">
+            QQ：
+            <text selectable>{{user.qqAccount}}</text>
+            <button class="cu-btn radius sm bd-blue ml-10px bg-white"
+                    @click="copyText(user.qqAccount)">
+              复制
+            </button>
+          </view>
+          <!-- #endif -->
+          <view v-if="user.wbAccount" class="row-col-center mb-5px">
+            微博：
+            <!--                        <q-icon class="text-green" icon="mdi-wechat"></q-icon>-->
+            <text selectable>{{user.wbAccount}}</text>
+            <button class="cu-btn radius sm bd-blue ml-10px bg-white"
+                    @click="copyText(user.wbAccount)">
+              复制
+            </button>
+          </view>
+        </view>
+      </view>
+
+      <uni-popup ref="reportDialog" :custom="true" :mask-click="false">
+        <view class="uni-tip">
+          <view class="uni-tip-title">举报</view>
+          <view class="uni-tip-content">
+            <radio-group class="uni-list" @change="reportTypeChange">
+              <label class="uni-list-cell flex-row uni-list-cell-pd"
+                     v-for="report in reportTypes" :key="report">
+                <view>
+                  <radio :id="report" :value="report" :checked="report===pornInfo"></radio>
+                </view>
+                <view>
+                  <label class="ml-10px" :for="report">
+                    <text>{{report}}</text>
+                  </label>
+                </view>
+              </label>
+            </radio-group>
+          </view>
+          <view class="uni-textarea bd-1 bd-radius">
+            <textarea placeholder="其他违规必填，其他情况选填，可详细陈述观点" v-model.trim="reportContent"
+                      :show-confirm-bar="false"
+            />
+          </view>
+          <view class="uni-tip-group-button">
+            <button class="uni-tip-button w40r" type="default" @click="closeDialogAndInitData"
+                    :plain="true">
+              取消
+            </button>
+            <button class="uni-tip-button w40r" type="primary" @click="addReport" :disabled="!reportType">确定
+            </button>
+          </view>
+        </view>
+      </uni-popup>
+    </view>
+    <talk-operate @deleteTalk="deleteTalk"></talk-operate>
+    <!--qq平台显示的广告-->
+    <!--  #ifdef MP-QQ -->
+    <ad v-if="talks.length>0" class="bg-white mb-5px" unit-id="72d8cb09a1bae9fa30d9e03e7cb8a25d" type="feeds"></ad>
+    <!--  #endif -->
+    <view v-for="talk in talks" :key="talk.id">
+      <talk-item :talk="talk" @deleteTalk="deleteTalk"></talk-item>
+    </view>
+    <!--wx平台显示的广告-->
+    <!--  #ifdef MP-WEIXIN -->
+    <ad class="bg-white mb-5px" unit-id="adunit-65c8911d279d228f" ad-type="video" ad-theme="white"></ad>
+    <!--  #endif -->
+    <!--qq平台显示的广告-->
+    <!--  #ifdef MP-QQ -->
+    <ad class="bg-white mb-5px" unit-id="bcc21923107071ac3f8aa076c7e00229" type="card"></ad>
+    <!--  #endif -->
+
+    <!--  #ifdef APP-PLUS -->
+    <!--    <ad class="bg-white mb-5px" adpid="1890536227"></ad>-->
+    <!--  #endif -->
+
+    <uni-popup ref="popup" type="center">
+      <user-edit @close="closeUserEditPop"></user-edit>
+    </uni-popup>
+  </view>
+</template>
+
+<script lang="ts">
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import TalkAPI from '@/api/TalkAPI'
+import TalkItem from '@/pages/talk/TalkItem.vue'
+import UserVO from '@/model/user/UserVO'
+import UserUtil from '@/utils/UserUtil'
+import TalkItemContent from '@/pages/talk/TalkItemContent.vue'
+import FollowAddVO from '@/model/FollowAddVO'
+import { namespace } from 'vuex-class'
+import UserEdit from '@/pages/user/UserEdit.vue'
+import UniUtils from '@/utils/UniUtils'
+import PagePath from '@/const/PagePath'
+import FollowAPI from '@/api/FollowAPI'
+import FollowSatus from '@/const/FollowSatus'
+import PageUtil from '@/utils/PageUtil'
+import LoginDataVO from '@/model/login/LoginDataVO'
+import LoginService from '@/pages/user/LoginService'
+import LoginAPI from '@/api/LoginAPI'
+import LoginUtil from '@/utils/LoginUtil'
+import ErrorCode from '@/const/ErrorCode'
+import ImgFileVO from '@/model/ImgFileVO'
+import ImgUtil from '@/utils/ImgUtil'
+import CosUtil from '@/utils/CosUtil'
+import CosConst from '@/const/CosConst'
+import UserAPI from '@/api/UserAPI'
+import Constants from '@/const/Constant'
+import ReportContentType from '@/const/ReportContentType'
+import ReportType from '@/const/ReportType'
+import ReportAddVO from '@/model/report/ReportAddVO'
+import ReportAPI from '@/api/ReportAPI'
+import UserStore from '@/plugins/store/UserStore'
+import TalkOperate from '@/pages/talk/talkOperate.vue'
+import TalkVO from '@/model/talk/TalkVO'
+import BalaBala from '@/utils/BalaBala'
+import ConfigMap from '@/const/ConfigMap'
+import PlatformUtils from '@/utils/PlatformUtils'
+import { systemModule } from '@/plugins/store'
+
+const userStore = namespace('user')
+const appStore = namespace('app')
+const configStore = namespace('config')
+
+@Component({
+  components: { TalkOperate, UserEdit, TalkItem, TalkItemContent }
+})
+export default class UserInfo extends Vue {
+  public $refs!: {
+    reportDialog: any;
+    popup: any;
+  }
+
+  @userStore.State('user') mineUser: UserVO
+  @appStore.State('appConfig') readonly appConfig: object
+  @appStore.State('reportTypes') reportTypes: string[]
+  @Prop() readonly user: UserVO
+  followBtnDisabled = false
+  hasFollowed = false
+  followStatus: string = FollowSatus.follow
+  phoneBtnDisabled = false
+  imgIndex = 0
+  showUploadImgHint: boolean = uni.getStorageSync(Constants.showUploadImgHintKey) !== 'false'
+  readonly reportContentType: string = ReportContentType.userImg
+  reportType: string = ReportType.pornInfo
+  pornInfo: string = ReportType.pornInfo
+  reportContent = ''
+  talks: TalkVO[] = []
+  @configStore.Getter(ConfigMap.reportHideCountKey) reportHideCount: number
+
+  getLargeUserImg (src: string) {
+    return ImgUtil.getUserLargeImgUrl(src)
+  }
+
+  openReportDialog () {
+    if (this.user) {
+      this.$refs.reportDialog.open()
+    } else {
+      BalaBala.unLoginMessage()
+    }
+  }
+
+  frontDeleteUserImg () {
+    this.user.imgs.splice(this.imgIndex, 1)
+  }
+
+  reportTypeChange ({ target }) {
+    this.reportType = target.value
+  }
+
+  addReport () {
+    const reportAdd: ReportAddVO = new ReportAddVO(this.reportContentType, this.reportType, this.reportContent)
+    const userImg: ImgFileVO = this.user.imgs[0]
+    reportAdd.userImgId = userImg.id
+    if (ReportType.other === this.reportType && !this.reportContent) {
+      UniUtils.hint('选择其他违规时，请您补充观点')
+    } else {
+      ReportAPI.addReportAPI(reportAdd).then((res: any) => {
+        // todo  举报过后，是否大于系统阀值，大于系统阀值隐藏
+        const reportNum: number = userImg.reportNum + 1
+        if (reportNum >= this.reportHideCount) {
+          this.frontDeleteUserImg()
+        }
+        this.closeDialogAndInitData()
+        UniUtils.hint(res.data)
+        PlatformUtils.requestSubscribeReport()
+      })
+    }
+  }
+
+  closeDialogAndInitData () {
+    this.$refs.reportDialog.close()
+    this.initReportData()
+  }
+
+  initReportData () {
+    this.imgIndex = 0
+    this.reportContent = ''
+    this.reportType = ReportType.pornInfo
+  }
+
+  get bottomMenuItemList () {
+    if (this.isMine) {
+      return ['上传', '删除']
+    } else {
+      return ['举报']
+    }
+  }
+
+  showBottomMenuClick (imgIndex: number) {
+    this.imgIndex = imgIndex
+    UniUtils.actionSheet(this.bottomMenuItemList).then((index: number) => {
+      if (this.isMine) {
+        if (index === 0) {
+          this.chooseImg()
+        } else if (index === 1) {
+          this.deleteImg()
+        }
+      } else {
+        if (index === 0) {
+          this.openReportDialog()
+        }
+      }
+    })
+  }
+
+  created () {
+    this.queryMineTalks()
+  }
+
+  deleteImg () {
+    if (this.user.imgs.length > 1) {
+      UniUtils.warning('请确认是否删除照片？').then(() => {
+        const imgs: ImgFileVO[] = this.user.imgs.splice(this.imgIndex, 1)
+        UserAPI.deleteUserImgAPI(imgs[0]).then((res: any) => {
+          UserStore.setMineUser(res.data)
+        })
+      })
+    } else {
+      UniUtils.error('请至少保留一张照片')
+    }
+  }
+
+  chooseImg () {
+    if (this.mineUser.imgs.length > 2) {
+      UniUtils.error('最多上传3张照片，请删除后继续！')
+      return
+    }
+    uni.chooseImage({
+      sourceType: ['album'],
+      sizeType: ['original'],
+      // sizeType: ['compressed'],
+      count: 1,
+      success: (res) => {
+        const imgFile: ImgFileVO = res.tempFiles[0]
+        // 不能大于10m大于10m就压缩不到100k
+        const imgSize: number = imgFile.size
+        if (imgSize / 1024 / 1024 > 10) {
+          UniUtils.error('图片大小不能超过10MB！')
+          return
+        }
+        UniUtils.showLoading('上传中')
+        // 获取cos密钥
+        const cos = CosUtil.getAuthorizationCos()
+        // 获取文件名
+        // 朝着100kb压缩？
+        uni.getImageInfo({
+          src: imgFile.path,
+          success: (image) => {
+            imgFile.aspectRatio = image.width / image.height
+            // user/id/talk/24324.img
+            imgFile.src = ImgUtil.getUserImgUploadFormat(this.user.id, imgFile.path)
+            cos.postObject({
+              Bucket: CosConst.bucketName,
+              Region: CosConst.region,
+              Key: imgFile.src,
+              FilePath: imgFile.path,
+              onProgress (info) {
+                console.log(JSON.stringify(info))
+              }
+            }, () => {
+              UserAPI.addUserImgAPI(imgFile).then((res: any) => {
+                UserStore.setMineUser(res.data)
+              }).finally(() => {
+                UniUtils.hideLoading()
+              })
+            })
+          }
+        })
+      }
+    })
+  }
+
+  getPhoneNumberAfterHandler (loginData: LoginDataVO) {
+    return LoginAPI.bindPhoneNumAPI(loginData).then((res: any) => {
+      UserStore.setMineUser(res.data.user)
+      UniUtils.hint(res.data.hint)
+    })
+  }
+
+  //微信绑定手机号使用
+  getPhoneNumberByLogin (obj: any) {
+    LoginService.getLoginData(systemModule.provider).then((loginData: LoginDataVO) => {
+      Object.assign(loginData, obj.detail)
+      // 代表已过期
+      loginData.sessionEnable = false
+      this.getPhoneNumberAfterHandler(loginData).finally(() => {
+        this.phoneBtnDisabled = false
+      })
+    })
+  }
+
+  toPhonePage () {
+    PageUtil.toPhonePage()
+  }
+
+  toIdentityAuth () {
+    PageUtil.toIdentityAuthPage()
+  }
+
+  // 微信点击按钮，获取手机号用来绑定
+  getPhoneNumberByWx (obj: any) {
+    if (obj.detail.errMsg === 'getPhoneNumber:ok') {
+      this.phoneBtnDisabled = true
+      // 默认未过期
+      LoginUtil.checkSession().then(() => {
+        const loginData: LoginDataVO = new LoginDataVO()
+        Object.assign(loginData, obj.detail)
+        loginData.sessionEnable = true
+        this.getPhoneNumberAfterHandler(loginData)
+          .then(() => {
+            this.phoneBtnDisabled = false
+          })
+          .catch((error) => {
+            if (error.errorCode === ErrorCode.custom) {
+              this.getPhoneNumberByLogin(obj)
+            } else {
+              this.phoneBtnDisabled = false
+            }
+          })
+      }).catch(() => {
+        this.getPhoneNumberByLogin(obj)
+      })
+    } else {
+      UniUtils.toast('您选择了不绑定')
+    }
+  }
+
+  openVip () {
+    PageUtil.toVipPage()
+  }
+
+  get isMine (): boolean {
+    // 两个都有值，且两个都相等，才为自己
+    return this.user && this.mineUser && this.user.id === this.mineUser.id
+  }
+
+  get talkIds () {
+    if (this.talks.length) {
+      return this.talks.map(item => item.id)
+    }
+    return [0]
+  }
+
+  copyText (textCopy: string) {
+    UniUtils.textCopy(textCopy)
+  }
+
+  deleteTalk (talkId: number) {
+    this.talks.splice(this.talks.findIndex(talk => talk.id === talkId), 1)
+  }
+
+  closeUserEditPop () {
+    this.$refs.popup.close()
+  }
+
+  moreAction () {
+    if (this.isMine) {
+      const menuList: string [] = ['刷新', '编辑', '退出']
+      UniUtils.actionSheet(menuList).then((index: number) => {
+        if (index === 0) {
+          this.refreshMine()
+        } else if (index === 1) {
+          this.openDialog()
+        } else if (index === 2) {
+          this.loginOut()
+        }
+      })
+    }
+  }
+
+  openDialog () {
+    this.$refs.popup.open()
+  }
+
+  @Watch('user')
+  watchUserChange (newUser: UserVO, oldUser: UserVO) {
+    this.phoneBtnDisabled = false
+    // 如果以前是null才查询
+    if (!oldUser) {
+      this.queryMineTalks()
+    }
+  }
+
+  queryMineTalks () {
+    if (this.user) {
+      this.followStatus = this.user.followStatus
+      this.hasFollowed = this.user.hasFollowed
+      TalkAPI.queryUserTalksAPI(this.user.id, this.talkIds).then((res: any) => {
+        this.talks = res.data
+      })
+    }
+  }
+
+  getGenderIcon (user: UserVO) {
+    return UserUtil.getGenderIcon(user)
+  }
+
+  getGenderBgColor (user: UserVO) {
+    return UserUtil.getGenderBgColor(user)
+  }
+
+  toFollowVue () {
+    if (this.isMine) {
+      PageUtil.navigateTo(PagePath.userFollow)
+    }
+  }
+
+  toLoveValuePage () {
+    if (this.mineUser) {
+      PageUtil.toLoveValuePage()
+    } else {
+      BalaBala.unLoginMessage()
+    }
+  }
+
+  hintJusticeInfo () {
+    UniUtils.toastLong('正义值，正确举报会增加正义值')
+  }
+
+  hintBindTwice () {
+    UniUtils.hint('因本软件系统升级导致老用户绑定手机号需要操作两次，给您带来不便，我们在此致以歉意，望您能够谅解，我们会努力做的更好，谢谢您的支持')
+  }
+
+  addFollow () {
+    if (this.mineUser) {
+      if (!this.followBtnDisabled) {
+        this.followBtnDisabled = true
+        const followAdd: FollowAddVO = new FollowAddVO(this.user.id)
+        // 如果已经关注
+        if (this.followStatus === FollowSatus.follow) {
+          this.hasFollowed = true
+          if (this.user.beFollow) {
+            // 进行关注操作
+            this.followStatus = FollowSatus.eachFollow
+          } else {
+            this.followStatus = FollowSatus.followed
+          }
+          FollowAPI.addFollowAPI(followAdd).finally(() => {
+            this.followBtnDisabled = false
+          })
+        } else {
+          this.hasFollowed = false
+          this.followStatus = FollowSatus.follow
+          // 进行取消关注操作
+          FollowAPI.cancelFollowAPI(followAdd).finally(() => {
+            this.followBtnDisabled = false
+          })
+        }
+      }
+    } else {
+      BalaBala.unLoginMessage()
+    }
+  }
+
+  getFollowStatusColor (followStatus: string) {
+    return UserUtil.getFollowStatusColor(followStatus)
+  }
+
+  toFaceValuePage () {
+    PageUtil.toFaceValuePage()
+  }
+
+  get imgUrls () {
+    if (this.user && this.user.imgs) {
+      return this.user.imgs.map(item => ImgUtil.getUserLargeImgUrl(item.src))
+    } else {
+      return []
+    }
+  }
+
+  previewImage (e) {
+    const current = e.target.dataset.src
+    uni.previewImage({
+      current: current,
+      urls: this.imgUrls
+    })
+  }
+
+  closeUploadImgHint () {
+    this.showUploadImgHint = false
+    uni.setStorageSync(Constants.showUploadImgHintKey, 'false')
+  }
+
+  refreshMine () {
+    UniUtils.action('是否刷新用户信息').then(() => {
+      UserStore.getMineUserAction().then(() => {
+        UniUtils.toast('刷新成功')
+      })
+    })
+  }
+
+  loginOut () {
+    UniUtils.action('是否退出登录').then(() => {
+      UserStore.loginOut()
+    })
+  }
+}
+</script>

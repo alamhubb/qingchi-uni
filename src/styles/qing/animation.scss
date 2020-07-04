@@ -1,0 +1,205 @@
+/*
+  Animation 微动画
+  基于ColorUI组建库的动画模块 by 文晓港 2019年3月26日19:52:28
+ */
+
+/* css 滤镜 控制黑白底色gif的 */
+.gif-black {
+  mix-blend-mode: screen;
+}
+
+.gif-white {
+  mix-blend-mode: multiply;
+}
+
+
+/* Animation css */
+[class*=q-animation-] {
+  animation-duration: .5s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both
+}
+
+.q-animation-fade {
+  animation-name: q-fade;
+  animation-duration: .8s;
+  animation-timing-function: linear
+}
+
+.q-animation-scale-up {
+  animation-name: q-scale-up
+}
+
+.q-animation-scale-down {
+  animation-name: q-scale-down
+}
+
+.q-animation-slide-top {
+  animation-name: q-slide-top
+}
+
+.q-animation-slide-bottom {
+  animation-name: q-slide-bottom
+}
+
+.q-animation-slide-left {
+  animation-name: q-slide-left
+}
+
+.q-animation-slide-right {
+  animation-name: q-slide-right
+}
+
+.q-animation-shake {
+  animation-name: q-shake
+}
+
+.q-animation-reverse {
+  animation-direction: reverse
+}
+
+@keyframes q-fade {
+  0% {
+    opacity: 0
+  }
+
+  100% {
+    opacity: 1
+  }
+}
+
+@keyframes q-scale-up {
+  0% {
+    opacity: 0;
+    transform: scale(.2)
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1)
+  }
+}
+
+@keyframes q-scale-down {
+  0% {
+    opacity: 0;
+    transform: scale(1.8)
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1)
+  }
+}
+
+@keyframes q-slide-top {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%)
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0)
+  }
+}
+
+@keyframes q-slide-bottom {
+  0% {
+    opacity: 0;
+    transform: translateY(100%)
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0)
+  }
+}
+
+@keyframes q-shake {
+
+  0%,
+  100% {
+    transform: translateX(0)
+  }
+
+  10% {
+    transform: translateX(-9px)
+  }
+
+  20% {
+    transform: translateX(8px)
+  }
+
+  30% {
+    transform: translateX(-7px)
+  }
+
+  40% {
+    transform: translateX(6px)
+  }
+
+  50% {
+    transform: translateX(-5px)
+  }
+
+  60% {
+    transform: translateX(4px)
+  }
+
+  70% {
+    transform: translateX(-3px)
+  }
+
+  80% {
+    transform: translateX(2px)
+  }
+
+  90% {
+    transform: translateX(-1px)
+  }
+}
+
+@keyframes q-slide-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%)
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0)
+  }
+}
+
+@keyframes q-show-slide-left {
+  0% {
+    transform: translateX(-100%)
+  }
+
+  100% {
+    transform: translateX(0)
+  }
+}
+
+@keyframes q-slide-right {
+  0% {
+    opacity: 0;
+    transform: translateX(100%)
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0)
+  }
+}
+
+@keyframes q-show-slide-right {
+  0% {
+    transform: translateX(100%)
+  }
+
+  100% {
+    transform: translateX(0)
+  }
+}

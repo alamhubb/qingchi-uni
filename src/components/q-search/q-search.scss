@@ -1,0 +1,19 @@
+.q-search-form{
+  background-color: #f5f5f5;
+  line-height: 60upx;
+  height: 60upx;
+  font-size: 24upx;
+  color: #333333;
+  flex: 1;
+  margin: 0 30upx;
+  @extend .flex-auto;
+  @extend .row-col-center;
+}
+.q-search-form input {
+  flex: 1;
+  padding-right: 30upx;
+  height: 60upx;
+  line-height: 60upx;
+  font-size: 26upx;
+  background-color: transparent;
+}

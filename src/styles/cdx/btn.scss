@@ -1,0 +1,23 @@
+.v-btn {
+  font-size: 14px;
+  padding: 0 10px;
+  height: 32px;
+  line-height: 1.5;
+  min-width: 56px;
+  background-color: #fff;
+  border-radius: 3px;
+  @extend .row-all-center;
+}
+
+.v-btn-block{
+  @extend .v-btn;
+  @extend .w100r;
+}
+
+.v-btn-mini {
+  @extend .v-btn;
+  font-size: 12px;
+  padding: 0 8px;
+  height: 20px;
+  min-width: 44px;
+}

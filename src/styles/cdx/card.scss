@@ -1,0 +1,53 @@
+.card {
+  @extend .bg-white;
+  @extend .mb-5px;
+  @extend .py-10px;
+}
+
+.card-px {
+  @extend .px-15px;
+}
+
+.card-title {
+  @extend .flex-row;
+  @extend .card-px;
+}
+
+.card-title-avatar {
+  @extend .avatar;
+  @extend .mr-10px;
+}
+
+.card-title-content {
+  @extend .flex-col;
+  @extend .flex-auto;
+}
+
+.card-text {
+  @extend .flex-col;
+  @extend .card-px;
+}
+
+.card-text-row {
+  @extend .flex-row;
+  @extend .card-px;
+}
+
+.card-actions {
+  @extend .flex-row;
+  @extend .card-px;
+}
+
+.card-item {
+  @extend .flex-row;
+  @extend .card-px;
+  @extend .py-10px;
+}
+
+.card-text-img:nth-of-type(n+2) {
+  @extend .ml-5px;
+}
+
+/*.card > view:last-of-type {
+  @extend .pb-10px;
+}*/

@@ -1,0 +1,13 @@
+//model index 以100开始
+//因为h5端navbar和tabbar为998
+.q-mask {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  @extend .modal-index;
+  //设置背景色
+  @extend .bg-modal;
+  @extend .row-all-center;
+  @extend .position-fixed;
+}

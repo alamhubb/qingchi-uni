@@ -1,0 +1,27 @@
+/* ==================
+          头像
+ ==================== */
+
+.q-avatar {
+  width: 64upx;
+  height: 64upx;
+  font-size: 1.5em;
+}
+
+.q-avatar.sm {
+  width: 48upx;
+  height: 48upx;
+  font-size: 1em;
+}
+
+.q-avatar.lg {
+  width: 96upx;
+  height: 96upx;
+  font-size: 2em;
+}
+
+.q-avatar.xl {
+  width: 128upx;
+  height: 128upx;
+  font-size: 2.5em;
+}

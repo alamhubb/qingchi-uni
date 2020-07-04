@@ -3,6 +3,9 @@
 ### 介绍
 清池app前端项目，日活3000已上线
 
+### 注意
+因为涉及到第三方sdk，未上传mainfest.json文件，请大家从其他项目复制
+
 #### Project setup
 ```
 npm install

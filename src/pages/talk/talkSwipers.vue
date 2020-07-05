@@ -1,7 +1,7 @@
 <template>
   <view class="bg-white px pt-xs">
     <u-swiper :height="swiperHeight" :list="homeSwipers" name="imgUrl" @click="skipWebView"
-              :interval="4000"
+              :interval="3500"
     ></u-swiper>
   </view>
 </template>

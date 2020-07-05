@@ -6,6 +6,14 @@
 ### 注意
 因为涉及到第三方sdk，未上传mainfest.json文件，请大家从其他项目复制
 
+### 体验
+
+app已上架，360、oppo、vivo、小米、阿里应用中心，大家可搜索 清池 自行下载。
+
+也可点击下载链接 [下载app](https://openbox.mobilem.360.cn/index/d/sid/4534383)
+
+已上架，微信小程序、qq小程序、可自行搜索 清池
+
 #### Project setup
 ```
 npm install

@@ -249,6 +249,11 @@ export default class TabsTalkVue extends Vue {
   @Prop() readonly userMinAge: number
   @Prop() readonly userMaxAge: number
 
+  //供父组件使用，不可删除
+  initQuery () {
+    this.autoChooseUsePositionQueryTalks(true)
+  }
+
   autoChooseUsePositionQueryTalks (firstLoad?: boolean) {
     if (appModule.openPosition) {
       this.requestUsePositionQueryTalks(firstLoad)

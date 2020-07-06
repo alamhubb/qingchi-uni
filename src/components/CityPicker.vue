@@ -1,5 +1,5 @@
 <template>
-  <u-popup v-model="showCityPopup" mode="bottom" :border-radius="20">
+  <u-popup v-model="showCityPopup" mode="bottom" :border-radius="20" @close="close">
     <q-bar round class="solid-bottom">
       <view class="text-black text-lgg text-bold">城市筛选</view>
       <view class="flex-row">

@@ -20,7 +20,7 @@
             VIP
           </view>
           <!--    如果爱心值不为0，且大于正义值显示爱心值-->
-          <view v-if="talk.user.loveValue&& talk.user.loveValue>talk.user.justiceValue"
+          <view v-else-if="talk.user.loveValue&& talk.user.loveValue>talk.user.justiceValue"
                 class="ml-5px cu-capsule radius"
                 @click.stop="toLoveValuePage">
             <view class='cu-tag bg-red sm'>

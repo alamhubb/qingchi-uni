@@ -19,6 +19,7 @@
       <talk-item :talk="talk" showAllComment
                  @deleteTalk="deleteTalk"
       />
+      <talk-operate @deleteTalk="deleteTalk"></talk-operate>
       <!--wx平台显示的广告-->
       <!--  #ifdef MP-WEIXIN -->
       <ad class="bg-white mb-5px" unit-id="adunit-65c8911d279d228f" ad-type="video" ad-theme="white"></ad>
@@ -49,11 +50,15 @@ import TalkAPI from '@/api/TalkAPI'
 import TalkItem from '@/pages/talk/TalkItem.vue'
 import PageUtil from '@/utils/PageUtil'
 import { namespace } from 'vuex-class'
+import TalkOperate from '@/pages/talk/talkOperate.vue'
 
 const appStore = namespace('app')
 
 @Component({
-  components: { TalkItem }
+  components: {
+    TalkItem,
+    TalkOperate
+  }
 })
 export default class TalkDetail extends Vue {
   talk: TalkVO = null

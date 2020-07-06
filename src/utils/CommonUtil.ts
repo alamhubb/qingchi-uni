@@ -1,4 +1,18 @@
 export default class CommonUtil {
+  static throttle (f, wait) {
+    let timer
+    return (...args) => {
+      if (timer) {
+        return
+      }
+      timer = setTimeout(() => {
+        f(...args)
+        clearTimeout(timer)
+        timer = null
+      }, wait)
+    }
+  }
+
   static showShareMenu () {
     // #ifdef MP-QQ || MP-WEIXIN
     uni.showShareMenu()

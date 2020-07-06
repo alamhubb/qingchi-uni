@@ -127,6 +127,7 @@ import SelectorQuery = UniApp.SelectorQuery
 import NodesRef = UniApp.NodesRef
 import TalkTabType from '@/const/TalkTabType'
 import PageUtil from '@/utils/PageUtil'
+import CommonUtil from '@/utils/CommonUtil'
 
 const userStore = namespace('user')
 const appStore = namespace('app')
@@ -457,22 +458,25 @@ export default class TabsTalkVue extends Vue {
       talkModule.inputContentBlur()
     }
     //只有app端处理滚动隐藏显示tabbar逻辑，小程序平台一卡一卡的
-    if (systemModule.isApp) {
+    if (!systemModule.isMp) {
+      //记录当前位置
       this.curScrollTop = detail.scrollTop
-      if (!this.timeout) {
-        if (this.curScrollTop > (this.lastScrollTop + 50)) {
-          uni.hideTabBar()
-        } else if (this.curScrollTop < (this.lastScrollTop - 20)) {
-          uni.showTabBar()
-        } else if (this.curScrollTop < 100 || this.curScrollTop === 0) {
-          uni.showTabBar()
-        }
-        this.lastScrollTop = this.curScrollTop
-        this.timeout = setTimeout(() => {
-          this.timeout = null
-        }, 100)
-      }
+      this.throttleScroll()
     }
+  }
+
+  throttleScroll = CommonUtil.throttle(this.scrollhanlder, 300)
+
+  scrollhanlder () {
+    if (this.curScrollTop > (this.lastScrollTop + 50)) {
+      uni.hideTabBar()
+    } else if (this.curScrollTop < (this.lastScrollTop - 20)) {
+      uni.showTabBar()
+    } else if (this.curScrollTop < 100 || this.curScrollTop === 0) {
+      uni.showTabBar()
+    }
+    //修改上次位置为当前位置
+    this.lastScrollTop = this.curScrollTop
   }
 
   toLoginVue () {

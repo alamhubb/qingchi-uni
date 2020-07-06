@@ -50,7 +50,7 @@ export default class AppModule extends VuexModule {
   setDistrictAction (district: DistrictVO) {
     //只要开启过定位就不再关闭
     //如果空值则默认中国
-    if (!district) {
+    if (!district || !district.adCode) {
       // 远程获取，获取不到返回中国
       // storeAge存储
       district = DistrictUtil.chinaDistrict

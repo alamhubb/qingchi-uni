@@ -103,7 +103,7 @@ import TalkFilterUtil from '@/utils/TalkFilterUtil'
 import UniUtils from '@/utils/UniUtils'
 import TalkSwipers from '@/pages/talk/talkSwipers.vue'
 import TabsTalk from '@/pages/talk/tabsTalk.vue'
-import { appModule, systemModule } from '@/plugins/store'
+import { appModule, systemModule, talkModule } from '@/plugins/store'
 import UserVO from '@/model/user/UserVO'
 import TagSearch from '@/pages/talk/TagSearch.vue'
 import CommonUtil from '@/utils/CommonUtil'
@@ -256,10 +256,13 @@ export default class TalkVue extends Vue {
   // 组件内的值
   genderValue: string = TalkFilterUtil.genderFilterDefault
   rangeValue: number[] = [TalkFilterUtil.minAgeFilterDefault, TalkFilterUtil.maxAgeFilterDefault]
+
+  // 轮播图
+  @talkStore.State('userMinAge') userMinAge: number
+  @talkStore.State('userMaxAge') userMaxAge: number
+  @talkStore.State('userGender') userGender: string
+
   // filter内容
-  userMinAge: number = TalkFilterUtil.getMinAgeFilter()
-  userMaxAge: number = TalkFilterUtil.getMaxAgeFilter()
-  userGender: string = TalkFilterUtil.getGenderFilter()
   showFilter = false
 
   showFilterModel () {
@@ -291,10 +294,10 @@ export default class TalkVue extends Vue {
   }
 
   filterQuery () {
-    this.userGender = this.genderValue
-    this.userMinAge = this.rangeValue[0]
-    this.userMaxAge = this.rangeValue[1]
-    TalkFilterUtil.setFilterData(this.userGender, this.userMinAge, this.userMaxAge)
+    talkModule.userGender = this.genderValue
+    talkModule.userMinAge = this.rangeValue[0]
+    talkModule.userMaxAge = this.rangeValue[1]
+    TalkFilterUtil.setFilterData(talkModule.userGender, talkModule.userMinAge, talkModule.userMaxAge)
     this.hideFilter()
     this.initQuery()
   }

@@ -8,9 +8,15 @@ import BalaBala from '@/utils/BalaBala'
 import UniUtils from '@/utils/UniUtils'
 import TalkTabVO from '@/model/talk/TalkTabVO'
 import TalkVueUtil from '@/utils/TalkVueUtil'
+import TalkFilterUtil from '@/utils/TalkFilterUtil'
 
 @Module({ generateMutationSetters: true })
 export default class TalkModule extends VuexModule {
+  // filter内容
+  userMinAge: number = TalkFilterUtil.getMinAgeFilter()
+  userMaxAge: number = TalkFilterUtil.getMaxAgeFilter()
+  userGender: string = TalkFilterUtil.getGenderFilter()
+
   talkTabs: TalkTabVO [] = TalkVueUtil.getTalkTabs()
 
   // state

@@ -1,4 +1,4 @@
-import { appModule, chatModule, platformModule, userModule } from './index'
+import { appModule, chatModule, platformModule, talkModule, userModule } from './index'
 import UserVO from '@/model/user/UserVO'
 import UserAPI from '@/api/UserAPI'
 import ResultVO from '@/model/ResultVO'
@@ -6,6 +6,7 @@ import WebsocketUtil from '@/utils/WebsocketUtil'
 import TokenUtil from '@/utils/TokenUtil'
 import UniUtils from '@/utils/UniUtils'
 import AppInitDataVO from '@/model/common/AppInitDataVO'
+import TalkFilterUtil from '@/utils/TalkFilterUtil'
 
 export default class UserStore {
   static hasUser (): boolean {
@@ -24,8 +25,17 @@ export default class UserStore {
   }
 
   static initUserStore (res: ResultVO<AppInitDataVO>) {
+    const user = res.data.user
     // 如果存在用户
-    if (res.data.user) {
+    if (user) {
+      //首次登陆且用户有年龄,默认设置筛选上下5岁的用户
+      if (!TalkFilterUtil.getNotFirstSetAge() && user.age) {
+        const minAge = user.age - 5
+        const maxAge = user.age + 5
+        talkModule.userMinAge = minAge
+        talkModule.userMaxAge = maxAge
+        TalkFilterUtil.setFistSetUserAge(minAge, maxAge)
+      }
       appModule.notifies = res.data.notifies
       UserStore.setMineUser(res.data.user)
       // 所有操作都是登陆后才可以操作的

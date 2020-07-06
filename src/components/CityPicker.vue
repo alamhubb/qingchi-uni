@@ -87,9 +87,8 @@ export default class CityPicker extends Vue {
   }
 
   open () {
-    this.getPosition().catch(() => {
-      this.bottomDistrict = this.district
-    })
+    this.bottomDistrict = this.district
+    this.getPosition()
     this.showCityPopup = true
     // 如果第二个没有子节点且或者子节点为0
     if (!this.districts[1].childs || !this.districts[1].childs.length) {

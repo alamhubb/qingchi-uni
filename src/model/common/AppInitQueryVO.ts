@@ -7,4 +7,5 @@ export default class AppInitQueryVO {
   public maxAge: number
   public lon: number
   public lat: number
+  public openPosition: boolean
 }

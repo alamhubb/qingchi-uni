@@ -83,7 +83,8 @@ export default class AppModule extends VuexModule {
     const district = appModule.district
     //如果为初始才传ad
     if (appModule.openPosition) {
-      initQueryVO.adCode = DistrictUtil.positionAdCode
+      initQueryVO.adCode = district.adCode
+      initQueryVO.openPosition = appModule.openPosition
       DistrictUtil.getCurPositionBySDK().then((res: DistrictVO) => {
         if (res) {
           initQueryVO.lon = res.lon
@@ -91,7 +92,7 @@ export default class AppModule extends VuexModule {
         }
       })
     } else {
-      initQueryVO.adCode = appModule.district.adCode
+      initQueryVO.adCode = district.adCode
     }
     const talkTabIndex = TalkVueUtil.getCurTalkTabIndex()
     const tabObj = talkModule.talkTabs[talkTabIndex]
@@ -122,8 +123,6 @@ export default class AppModule extends VuexModule {
         }
       }
       UserStore.initUserStore(res)
-    }).catch((err) => {
-      console.log(err)
     }).finally(() => {
       tabObj.loadMore = LoadMoreType.more
       //延迟1秒。避免user watch重复查询，只要在这些时间内不登陆就没问题，只要在watch之后就没问题。在差的机子500毫秒也反应过来了吧。

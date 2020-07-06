@@ -5,7 +5,6 @@ import { appModule } from '@/plugins/store'
 
 const chinaAdCode = '100000'
 const initAdCode = '100001'
-const positionAdCode = '100002'
 
 const chinaDistrict = new DistrictVO()
 chinaDistrict.id = 1
@@ -21,8 +20,6 @@ export default class DistrictUtil {
   static readonly chinaAdCode = chinaAdCode
 
   static readonly initAdCode = initAdCode
-
-  static readonly positionAdCode = positionAdCode
 
   static readonly nationwide = '全国'
 

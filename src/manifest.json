@@ -114,8 +114,7 @@
     "mp-weixin" : {
         /* 小程序特有相关 */
         "usingComponents" : true,
-        //        腾讯地图FZDBZ-5XCLO-OCYW6-SRG4Y-ZFP7O-IJBSD
-        "appid" : "wx0bf5fe9ceeab514c",
+        "appid" : "",
         "setting" : {
             "urlCheck" : true
         },
@@ -140,21 +139,21 @@
     },
     "mp-baidu" : {
         "usingComponents" : true,
-        "appid" : "17880065",
+        "appid" : "",
         "uniStatistics" : {
             "enable" : true
         }
     },
     "mp-toutiao" : {
         "usingComponents" : true,
-        "appid" : "ttdfffa94240d52071",
+        "appid" : "",
         "uniStatistics" : {
             "enable" : true
         }
     },
     "mp-qq" : {
         "usingComponents" : true,
-        "appid" : "1109985787",
+        "appid" : "",
         "optimization" : {
             "subPackages" : true
         },

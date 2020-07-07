@@ -267,6 +267,9 @@ export default class TalkVue extends Vue {
 
   showFilterModel () {
     this.showFilter = true
+    //修复打开filter时，当前值不对的问题
+    this.genderValue = this.userGender
+    this.rangeValue = [this.userMinAge, this.userMaxAge]
   }
 
   hideFilter () {

@@ -1,0 +1,191 @@
+{
+    "name" : "清池",
+    "appid" : "__UNI__9863127",
+    "description" : "干净的00后恋爱交友app",
+    "versionName" : "1.7.5",
+    "versionCode" : 175,
+    "transformPx" : false,
+    "app-plus" : {
+        /* 5+App特有相关 */
+        "modules" : {
+            "Maps" : {},
+            "OAuth" : {}
+        },
+        "privacy" : {
+            "prompt" : "template", //可取值template、custom、none
+            "template" : {
+                "title" : "服务协议和隐私政策",
+                "message" : "　　请你务必审慎阅读、充分理解“服务协议”和“隐私政策”各条款，包括但不限于：为了更好的向你提供服务，我们需要收集你的设备标识、操作日志等信息用于分析、优化应用性能。<br/>　　你可阅读<a href=\"https://www.qingchi1.com/agreement\">《服务协议》</a>和<a href=\"https://www.qingchi1.com/privacy\">《隐私政策》</a>了解详细信息。如果你同意，请点击下面按钮开始接受我们的服务。",
+                "buttonAccept" : "我知道了",
+                "buttonRefuse" : "暂不同意"
+            }
+        },
+        /* 模块配置 */
+        "distribute" : {
+            /* 应用发布信息 */
+            "android" : {
+                /* android打包配置 */
+                "permissions" : [
+                    "<uses-feature android:name=\"android.hardware.camera\"/>",
+                    "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
+                    // 允许访问粗略位置
+                    "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+                    // 精细定位
+                    "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+                    // 获取网络信息
+                    "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+                    // 获取wifi信息
+                    "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+                    // 允许拍照
+                    "<uses-permission android:name=\"android.permission.CAMERA\"/>",
+                    // 改变wifi状态
+                    "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+                    // 允许访问网络 产生gprs
+                    "<uses-permission android:name=\"android.permission.INTERNET\"/>",
+                    // 修改声音设置信息
+                    "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
+                    // 挂载外部文件
+                    "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+                    // 读取系统日志
+                    "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+                    // 访问电话状态
+                    "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+                    // 写入外部sd
+                    "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
+                    // 允许读写系统设置
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                ]
+            },
+            "ios" : {},
+            /* ios打包配置 */
+            "sdkConfigs" : {
+                "ad" : {
+                    "gdt" : {}
+                },
+                "maps" : {
+
+                },
+                "oauth" : {
+
+                }
+            },
+            "icons" : {
+                "android" : {
+                    "hdpi" : "unpackage/res/icons/72x72.png",
+                    "xhdpi" : "unpackage/res/icons/96x96.png",
+                    "xxhdpi" : "unpackage/res/icons/144x144.png",
+                    "xxxhdpi" : "unpackage/res/icons/192x192.png"
+                },
+                "ios" : {
+                    "appstore" : "unpackage/res/icons/1024x1024.png",
+                    "ipad" : {
+                        "app" : "unpackage/res/icons/76x76.png",
+                        "app@2x" : "unpackage/res/icons/152x152.png",
+                        "notification" : "unpackage/res/icons/20x20.png",
+                        "notification@2x" : "unpackage/res/icons/40x40.png",
+                        "proapp@2x" : "unpackage/res/icons/167x167.png",
+                        "settings" : "unpackage/res/icons/29x29.png",
+                        "settings@2x" : "unpackage/res/icons/58x58.png",
+                        "spotlight" : "unpackage/res/icons/40x40.png",
+                        "spotlight@2x" : "unpackage/res/icons/80x80.png"
+                    },
+                    "iphone" : {
+                        "app@2x" : "unpackage/res/icons/120x120.png",
+                        "app@3x" : "unpackage/res/icons/180x180.png",
+                        "notification@2x" : "unpackage/res/icons/40x40.png",
+                        "notification@3x" : "unpackage/res/icons/60x60.png",
+                        "settings@2x" : "unpackage/res/icons/58x58.png",
+                        "settings@3x" : "unpackage/res/icons/87x87.png",
+                        "spotlight@2x" : "unpackage/res/icons/80x80.png",
+                        "spotlight@3x" : "unpackage/res/icons/120x120.png"
+                    }
+                }
+            }
+        },
+        /* SDK配置 */
+        "usingComponents" : true,
+        "uniStatistics" : {
+            "enable" : true
+        },
+        "compilerVersion" : 2
+    },
+    "quickapp" : {},
+    /* 快应用特有相关 */
+    "mp-weixin" : {
+        /* 小程序特有相关 */
+        "usingComponents" : true,
+        //        腾讯地图FZDBZ-5XCLO-OCYW6-SRG4Y-ZFP7O-IJBSD
+        "appid" : "wx0bf5fe9ceeab514c",
+        "setting" : {
+            "urlCheck" : true
+        },
+        "optimization" : {
+            "subPackages" : true
+        },
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "你的位置信息将用于小程序位置接口的效果展示"
+            }
+        },
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    // 高速公路行驶持续后台定位
+    "mp-alipay" : {
+        "usingComponents" : true,
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-baidu" : {
+        "usingComponents" : true,
+        "appid" : "17880065",
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-toutiao" : {
+        "usingComponents" : true,
+        "appid" : "ttdfffa94240d52071",
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-qq" : {
+        "usingComponents" : true,
+        "appid" : "1109985787",
+        "optimization" : {
+            "subPackages" : true
+        },
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "你的位置信息将用于小程序位置接口的效果展示"
+            },
+            "scope.phoneNumber" : {
+                "desc" : "您的手机号将用于账号绑定"
+            }
+        },
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    // 高速公路行驶持续后台定位
+    "h5" : {
+        "title" : "清池恋爱交友app - 00后干净的恋爱交友社区",
+        "router" : {
+            "mode" : "history"
+        },
+        "domain" : "www.qingchi1.com",
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    /*全局关闭 uni统计*/
+    "uniStatistics" : {
+        "enable" : true
+    }
+}
+//prompt取值为template时有效，用于配置模板提示框上显示的内容
+/* 模块配置 *//* 应用发布信息 *//* android打包配置 */
+

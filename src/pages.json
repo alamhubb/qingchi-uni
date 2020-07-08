@@ -14,13 +14,13 @@
       }
     },
     {
-      "path": "pages/talk/empty"
-    },
-    {
       "path": "pages/user/mine",
       "style": {
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/talk/empty"
     },
     {
       "path": "pages/match/match",

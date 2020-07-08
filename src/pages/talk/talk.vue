@@ -131,7 +131,6 @@ export default class TalkVue extends Vue {
   }
 
   onLoad () {
-    systemModule.appInit()
     CommonUtil.showShareMenu()
   }
 

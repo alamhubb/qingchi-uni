@@ -1,38 +1,41 @@
 <template>
   <view v-if="user" class="overflow-scroll bg-default">
     <view class="bg-white">
-      <swiper v-if="imgUrls.length" class="square-dot size100vw">
-        <swiper-item v-for="(img,index) in imgUrls" :key="img">
-          <image class="size100vw" @longpress="showBottomMenuClick(index)"
-                 :data-src="img"
-                 @click="previewImage"
-                 mode="aspectFill"
-                 :src="img"
-          ></image>
-        </swiper-item>
-      </swiper>
-      <image v-else class="sizeUserImg" @click="showBottomMenuClick(0)"
-             mode="aspectFill"
-             src="https://cdxapp-1257733245.cos.ap-beijing.myqcloud.com/qingchi/static/uploadimgmini.png"
-      ></image>
-      <view v-if="showUploadImgHint && imgUrls.length" class="row-col-center bg-orange">
-        <view class="flex-auto card-text-row">
-          单击图片预览，长按图片进行操作
-        </view>
-        <view class="flex-none mr-10px">
-          <q-icon icon="close-circle-fill" size="36" @click="closeUploadImgHint"></q-icon>
+      <view>
+        <swiper v-if="imgUrls.length" class="square-dot size100vw">
+          <swiper-item v-for="(img,index) in imgUrls" :key="img">
+            <image class="size100vw" @longpress="showBottomMenuClick(index)"
+                   :data-src="img"
+                   @click="previewImage"
+                   mode="aspectFill"
+                   :src="img"
+            ></image>
+          </swiper-item>
+        </swiper>
+        <image v-else class="sizeUserImg" @click="showBottomMenuClick(0)"
+               mode="aspectFill"
+               src="https://cdxapp-1257733245.cos.ap-beijing.myqcloud.com/qingchi/static/uploadimgmini.png"
+        ></image>
+        <view v-if="showUploadImgHint && imgUrls.length" class="row-col-center bg-orange">
+          <view class="flex-auto flex-row px">
+            单击图片预览，长按图片进行操作
+          </view>
+          <view class="flex-none mr-10px">
+            <q-icon icon="close-circle-fill" size="36" @click="closeUploadImgHint"></q-icon>
+          </view>
         </view>
       </view>
 
-      <view class="card solid-top">
-        <view class="card-title">
+
+      <view class="q-box">
+        <view class="q-box-row">
           <image
-              class="card-title-avatar"
+              class="avatar mr-sm"
               mode="aspectFill"
               :src="user.avatar"
           />
           <view class="flex-auto row-between">
-            <view class="card-title-content">
+            <view class="flex-col flex-auto">
               <view v-if="user.vipFlag" class="text-red text-lg">
                 {{user.nickname}}
               </view>
@@ -59,120 +62,139 @@
               </button>
             </view>
             <view v-if="isMine">
-              <button class="v-btn-mini" @click="moreAction" type="primary" plain="true">
+              <button class="cu-btn round bd-green px-12px bg-white"
+                      @click="moreAction">
                 <q-icon size="28" icon="edit-pen" class="mr-xs"/>
                 操作
               </button>
             </view>
           </view>
         </view>
-        <view class="card-text mt-xs">
-          <view>
-            <view class="cu-tag radius text-df"
-                  :class="[getGenderBgColor(user)]">
-              {{user.age}}
-              <q-icon class="row-col-start ml-2px" size="24"
-                      :icon="getGenderIcon(user)"/>
-            </view>
-            <view v-if="user.vipFlag" class="cu-tag bg-red radius" @click="openVip">VIP</view>
-            <view v-else class="cu-tag bg-grey radius" @click="openVip">VIP</view>
-            <view class="ml-5px cu-capsule radius" @click="hintJusticeInfo">
-              <view class='cu-tag bg-green'>
-                <q-icon size="24" icon="mdi-sword-cross"/>
-              </view>
-              <view class="cu-tag bg-white bd-green bd-r-radius">
-                {{user.justiceValue}}
-              </view>
-            </view>
-            <view class="ml-5px cu-capsule radius" @click="toLoveValuePage">
-              <view class='cu-tag bg-red'>
-                <q-icon size="24" icon="heart-fill"/>
-              </view>
-              <view class="cu-tag bg-white bd-red bd-r-radius">
-                {{user.loveValue}}
-              </view>
-            </view>
-            <view class="ml-5px cu-capsule radius" @click="toFaceValuePage">
-              <view class='cu-tag bg-orange'>
-                <q-icon size="26" icon="mdi-face"/>
-              </view>
-              <view class="cu-tag bg-white bd-orange bd-r-radius">
-                {{user.faceRatio}}
-              </view>
-            </view>
-          </view>
 
-          <view class="mt-5px">地区：{{user.location}}</view>
-          <view v-if="isMine" class="row-col-center">
-            手机号(仅自己可见)：
-            <view v-if="user.phoneNum">
-              {{user.phoneNum}}
-              <view class="ml-10px sm cu-tag bg-white bd-gray radius">
-                已绑定
-              </view>
+        <view class="q-box-row">
+          <view class="cu-tag radius text-df"
+                :class="[getGenderBgColor(user)]">
+            {{user.age}}
+            <q-icon class="row-col-start ml-2px" size="24"
+                    :icon="getGenderIcon(user)"/>
+          </view>
+          <view v-if="user.vipFlag" class="cu-tag bg-red radius" @click="openVip">VIP</view>
+          <view v-else class="cu-tag bg-grey radius" @click="openVip">VIP</view>
+          <view class="ml-5px cu-capsule radius" @click="hintJusticeInfo">
+            <view class='cu-tag bg-green'>
+              <q-icon size="24" icon="mdi-sword-cross"/>
             </view>
-            <view v-else>
-              <!-- #ifdef MP-WEIXIN -->
-              <button class="cu-btn radius sm bg-orange" :disabled="phoneBtnDisabled"
-                      open-type="getPhoneNumber"
-                      @getphonenumber="getPhoneNumberByWx">绑定
-              </button>
-              <q-icon class="ml-10px text-gray" size="26" icon="error-circle"
-                      @click="hintBindTwice"></q-icon>
-              <text class="text-gray" @click="hintBindTwice">
-                (老用户需操作两次)
-              </text>
-              <!-- #endif -->
-              <!-- #ifndef MP-WEIXIN -->
-              <button class="cu-btn radius sm bg-orange"
-                      @click="toPhonePage">绑定
-              </button>
-              <!-- #endif -->
+            <view class="cu-tag bg-white bd-green bd-r-radius">
+              {{user.justiceValue}}
             </view>
           </view>
-          <!-- #ifndef MP-WEIXIN -->
-          <view class="mb-5px row-col-center">
-            照片认证：
-            <!-- 为自己且未绑定-->
-            <view v-if="user.isMine && !user.isSelfAuth">
-              未认证(认证后可使用匹配功能)
-              <button class="ml-10px cu-btn radius sm bg-orange"
-                      @click="toIdentityAuth">认证
-              </button>
+          <view class="ml-5px cu-capsule radius" @click="toLoveValuePage">
+            <view class='cu-tag bg-red'>
+              <q-icon size="24" icon="heart-fill"/>
             </view>
-            <view v-else>
-              <view class="ml-10px sm cu-tag bg-blue radius" v-if="user.isSelfAuth">
-                已认证
-              </view>
-              <view class="ml-10px sm cu-tag bg-white bd-gray radius" v-else>
-                未认证
-              </view>
+            <view class="cu-tag bg-white bd-red bd-r-radius">
+              {{user.loveValue}}
             </view>
           </view>
-          <!-- #endif -->
-          <view v-if="user.wxAccount" class="row-col-center mb-5px">
-            微信：
-            <text selectable>{{user.wxAccount}}</text>
-            <button class="cu-btn radius sm bd-blue ml-10px bg-white"
-                    @click="copyText(user.wxAccount)">
-              复制
+          <view class="ml-5px cu-capsule radius" @click="toFaceValuePage">
+            <view class='cu-tag bg-orange'>
+              <q-icon size="26" icon="mdi-face"/>
+            </view>
+            <view class="cu-tag bg-white bd-orange bd-r-radius">
+              {{user.faceRatio}}
+            </view>
+          </view>
+        </view>
+
+        <view class="q-box-row">
+          <q-icon class="text-gray mr-xs" size="50" icon="map-fill"/>
+          地区：{{user.location}}
+        </view>
+
+        <view v-if="isMine" class="q-box-row">
+          <q-icon class="text-gray mr-xs" size="50" icon="mdi-cellphone-android"/>
+          手机号(仅自己可见)：
+          <view v-if="user.phoneNum">
+            {{user.phoneNum}}
+            <view class="ml-10px sm cu-tag bg-white bd-gray radius">
+              已绑定
+            </view>
+          </view>
+          <view v-else>
+            <!-- #ifdef MP-WEIXIN -->
+            <button class="cu-btn radius sm bg-orange" :disabled="phoneBtnDisabled"
+                    open-type="getPhoneNumber"
+                    @getphonenumber="getPhoneNumberByWx">绑定
+            </button>
+            <q-icon class="ml-10px text-gray" size="26" icon="error-circle"
+                    @click="hintBindTwice"></q-icon>
+            <text class="text-gray" @click="hintBindTwice">
+              (老用户需操作两次)
+            </text>
+            <!-- #endif -->
+            <!-- #ifndef MP-WEIXIN -->
+            <button class="cu-btn radius sm bg-orange"
+                    @click="toPhonePage">绑定
+            </button>
+            <!-- #endif -->
+          </view>
+        </view>
+
+        <!-- #ifndef MP-WEIXIN -->
+        <view class="q-box-row">
+          <q-icon class="text-gray mr-xs" size="50" icon="mdi-alpha-v-circle"/>
+          照片认证：
+          <!-- 为自己且未绑定-->
+          <view class="row-between-center flex-auto" v-if="user.isMine && !user.isSelfAuth">
+            未认证
+            <button class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
+                    @click="toIdentityAuth">认证
             </button>
           </view>
+          <view v-else>
+            <view class="ml-10px sm cu-tag bg-blue radius" v-if="user.isSelfAuth">
+              已认证
+            </view>
+            <view class="ml-10px sm cu-tag bg-white bd-gray radius" v-else>
+              未认证
+            </view>
+          </view>
+        </view>
+        <!-- #endif -->
 
-          <!--          如果qq平台支持一键加qq-->
+        <view v-if="user.wxAccount" class="q-box-row">
+          微信：
+          <text selectable>{{user.wxAccount}}</text>
+          <button class="cu-btn radius sm bd-blue ml-10px bg-white"
+                  @click="copyText(user.wxAccount)">
+            复制
+          </button>
+        </view>
+
+        <view class="q-box-row row-between-center">
+          <view class="row-col-center">
+            <q-icon class="text-gray mr-xs" size="50" icon="account"/>
+            联系方式：
+            <text selectable>{{user.wxAccount}}</text>
+            <view>
+              ******
+            </view>
+          </view>
+          <button class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-blue">
+            获取
+          </button>
+        </view>
+        <view class="q-box-row row-between-center" @click="toUserShell">
+          <view class="row-col-center">
+            <q-icon class="text-green mr-xs" size="50" icon="mdi-bitcoin"/>
+            <text class="text-lgg">我的贝壳（0）</text>
+          </view>
+          <view class="text-gray row-col-center pr-xs">
+            <text class="text-lgg text-gray text-lgg">充值</text>
+            <q-icon class="text-gray" size="32" icon="arrow-right"/>
+          </view>
         </view>
       </view>
-
-      <q-row-item @click="toUserShell">
-        <view class="row-col-center">
-          <q-icon class="text-green" size="50" icon="mdi-bitcoin"/>
-          <text class="text-lgg">我的贝壳（0）</text>
-        </view>
-        <view class="text-gray row-col-center pr-xs">
-          <text class="text-lgg text-gray text-lgg">充值</text>
-          <q-icon class="text-gray" size="32" icon="arrow-right"/>
-        </view>
-      </q-row-item>
     </view>
 
     <uni-popup ref="reportDialog" :custom="true" :mask-click="false">
@@ -213,9 +235,9 @@
     <!--  #ifdef MP-QQ -->
     <ad v-if="talks.length>0" class="bg-white mb-5px" unit-id="72d8cb09a1bae9fa30d9e03e7cb8a25d" type="feeds"></ad>
     <!--  #endif -->
-    <view v-for="talk in talks" :key="talk.id">
+    <!--<view v-for="talk in talks" :key="talk.id">
       <talk-item :talk="talk" @deleteTalk="deleteTalk"></talk-item>
-    </view>
+    </view>-->
     <!--wx平台显示的广告-->
     <!--  #ifdef MP-WEIXIN -->
     <ad class="bg-white mb-5px" unit-id="adunit-65c8911d279d228f" ad-type="video" ad-theme="white"></ad>

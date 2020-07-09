@@ -9,10 +9,15 @@ import GetSystemInfoResult = UniApp.GetSystemInfoResult
 export default class SystemModule extends VuexModule {
   // 条件编译属性
   isApp = false
+  isNApp = true
   isMp = false
+  isNMp = true
   isMpQQ = false
+  isNMpQQ = true
   isMpWX = false
+  isNMpWX = true
   isH5 = false
+  isNH5 = true
 
   // 条件编译属性
   // ios android h5,默认安卓
@@ -68,22 +73,27 @@ export default class SystemModule extends VuexModule {
   getSystemInfo () {
     // #ifdef APP-PLUS
     this.isApp = true
+    this.isNApp = false
     this.platform = PlatformType.app
     // #endif
     // #ifdef MP
     this.isMp = true
+    this.isNMp = false
     this.platform = PlatformType.mp
     // #endif
     // #ifdef MP-WEIXIN
     this.isMpWX = true
+    this.isNMpWX = false
     this.provider = ProviderType.wx
     // #endif
     // #ifdef MP-QQ
     this.isMpQQ = true
+    this.isNMpQQ = false
     this.provider = ProviderType.qq
     // #endif
     // #ifdef H5
     this.isH5 = true
+    this.isNH5 = false
     this.platform = PlatformType.h5
     // #endif
     // 判断是否为ios平台

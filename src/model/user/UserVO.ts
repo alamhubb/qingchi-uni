@@ -48,4 +48,7 @@ export default class UserVO {
   isMine: boolean = null
   isSelfAuth: boolean = null
   authNum: number = null
+  //展示联系方式
+  showUserContact: boolean = null
+  contactAccount: string = null
 }

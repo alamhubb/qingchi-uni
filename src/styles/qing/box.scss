@@ -1,0 +1,22 @@
+.q-box {
+  &.card {
+    @extend .bd-box-radius;
+    @extend .mx;
+    @extend .my-xs;
+  }
+  @extend .bg-white;
+  @extend .px;
+  .q-box-row {
+    @extend .row-col-center;
+    @extend .text-lgg;
+    @extend .py-xs;
+  }
+  .q-box-col {
+    @extend .flex-col;
+    @extend .text-lgg;
+    @extend .py-xs;
+  }
+  /*.q-box-item:not(:last-child) {
+    @extend .q-solid-bottom;
+  }*/
+}

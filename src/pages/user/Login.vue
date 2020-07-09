@@ -168,7 +168,7 @@ const systemStore = namespace('system')
     QIcon, UCheckbox, UButton
   }
 })
-export default class AppLoginVue extends Vue {
+export default class LoginVue extends Vue {
   @userStore.State('user') user: UserVO
   @configStore.Getter(ConfigMap.authCodeIntervalKey) authCodeInterval: number
   @configStore.Getter(ConfigMap.qqServiceKey) qqService: string

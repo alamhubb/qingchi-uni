@@ -8,6 +8,7 @@ import CosConst from '@/const/CosConst'
 import ImgUtil from '@/utils/ImgUtil'
 import ImgFileVO from '@/model/ImgFileVO'
 import HintMsg from '@/const/HintMsg'
+import { systemModule } from '@/plugins/store'
 
 export default class UniUtils {
   public static delayTime (millisecond: number): Promise<any> {
@@ -269,11 +270,13 @@ export default class UniUtils {
               ratio = Math.round(10000 / (imgSize / 1024))
             }
             imgFile.quality = ratio
-            UniUtils.compressImage(imgFile.path, ratio).then(res => {
-              imgFile.path = res
-              //计算压缩后的大小
-              imgFile.size = Math.round(imgSize * ratio / 100)
-            })
+            if (systemModule.isNH5) {
+              UniUtils.compressImage(imgFile.path, ratio).then(res => {
+                imgFile.path = res
+                //计算压缩后的大小
+                imgFile.size = Math.round(imgSize * ratio / 100)
+              })
+            }
             // 获取文件名
             uni.getImageInfo({
               src: imgFile.path,

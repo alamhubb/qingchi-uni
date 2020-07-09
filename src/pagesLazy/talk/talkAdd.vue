@@ -111,7 +111,6 @@ import TagVO from '@/model/tag/TagVO'
 import TagUtil from '@/utils/TagUtil'
 import PageUtil from '@/utils/PageUtil'
 import ImgUtil from '@/utils/ImgUtil'
-import CosConst from '@/const/CosConst'
 import UserVO from '@/model/user/UserVO'
 import ImgFileVO from '@/model/ImgFileVO'
 import CosUtil from '@/utils/CosUtil'
@@ -291,15 +290,7 @@ export default class TalkAddVue extends Vue {
   }
 
   uploadImgList () {
-    const cos = CosUtil.getAuthorizationCos()
-    for (const imgFile of this.showsImgSrcs) {
-      cos.postObject({
-        Bucket: CosConst.bucketName,
-        Region: CosConst.region,
-        Key: imgFile.src,
-        FilePath: imgFile.path
-      })
-    }
+    CosUtil.postObjectList(this.showsImgSrcs)
   }
 
   deleteImg (e) {
@@ -317,32 +308,11 @@ export default class TalkAddVue extends Vue {
         return
       }
     }
-    uni.chooseImage({
-      sourceType: ['album'],
-      sizeType: ['original'],
-      // sizeType: ['compressed'],
-      count: this.imgMaxSize - this.showsImgSrcs.length,
-      success: (res) => {
-        const imgFiles: any = res.tempFiles
-        for (const imgFile of imgFiles) {
-          // 不能大于10m大于10m就压缩不到100k
-          // 获取压缩比
-          const imgSize: number = imgFile.size
-          if (imgSize / 1024 / 1024 > 10) {
-            UniUtils.error('图片大小不能超过10MB！')
-            return
-          }
-          // 获取文件名
-          const filePath = imgFile.path
-          imgFile.src = ImgUtil.getTalkUploadFormat(this.user.id, filePath)
-          uni.getImageInfo({
-            src: filePath,
-            success: (image) => {
-              imgFile.aspectRatio = image.width / image.height
-              this.showsImgSrcs.push(imgFile)
-            }
-          })
-        }
+    const count = this.imgMaxSize - this.showsImgSrcs.length
+    UniUtils.chooseImage(count).then(imgFiles => {
+      for (const imgFile of imgFiles) {
+        imgFile.src = ImgUtil.getTalkUploadFormat(this.user.id, imgFile.path)
+        this.showsImgSrcs.push(imgFile)
       }
     })
   }

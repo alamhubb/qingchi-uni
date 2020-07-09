@@ -32,6 +32,7 @@ export default class ConfigMap {
   static readonly userAgreementUrlDefault: string = 'https://www.qingchi1.com/agreement'
   static readonly userPrivacyUrlDefault: string = 'https://www.qingchi1.com/privacy'
   static readonly childProtectUrlDefault: string = 'https://www.qingchi1.com/childProtect'
+  static readonly shellInfoUrlDefault: string = 'https://www.qingchi1.com/shellInfo'
 
   // 验证码间隔多少秒
   static readonly authCodeIntervalKey: string = 'authCodeInterval'

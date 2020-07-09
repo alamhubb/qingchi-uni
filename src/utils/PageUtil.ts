@@ -33,9 +33,14 @@ export default class PageUtil {
     } else if (type === SkipType.local) {
       PageUtil.navigateTo(skipUrl)
     } else {
-      PageUtil.navigateToWeb(SkipUrlConst.homeUrl())
+      PageUtil.toWebHome()
     }
   }
+
+  static toWebHome (): void {
+    PageUtil.navigateTo(SkipUrlConst.homeUrl())
+  }
+
 
   static navigateToWeb (webUrl: string, pageTitle?: string): void {
     PageUtil.navigateTo(SkipUtil.getWebUrl(webUrl, pageTitle))
@@ -103,6 +108,19 @@ export default class PageUtil {
       const user: UserVO = userModule.user
       if (user) {
         PageUtil.navigateTo(PagePath.userVip)
+      } else {
+        BalaBala.unLoginMessage()
+      }
+    }
+  }
+
+  static toShellPage () {
+    if (systemModule.isIos) {
+      // 由于相关规范，iOS功能暂不可用
+      UniUtils.hint('由于ios相关规则限制，ios系统被禁止支持此类付费功能')
+    } else {
+      if (userModule.user) {
+        PageUtil.navigateTo(PagePath.userShell)
       } else {
         BalaBala.unLoginMessage()
       }

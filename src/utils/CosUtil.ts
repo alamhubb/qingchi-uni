@@ -2,8 +2,36 @@
 import JsonUtils from '@/utils/JsonUtils'
 import CosAPI from '@/api/CosAPI'
 import COS from 'cos-wx-sdk-v5'
+import CosConst from '@/const/CosConst'
+import ImgFileVO from '@/model/ImgFileVO'
+import UniUtils from '@/utils/UniUtils'
+import HintMsg from '@/const/HintMsg'
 
 export default class CosUtil {
+  static postObject (imgFile: ImgFileVO, cos = CosUtil.getAuthorizationCos()) {
+    return new Promise<any>((resolve, reject) => {
+      cos.postObject({
+        Bucket: CosConst.bucketName,
+        Region: CosConst.region,
+        Key: imgFile.src,
+        FilePath: imgFile.path
+      }, (err, data) => {
+        if (!err) {
+          resolve(data)
+        } else {
+          UniUtils.hideLoading()
+          UniUtils.error(HintMsg.uploadFailMsg)
+          reject(err)
+        }
+      })
+    })
+  }
+
+  static postObjectList (imgSrcs: ImgFileVO[]) {
+    const cos = CosUtil.getAuthorizationCos()
+    return Promise.all(imgSrcs.map(imgFile => CosUtil.postObject(imgFile, cos)))
+  }
+
   static getAuthorizationCos () {
     return new COS({
       // ForcePathStyle: true, // 如果使用了很多存储桶，可以通过打开后缀式，减少配置白名单域名数量，请求时会用地域域名

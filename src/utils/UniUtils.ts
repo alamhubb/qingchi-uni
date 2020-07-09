@@ -4,6 +4,10 @@ import GetProviderRes = UniApp.GetProviderRes
 import LoginRes = UniApp.LoginRes
 import { Provider } from '@/const/ProviderType'
 import GetUserInfoRes = UniApp.GetUserInfoRes
+import CosConst from '@/const/CosConst'
+import ImgUtil from '@/utils/ImgUtil'
+import ImgFileVO from '@/model/ImgFileVO'
+import HintMsg from '@/const/HintMsg'
 
 export default class UniUtils {
   public static delayTime (millisecond: number): Promise<any> {
@@ -208,7 +212,7 @@ export default class UniUtils {
           if (res.confirm) {
             resolve()
           } else if (res.cancel) {
-            reject(new Error('点击了取消'))
+            reject()
           }
         }
       })
@@ -232,6 +236,71 @@ export default class UniUtils {
         },
         fail (res) {
           reject(res.errMsg)
+        }
+      })
+    })
+  }
+
+
+  public static chooseImage (count = 1) {
+    return new Promise<ImgFileVO[]>((resolve, reject) => {
+      uni.chooseImage({
+        sourceType: ['album'],
+        sizeType: ['original'],
+        // sizeType: ['compressed'],
+        count: count,
+        success (res) {
+          const imgFiles: any = res.tempFiles
+          for (const imgFile of imgFiles) {
+            // 不能大于10m大于10m就压缩不到100k
+            // 获取压缩比
+            const imgSize: number = imgFile.size
+            console.log(imgSize)
+            if (imgSize / 1024 / 1024 > 10) {
+              UniUtils.error(HintMsg.imgSizeNotGt10MB)
+              reject(HintMsg.imgSizeNotGt10MB)
+            }
+            let ratio: number = 100
+            //如果大于100k 按照100k标准压缩
+            if (imgSize > 100 * 1024) {
+              //得出来100以下的压缩比
+              //(imgSize / 1024)计算kb
+              //100kb 除以 kb，再乘以百分数100
+              ratio = Math.round(10000 / (imgSize / 1024))
+            }
+            imgFile.quality = ratio
+            UniUtils.compressImage(imgFile.path, ratio).then(res => {
+              imgFile.path = res
+              //计算压缩后的大小
+              imgFile.size = Math.round(imgSize * ratio / 100)
+            })
+            // 获取文件名
+            uni.getImageInfo({
+              src: imgFile.path,
+              success: (image) => {
+                imgFile.aspectRatio = image.width / image.height
+              }
+            })
+          }
+          resolve(imgFiles)
+        },
+        fail (err) {
+          reject(err)
+        }
+      })
+    })
+  }
+
+  public static compressImage (filePath: string, quality: number): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      uni.compressImage({
+        src: filePath,
+        quality: quality,
+        success: res => {
+          resolve(res.tempFilePath)
+        },
+        fail: err => {
+          reject(err)
         }
       })
     })

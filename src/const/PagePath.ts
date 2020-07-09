@@ -11,6 +11,8 @@ export default class PagePath {
 
   static readonly userDetail: string = '/pagesLazy/user/userDetail'
   static readonly userVip: string = '/pagesLazy/user/vip'
+  //贝壳充值界面
+  static readonly userShell: string = '/pagesLazy/user/shell'
   static readonly userFollow: string = '/pagesLazy/user/follow'
   static readonly loveValue: string = '/pagesLazy/user/loveValue'
   static readonly identityAuth: string = '/pagesLazy/user/identityAuth'

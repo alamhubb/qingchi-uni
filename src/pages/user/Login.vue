@@ -109,7 +109,7 @@
                 <!--          微信颜色-->
                 <view @click="bindPhoneNum" v-if="showPhoneView">
                   <button :disabled="loginButtonDisabled"
-                          class="bg-gradual-phone text-white text-lgg bd-none bg-active round w80vw" @click="qqLogin">
+                          class="bg-gradual-phone text-white text-lgg bd-none bg-active round w80vw">
                     <q-icon color="white" icon="mdi-cellphone-android" size="34" class="mr-sm"></q-icon>
                     手机号登录
                   </button>
@@ -189,18 +189,17 @@ export default class AppLoginVue extends Vue {
   }
 
   qqLogin () {
-    if (this.qqLoginEnable) {
-      this.qqLoginEnable = false
-      LoginService.platformLogin(ProviderType.qq).finally(() => {
-        this.qqLoginEnable = true
-      })
-    }
+    this.providerLogin(ProviderType.qq)
   }
 
   wxLogin () {
+    this.providerLogin(ProviderType.wx)
+  }
+
+  providerLogin (providerType) {
     if (this.qqLoginEnable) {
       this.qqLoginEnable = false
-      LoginService.platformLogin(ProviderType.wx).finally(() => {
+      LoginService.platformLogin(providerType).finally(() => {
         this.qqLoginEnable = true
       })
     }

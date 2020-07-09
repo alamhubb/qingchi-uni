@@ -15,8 +15,8 @@ export default class SystemModule extends VuexModule {
   isH5 = false
 
   // 条件编译属性
-  // ios android h5
-  platform = PlatformType.android
+  // ios android h5,默认安卓
+  platform = PlatformType.app
   // 登陆平台
   provider: Provider = 'qq'
   isIos = false
@@ -93,7 +93,7 @@ export default class SystemModule extends VuexModule {
     const model: string = systemInfo.model
     //小程序开发工具时会为 devtools
     const platform: string = systemInfo.platform
-    if ((platform && (platform === 'ios')) || (model && (model.indexOf('iPhone') > -1 || model.indexOf('iPad') > -1))) {
+    if ((platform && (platform === PlatformType.ios)) || (model && (model.indexOf('iPhone') > -1 || model.indexOf('iPad') > -1))) {
       this.isIos = true
     }
     this.screenHeight = systemInfo.screenHeight

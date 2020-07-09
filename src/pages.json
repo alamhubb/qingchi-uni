@@ -8,13 +8,16 @@
   },
   "pages": [
     {
-      "path": "pages/talk/talk",
+      "path": "pages/talk/tempTest"
+    },
+    {
+      "path": "pages/user/mine",
       "style": {
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/user/mine",
+      "path": "pages/talk/talk",
       "style": {
         "navigationStyle": "custom"
       }
@@ -137,6 +140,12 @@
           "path": "user/identityAuth",
           "style": {
             "navigationBarTitleText": "身份认证"
+          }
+        },
+        {
+          "path": "user/shell",
+          "style": {
+            "navigationBarTitleText": "贝壳充值"
           }
         }
       ]

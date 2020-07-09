@@ -29,7 +29,7 @@ import UniUtils from '@/utils/UniUtils'
 import PageUtil from '@/utils/PageUtil'
 
 @Component
-export default class WebBrowserVue extends Vue {
+export default class ShareVue extends Vue {
   webUrl = ''
 
   showMoreList = false

@@ -10,8 +10,10 @@ export default class ImgFileVO {
   public reportNum: number
 
   constructor (imgFile: ImgFileVO) {
-    this.path = imgFile.path
-    this.size = imgFile.size
-    this.aspectRatio = 1
+    if (imgFile) {
+      this.path = imgFile.path
+      this.size = imgFile.size
+      this.aspectRatio = 1
+    }
   }
 }

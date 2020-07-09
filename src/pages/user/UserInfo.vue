@@ -11,7 +11,7 @@
           ></image>
         </swiper-item>
       </swiper>
-      <image v-else class="size100vw" @click="showBottomMenuClick(0)"
+      <image v-else class="sizeUserImg" @click="showBottomMenuClick(0)"
              mode="aspectFill"
              src="https://cdxapp-1257733245.cos.ap-beijing.myqcloud.com/qingchi/static/uploadimgmini.png"
       ></image>
@@ -158,62 +158,56 @@
               复制
             </button>
           </view>
-          <!-- #ifndef MP-QQ -->
-          <view v-if="user.qqAccount" class="row-col-center mb-5px">
-            QQ：
-            <text selectable>{{user.qqAccount}}</text>
-            <button class="cu-btn radius sm bd-blue ml-10px bg-white"
-                    @click="copyText(user.qqAccount)">
-              复制
-            </button>
-          </view>
-          <!-- #endif -->
-          <view v-if="user.wbAccount" class="row-col-center mb-5px">
-            微博：
-            <!--                        <q-icon class="text-green" icon="mdi-wechat"></q-icon>-->
-            <text selectable>{{user.wbAccount}}</text>
-            <button class="cu-btn radius sm bd-blue ml-10px bg-white"
-                    @click="copyText(user.wbAccount)">
-              复制
-            </button>
-          </view>
+
+          <!--          如果qq平台支持一键加qq-->
         </view>
       </view>
 
-      <uni-popup ref="reportDialog" :custom="true" :mask-click="false">
-        <view class="uni-tip">
-          <view class="uni-tip-title">举报</view>
-          <view class="uni-tip-content">
-            <radio-group class="uni-list" @change="reportTypeChange">
-              <label class="uni-list-cell flex-row uni-list-cell-pd"
-                     v-for="report in reportTypes" :key="report">
-                <view>
-                  <radio :id="report" :value="report" :checked="report===pornInfo"></radio>
-                </view>
-                <view>
-                  <label class="ml-10px" :for="report">
-                    <text>{{report}}</text>
-                  </label>
-                </view>
-              </label>
-            </radio-group>
-          </view>
-          <view class="uni-textarea bd-1 bd-radius">
+      <q-row-item @click="toUserShell">
+        <view class="row-col-center">
+          <q-icon class="text-green" size="50" icon="mdi-bitcoin"/>
+          <text class="text-lgg">我的贝壳（0）</text>
+        </view>
+        <view class="text-gray row-col-center pr-xs">
+          <text class="text-lgg text-gray text-lgg">充值</text>
+          <q-icon class="text-gray" size="32" icon="arrow-right"/>
+        </view>
+      </q-row-item>
+    </view>
+
+    <uni-popup ref="reportDialog" :custom="true" :mask-click="false">
+      <view class="uni-tip">
+        <view class="uni-tip-title">举报</view>
+        <view class="uni-tip-content">
+          <radio-group class="uni-list" @change="reportTypeChange">
+            <label class="uni-list-cell flex-row uni-list-cell-pd"
+                   v-for="report in reportTypes" :key="report">
+              <view>
+                <radio :id="report" :value="report" :checked="report===pornInfo"></radio>
+              </view>
+              <view>
+                <label class="ml-10px" :for="report">
+                  <text>{{report}}</text>
+                </label>
+              </view>
+            </label>
+          </radio-group>
+        </view>
+        <view class="uni-textarea bd-1 bd-radius">
             <textarea placeholder="其他违规必填，其他情况选填，可详细陈述观点" v-model.trim="reportContent"
                       :show-confirm-bar="false"
             />
-          </view>
-          <view class="uni-tip-group-button">
-            <button class="uni-tip-button w40r" type="default" @click="closeDialogAndInitData"
-                    :plain="true">
-              取消
-            </button>
-            <button class="uni-tip-button w40r" type="primary" @click="addReport" :disabled="!reportType">确定
-            </button>
-          </view>
         </view>
-      </uni-popup>
-    </view>
+        <view class="uni-tip-group-button">
+          <button class="uni-tip-button w40r" type="default" @click="closeDialogAndInitData"
+                  :plain="true">
+            取消
+          </button>
+          <button class="uni-tip-button w40r" type="primary" @click="addReport" :disabled="!reportType">确定
+          </button>
+        </view>
+      </view>
+    </uni-popup>
     <talk-operate @deleteTalk="deleteTalk"></talk-operate>
     <!--qq平台显示的广告-->
     <!--  #ifdef MP-QQ -->
@@ -278,13 +272,15 @@ import BalaBala from '@/utils/BalaBala'
 import ConfigMap from '@/const/ConfigMap'
 import PlatformUtils from '@/utils/PlatformUtils'
 import { systemModule } from '@/plugins/store'
+import QRowItem from '@/components/q-row-item/q-row-item.vue'
+import HintMsg from '@/const/HintMsg'
 
 const userStore = namespace('user')
 const appStore = namespace('app')
 const configStore = namespace('config')
 
 @Component({
-  components: { TalkOperate, UserEdit, TalkItem, TalkItemContent }
+  components: { QRowItem, TalkOperate, UserEdit, TalkItem, TalkItemContent }
 })
 export default class UserInfo extends Vue {
   public $refs!: {
@@ -421,8 +417,6 @@ export default class UserInfo extends Vue {
           return
         }
         UniUtils.showLoading('上传中')
-        // 获取cos密钥
-        const cos = CosUtil.getAuthorizationCos()
         // 获取文件名
         // 朝着100kb压缩？
         uni.getImageInfo({
@@ -431,15 +425,7 @@ export default class UserInfo extends Vue {
             imgFile.aspectRatio = image.width / image.height
             // user/id/talk/24324.img
             imgFile.src = ImgUtil.getUserImgUploadFormat(this.user.id, imgFile.path)
-            cos.postObject({
-              Bucket: CosConst.bucketName,
-              Region: CosConst.region,
-              Key: imgFile.src,
-              FilePath: imgFile.path,
-              onProgress (info) {
-                console.log(JSON.stringify(info))
-              }
-            }, () => {
+            CosUtil.postObject(imgFile).then(() => {
               UserAPI.addUserImgAPI(imgFile).then((res: any) => {
                 UserStore.setMineUser(res.data)
               }).finally(() => {
@@ -675,6 +661,11 @@ export default class UserInfo extends Vue {
     UniUtils.action('是否退出登录').then(() => {
       UserStore.loginOut()
     })
+  }
+
+  //前往贝壳页面
+  toUserShell () {
+    PageUtil.toShellPage()
   }
 }
 </script>

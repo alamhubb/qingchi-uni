@@ -26,4 +26,9 @@ export default class SkipUrlConst {
   static childProtectUrl (): string {
     return SkipUtil.getWebUrl(configModule.childProtectUrl, AppConfig.childProtectTitle)
   }
+
+  static shellInfoUrl (): string {
+    return SkipUtil.getWebUrl(configModule.childProtectUrl, AppConfig.shellInfoTitle)
+    // return SkipUtil.getWebUrl(ConfigMap.shellInfoUrlDefault, AppConfig.shellInfoTitle)
+  }
 }

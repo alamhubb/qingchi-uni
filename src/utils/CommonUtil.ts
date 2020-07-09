@@ -7,7 +7,6 @@ export default class CommonUtil {
       }
       timer = setTimeout(() => {
         f(...args)
-        clearTimeout(timer)
         timer = null
       }, wait)
     }

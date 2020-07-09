@@ -35,10 +35,13 @@ export default class QQUtils {
   }
 
   static payVipAPI () {
-    UserAPI.payVipAPI(ProviderType.qq).then((res: any) => {
-      qq.requestPayment({
+    UserAPI.payVipAPI(ProviderType.wx).then((res: any) => {
+      wx.requestPayment({
+        timeStamp: res.data.timeStamp,
+        nonceStr: res.data.nonceStr,
         package: res.data.package,
-        bargainor_id: AppConfig.qq_bargainor_id,
+        signType: 'MD5',
+        paySign: res.data.paySign,
         success () {
           UserStore.getMineUserAction().then(() => {
             UniUtils.hint('开通会员成功')
@@ -54,9 +57,12 @@ export default class QQUtils {
 
   static async userPay (amount: number, payResult: UserPayResultVO): Promise<void> {
     return new Promise((resolve, reject) => {
-      qq.requestPayment({
+      wx.requestPayment({
+        timeStamp: payResult.timeStamp,
+        nonceStr: payResult.nonceStr,
         package: payResult.package,
-        bargainor_id: AppConfig.qq_bargainor_id,
+        signType: 'MD5',
+        paySign: payResult.paySign,
         success () {
           resolve()
         },

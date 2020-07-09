@@ -1,9 +1,10 @@
 export default class Constants {
-  static loginSuccess = 'getUserInfo:ok'
+  static readonly loginSuccess = 'getUserInfo:ok'
+  static readonly payCancel = 'requestPayment:fail cancel'
 
-  static second = 1000
-  static minute: number = 60 * Constants.second
-  static hour: number = 60 * Constants.minute
+  static readonly second = 1000
+  static readonly minute: number = 60 * Constants.second
+  static readonly hour: number = 60 * Constants.minute
 
   // 用户在线图标颜色
   static readonly onlineColor: string = 'text-green'

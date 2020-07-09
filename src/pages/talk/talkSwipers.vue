@@ -18,7 +18,6 @@ import HomeSwiperVO from '@/model/HomeSwiperVO'
 import ConfigMap from '@/const/ConfigMap'
 import PageUtil from '@/utils/PageUtil'
 import SkipType from '@/const/SkipType'
-import SkipUrlConst from '@/const/SkipUrlConst'
 import { systemModule } from '@/plugins/store'
 
 const appStore = namespace('app')
@@ -50,7 +49,7 @@ export default class TalkSwipersVue extends Vue {
       } else if (homeSwiper.skipType === SkipType.local) {
         PageUtil.navigateTo(homeSwiper.skipUrl)
       } else {
-        PageUtil.navigateToWeb(SkipUrlConst.homeUrl())
+        PageUtil.toWebHome()
       }
     }
   }

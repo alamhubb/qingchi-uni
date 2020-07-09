@@ -126,7 +126,7 @@ export default class Request {
     this.config = f(this.config)
   }
 
-  request (options: options) {
+  request<T> (options: options) {
     const _options: newOptions = {
       baseUrl: this.config.baseUrl,
       dataType: options.dataType || this.config.dataType,
@@ -136,7 +136,7 @@ export default class Request {
       header: options.header || this.config.header,
       method: options.method || this.config.method
     }
-    return new Promise<ResultVO<object>>((resolve: Function, reject: Function) => {
+    return new Promise<ResultVO<T>>((resolve: Function, reject: Function) => {
       let next = true
       let _config: object = {}
       _options.complete = (response: response) => {
@@ -170,8 +170,8 @@ export default class Request {
     })
   }
 
-  post (url: string, data: object = {}, options: handleOptions = {}) {
-    return this.request({
+  post<T> (url: string, data: object = {}, options: handleOptions = {}) {
+    return this.request <T>({
       url,
       data,
       method: 'POST',

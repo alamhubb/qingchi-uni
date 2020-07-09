@@ -3,6 +3,8 @@ import UserQueryVO from '@/model/user/UserQueryVO'
 import EditUserVO from '@/model/EditUserVO'
 import PhoneNumVO from '@/model/user/PhoneNumVO'
 import ImgFileVO from '@/model/ImgFileVO'
+import UserPayVO from '@/model/user/UserPayVO'
+import UserPayResultVO from '@/model/user/UserPayResultVO'
 
 export default class UserAPI {
   static getMineUserInfoAPI () {
@@ -39,7 +41,12 @@ export default class UserAPI {
   }
 
   static payVipAPI (platform: string) {
-    return http.post('user/payVipNew?platform=' + platform)
+    return http.post('user/payVip?platform=' + platform)
+  }
+
+  static userPayAPI (platform: string, amount: number) {
+    const userPayVO = new UserPayVO(platform, amount)
+    return http.post<UserPayResultVO>('user/pay', userPayVO)
   }
 
   static updateAvatarAPI (avatar: string) {

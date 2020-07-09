@@ -55,27 +55,6 @@
                     <input :cursor-spacing="20" v-model="wxAccount" maxlength="20" placeholder="微信号"/>
                     <view class="uni-icon uni-icon-clear" v-if="wxAccount" @click="clearWxAccount"></view>
                 </view>
-
-                <!-- #ifdef MP-WEIXIN -->
-                <view class="cu-form-group">
-                    <view class="title">
-                        <q-icon class="text-blue mr-xs" size="36" icon="mdi-qqchat"></q-icon>
-                        QQ
-                    </view>
-                    <input :cursor-spacing="20" v-model="qqAccount" maxlength="20" placeholder="QQ号"/>
-                    <view class="uni-icon uni-icon-clear" v-if="qqAccount" @click="clearQqAccount"></view>
-                </view>
-                <!-- #endif -->
-
-                <view class="cu-form-group">
-                    <view class="title">
-                        <q-icon class="text-orange mr-xs" size="40" icon="mdi-sina-weibo"></q-icon>
-                        微博
-                    </view>
-                    <input :cursor-spacing="20" v-model="wbAccount" maxlength="20" placeholder="微博名称"/>
-                    <view class="uni-icon uni-icon-clear" v-if="wbAccount" @click="clearWbAccount"></view>
-                </view>
-
                 <!--<view class="cu-form-group margin-top">
                     <view class="title">
                         个人介绍

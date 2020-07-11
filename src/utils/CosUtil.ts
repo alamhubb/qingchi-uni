@@ -4,7 +4,7 @@ import CosAPI from '@/api/CosAPI'
 import COS from 'cos-wx-sdk-v5'
 import CosConst from '@/const/CosConst'
 import ImgFileVO from '@/model/ImgFileVO'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from './UniUtil'
 import HintMsg from '@/const/HintMsg'
 
 export default class CosUtil {
@@ -19,8 +19,8 @@ export default class CosUtil {
         if (!err) {
           resolve(data)
         } else {
-          UniUtils.hideLoading()
-          UniUtils.error(HintMsg.uploadFailMsg)
+          UniUtil.hideLoading()
+          UniUtil.error(HintMsg.uploadFailMsg)
           reject(err)
         }
       })

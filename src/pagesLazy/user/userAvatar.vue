@@ -24,7 +24,7 @@ import { Vue, Component, Watch } from 'vue-property-decorator'
 import UserVO from '@/model/user/UserVO'
 import { namespace } from 'vuex-class'
 import ImgUtil from '@/utils/ImgUtil'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import CosConst from '@/const/CosConst'
 
 import JsonUtils from '@/utils/JsonUtils'
@@ -78,7 +78,7 @@ export default class UserAvatarVue extends Vue {
         // 获取压缩比
         const imgSize: number = imgFile.size
         if (imgSize / 1024 / 1024 > 10) {
-          UniUtils.error('图片大小不能超过10MB！')
+          UniUtil.error('图片大小不能超过10MB！')
           return
         }
         // 获取文件名
@@ -92,7 +92,7 @@ export default class UserAvatarVue extends Vue {
 
   saveAvatar () {
     this.saveDisabled = true
-    UniUtils.showLoading('保存中')
+    UniUtil.showLoading('保存中')
     // 更新之后提示是否跳转信息页，更新手需要更新用户信息
     let ratio = 100
     // 300k+ 3116151b
@@ -113,13 +113,13 @@ export default class UserAvatarVue extends Vue {
           userCopy.avatar = 'https://' + newAvatar
           UserStore.setMineUser(userCopy)
           UserAPI.updateAvatarAPI(newAvatar)
-          UniUtils.action('保存完成，是否跳转至个人详情页', '跳转').then(() => {
+          UniUtil.action('保存完成，是否跳转至个人详情页', '跳转').then(() => {
             PageUtil.toMinePage()
           })
         }).finally(() => {
           this.saveDisabled = false
           this.uploadImgFile = null
-          UniUtils.hideLoading()
+          UniUtil.hideLoading()
         })
       }
     })

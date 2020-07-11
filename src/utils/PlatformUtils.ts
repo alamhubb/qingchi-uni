@@ -2,7 +2,7 @@ import QQUtils from '@/utils/QQUtils'
 import CommonUtil from '@/utils/CommonUtil'
 import { platformModule, systemModule } from '@/plugins/store'
 import WxUtils from '@/utils/WxUtils'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from './UniUtil'
 import UserAPI from '@/api/UserAPI'
 import UserStore from '@/plugins/store/UserStore'
 import PageUtil from '@/utils/PageUtil'
@@ -74,7 +74,7 @@ export default class PlatformUtils {
     return PlatformUtils.requestPayment(amount)
       .catch((err) => {
         if (err.errMsg === Constants.payCancel) {
-          UniUtils.toast(HintMsg.payCancelMsg)
+          UniUtil.toast(HintMsg.payCancelMsg)
           throw err
         } else {
           MsgUtil.payFailMsg()
@@ -87,7 +87,7 @@ export default class PlatformUtils {
     PlatformUtils.cashPay(amount)
       .then(() => {
         UserStore.getMineUserAction().then(() => {
-          UniUtils.hint(HintMsg.paySuccessMsg)
+          UniUtil.hint(HintMsg.paySuccessMsg)
           PageUtil.reLaunch(PagePath.userMine)
         })
       })
@@ -115,7 +115,7 @@ export default class PlatformUtils {
         WxUtils.payVipAPI()
       }
     } else {
-      UniUtils.hint('非小程序平台暂不支持开通VIP')
+      UniUtil.hint('非小程序平台暂不支持开通VIP')
     }
   }
 }

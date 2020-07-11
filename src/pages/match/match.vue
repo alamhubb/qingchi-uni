@@ -71,7 +71,7 @@ import MatchItem from '@/pages/match/MatchItem.vue'
 import Constants from '@/const/Constant'
 import LoadMoreType from '@/const/LoadMoreType'
 import MatchType from '@/const/MatchType'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import CommonUtil from '@/utils/CommonUtil'
 import BalaBala from '@/utils/BalaBala'
 
@@ -241,7 +241,7 @@ export default class MatchVue extends Vue {
           // #ifndef MP-WEIXIN
           if (this.user.isSelfAuth) {
             // #endif
-            UniUtils.toast('不喜欢')
+            UniUtil.toast('不喜欢')
             // 还要减去高度，还有加高度
             MatchAPI.unlikeUserAPI(this.showUser.id)
             if (this.leftOrRight === Constants.leftKey) {
@@ -270,7 +270,7 @@ export default class MatchVue extends Vue {
           // #ifndef MP-WEIXIN
           if (this.user.isSelfAuth) {
             // #endif
-            UniUtils.toast('喜欢')
+            UniUtil.toast('喜欢')
             // 还要减去高度，还有加高度
             MatchAPI.likeUserAPI(this.showUser.id)
             if (this.leftOrRight === Constants.leftKey) {

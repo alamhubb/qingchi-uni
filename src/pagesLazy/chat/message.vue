@@ -147,7 +147,7 @@ import UserVO from '@/model/user/UserVO'
 import LoadMoreType from '@/const/LoadMoreType'
 import Constants from '@/const/Constant'
 import PagePath from '@/const/PagePath'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import MessageAPI from '@/api/MessageAPI'
 import ReportContentType from '@/const/ReportContentType'
 import ReportDialog from '@/pagesLazy/ReportDialog.vue'
@@ -258,7 +258,7 @@ export default class MessageVue extends Vue {
     // #ifdef MP-QQ
     this.inputFocus = false
     // 严格测试150毫秒时间比较合适，不卡顿，且不出bug
-    UniUtils.delayTime(150).then(() => {
+    UniUtil.delayTime(150).then(() => {
       this.inputFocus = true
     })
     // #endif
@@ -272,7 +272,7 @@ export default class MessageVue extends Vue {
         BalaBala.unBindPhoneNum()
       }
     } else {
-      UniUtils.toast('不能发送空白内容')
+      UniUtil.toast('不能发送空白内容')
     }
   }
 
@@ -280,7 +280,7 @@ export default class MessageVue extends Vue {
     if (this.user.userType === UserType.systemUser) {
       this.deleteMsgAction(this.curMsg)
     } else {
-      UniUtils.action('是否确定删除此条消息，此操作无法恢复').then(() => {
+      UniUtil.action('是否确定删除此条消息，此操作无法恢复').then(() => {
         this.deleteMsgAction(msg)
       })
     }
@@ -350,7 +350,7 @@ export default class MessageVue extends Vue {
   }
 
   copyText () {
-    UniUtils.textCopy(this.message.content)
+    UniUtil.textCopy(this.message.content)
     this.closeMessageMoreDialog()
     this.initChooseCommentData()
   }

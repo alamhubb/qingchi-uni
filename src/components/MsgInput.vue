@@ -24,7 +24,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import UserVO from '@/model/user/UserVO'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import { talkModule } from '@/plugins/store'
 import BalaBala from '@/utils/BalaBala'
 import PlatformUtils from '@/utils/PlatformUtils'
@@ -57,7 +57,7 @@ export default class MsgInput extends Vue {
         // 申请订阅
         PlatformUtils.requestSubscribeComment()
       } else {
-        UniUtils.error('不能发表内容为空的评论')
+        UniUtil.error('不能发表内容为空的评论')
       }
     } else {
       BalaBala.unBindPhoneNum()

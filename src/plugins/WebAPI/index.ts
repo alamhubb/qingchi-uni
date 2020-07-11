@@ -1,7 +1,7 @@
 import Request from '@/plugins/http/request'
 import TokenUtil from '@/utils/TokenUtil'
 import ErrorCode from '@/const/ErrorCode'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import { configModule } from '@/plugins/store'
 import BalaBala from '@/utils/BalaBala'
 
@@ -18,7 +18,7 @@ WebAPI.interceptor.response(
     return response.data
   },
   error => {
-    UniUtils.hideLoading()
+    UniUtil.hideLoading()
     if (error.statusCode) {
       const result = error.data
       switch (error.statusCode) {
@@ -31,17 +31,17 @@ WebAPI.interceptor.response(
         case ErrorCode.banned:
           TokenUtil.remove()
           if (result) {
-            UniUtils.error(result.errorMsg)
+            UniUtil.error(result.errorMsg)
           } else {
             const msg: string = configModule.systemError605
-            UniUtils.error(msg)
+            UniUtil.error(msg)
           }
           break
         case ErrorCode.custom:
           break
         default:
           if (result) {
-            UniUtils.error(result.errorMsg)
+            UniUtil.error(result.errorMsg)
           } else {
             BalaBala.systemErrorMsg()
           }

@@ -10,7 +10,7 @@ import ImgFileVO from '@/model/ImgFileVO'
 import HintMsg from '@/const/HintMsg'
 import { systemModule } from '@/plugins/store'
 
-export default class UniUtils {
+export default class UniUtil {
   public static delayTime (millisecond: number): Promise<any> {
     return new Promise<any>(resolve =>
       setTimeout(() => {
@@ -26,7 +26,7 @@ export default class UniUtils {
         success () {
           if (hint) {
             uni.hideToast()
-            UniUtils.toast(hint)
+            UniUtil.toast(hint)
           }
           resolve()
         },
@@ -44,7 +44,7 @@ export default class UniUtils {
   }
 
   static copyLink (webUrl: string) {
-    return UniUtils.textCopy(webUrl, '链接已复制，可在浏览器打开')
+    return UniUtil.textCopy(webUrl, '链接已复制，可在浏览器打开')
   }
 
   public static getUUID (): string {
@@ -258,7 +258,7 @@ export default class UniUtils {
             // 获取压缩比
             const imgSize: number = imgFile.size
             if (imgSize / 1024 / 1024 > 10) {
-              UniUtils.error(HintMsg.imgSizeNotGt10MBMsg)
+              UniUtil.error(HintMsg.imgSizeNotGt10MBMsg)
               reject(HintMsg.imgSizeNotGt10MBMsg)
             }
             let ratio: number = 100
@@ -271,7 +271,7 @@ export default class UniUtils {
             }
             imgFile.quality = ratio
             if (systemModule.isNH5) {
-              UniUtils.compressImage(imgFile.path, ratio).then(res => {
+              UniUtil.compressImage(imgFile.path, ratio).then(res => {
                 imgFile.path = res
                 //计算压缩后的大小
                 imgFile.size = Math.round(imgSize * ratio / 100)

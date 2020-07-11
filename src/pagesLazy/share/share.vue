@@ -25,7 +25,7 @@ import {
   Vue,
   Component
 } from 'vue-property-decorator'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import PageUtil from '@/utils/PageUtil'
 
 @Component
@@ -47,7 +47,7 @@ export default class ShareVue extends Vue {
   }
 
   copyLink () {
-    UniUtils.copyLink(this.webUrl)
+    UniUtil.copyLink(this.webUrl)
   }
 
   openInBrowser () {

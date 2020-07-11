@@ -63,7 +63,7 @@ import ReportAddVO from '@/model/report/ReportAddVO'
 import ReportContentType from '@/const/ReportContentType'
 import ReportAPI from '@/api/ReportAPI'
 import TalkAPI from '@/api/TalkAPI'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import UserVO from '@/model/user/UserVO'
 import { talkModule } from '@/plugins/store'
 import TalkVO from '@/model/talk/TalkVO'
@@ -107,7 +107,7 @@ export default class TalkOperate extends Vue {
         reportAdd.commentId = this.comment.id
       }
       if (ReportType.other === this.reportType && !this.reportContent) {
-        UniUtils.hint('选择其他违规时，请您补充观点')
+        UniUtil.hint('选择其他违规时，请您补充观点')
       } else {
         ReportAPI.addReportAPI(reportAdd).then((res: any) => {
           if (this.reportContentType === ReportContentType.comment) {
@@ -123,7 +123,7 @@ export default class TalkOperate extends Vue {
           }
           // 必须最后清空因为前面还要使用做判断
           this.reportDialogClose()
-          UniUtils.hint(res.data)
+          UniUtil.hint(res.data)
           PlatformUtils.requestSubscribeReport()
         })
       }
@@ -137,7 +137,7 @@ export default class TalkOperate extends Vue {
     }
 
     copyText () {
-      UniUtils.textCopy(this.comment.content)
+      UniUtil.textCopy(this.comment.content)
       this.closeActionAndInitData()
     }
 
@@ -158,7 +158,7 @@ export default class TalkOperate extends Vue {
     // 用户自己删除
     userDeleteComment () {
       this.commentActionClose()
-      UniUtils.action('是否确定删除此条评论，此操作无法恢复').then(() => {
+      UniUtil.action('是否确定删除此条评论，此操作无法恢复').then(() => {
         this.deleteComment()
       })
     }

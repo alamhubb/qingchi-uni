@@ -39,7 +39,7 @@ import TagVO from '@/model/tag/TagVO'
 import TagAPI from '@/api/TagAPI'
 import ResultVO from '@/model/ResultVO'
 import ErrorCode from '@/const/ErrorCode'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 
 @Component
 export default class TagAddVue extends Vue {
@@ -63,7 +63,7 @@ export default class TagAddVue extends Vue {
         this.checkTag(res.data)
       }).catch((res: ResultVO<TagVO>) => {
         if (res.errorCode === ErrorCode.custom) {
-          UniUtils.action(res.errorMsg, '使用').then(() => {
+          UniUtil.action(res.errorMsg, '使用').then(() => {
             this.checkTag(res.data)
           })
         }

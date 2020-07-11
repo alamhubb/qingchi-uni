@@ -1,7 +1,7 @@
 import JsonUtils from '@/utils/JsonUtils'
 import TokenUtil from '@/utils/TokenUtil'
 import ErrorCode from '@/const/ErrorCode'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from './UniUtil'
 
 export default class ImgUtil {
   static readonly imgUrl: string = process.env.VUE_APP_COS_URL
@@ -103,19 +103,19 @@ export default class ImgUtil {
   }
 
   static getTalkUploadFormat (userId: number, filePath: string): string {
-    return 'user/' + userId + '/talk/normal/' + UniUtils.getUUID() + ImgUtil.getFileSuffixName(filePath)
+    return 'user/' + userId + '/talk/normal/' + UniUtil.getUUID() + ImgUtil.getFileSuffixName(filePath)
   }
 
   static getUserAvatarUploadFormat (userId: number, filePath: string): string {
-    return 'user/' + userId + '/avatar/' + UniUtils.getUUID() + ImgUtil.getFileSuffixName(filePath)
+    return 'user/' + userId + '/avatar/' + UniUtil.getUUID() + ImgUtil.getFileSuffixName(filePath)
   }
 
   static getUserImgUploadFormat (userId: number, filePath: string): string {
-    return 'user/' + userId + '/img/' + UniUtils.getUUID() + ImgUtil.getFileSuffixName(filePath)
+    return 'user/' + userId + '/img/' + UniUtil.getUUID() + ImgUtil.getFileSuffixName(filePath)
   }
 
   static getUserIdentityUploadFormat (userId: number, filePath: string): string {
-    return 'user/' + userId + '/identity/' + UniUtils.getUUID() + ImgUtil.getFileSuffixName(filePath)
+    return 'user/' + userId + '/identity/' + UniUtil.getUUID() + ImgUtil.getFileSuffixName(filePath)
   }
 
   static getFileSuffixName (filePath: string): string {

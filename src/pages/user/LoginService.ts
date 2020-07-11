@@ -1,5 +1,5 @@
 import LoginDataVO from '@/model/login/LoginDataVO'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import { systemModule } from '@/plugins/store'
 import ProviderType, { Provider } from '@/const/ProviderType'
 import JsonUtils from '@/utils/JsonUtils'
@@ -11,7 +11,7 @@ import BalaBala from '@/utils/BalaBala'
 
 export default class LoginService {
   static getLoginData (provider: Provider) {
-    return UniUtils.login(provider).then((loginRes) => {
+    return UniUtil.login(provider).then((loginRes) => {
       const loginData: LoginDataVO = new LoginDataVO()
       loginData.loginType = provider
       loginData.platform = systemModule.platform
@@ -31,10 +31,10 @@ export default class LoginService {
    * 以后需要考虑切换手机，登录同个账户的问题，也没准不用考虑，相同逻辑
    */
   static platformLogin (provider: Provider) {
-    UniUtils.showLoading('登录中')
+    UniUtil.showLoading('登录中')
     // 小程序平台登陆
     return LoginService.getLoginData(provider).then((loginData: LoginDataVO) => {
-      return UniUtils.getUserInfo(provider).then((infoRes) => {
+      return UniUtil.getUserInfo(provider).then((infoRes) => {
         if (infoRes && infoRes.errMsg === Constants.loginSuccess) {
           if (PlatformType.mp === loginData.platform) {
             Object.assign(loginData, infoRes.userInfo)
@@ -56,7 +56,7 @@ export default class LoginService {
             } else if (provider === ProviderType.wx) {
               loginData.gender = userInfo.gender
             } else {
-              UniUtils.error('错误的登陆方式')
+              UniUtil.error('错误的登陆方式')
             }
             loginData.birthday = userInfo.year
             loginData.city = userInfo.city || userInfo.province
@@ -66,14 +66,14 @@ export default class LoginService {
             if (!user.phoneNum) {
               hintText += '，绑定手机号后才可发布内容'
             }
-            UniUtils.hint(hintText)
+            UniUtil.hint(hintText)
           })
         } else {
           throw new Error('获取信息失败，请重试')
         }
       })
     }).finally(() => {
-      UniUtils.hideLoading()
+      UniUtil.hideLoading()
     })
   }
 }

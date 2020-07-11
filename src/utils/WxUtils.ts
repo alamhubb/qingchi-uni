@@ -1,5 +1,5 @@
 import PageUtil from '@/utils/PageUtil'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from './UniUtil'
 import AppConfig from '@/const/AppConfig'
 import UserStore from '@/plugins/store/UserStore'
 import PagePath from '@/const/PagePath'
@@ -25,7 +25,7 @@ export default class QQUtils {
   }
 
   static createRewardedVideoAd () {
-    return UniUtils.createRewardedVideoAd(AppConfig.qq_award_ad_id)
+    return UniUtil.createRewardedVideoAd(AppConfig.qq_award_ad_id)
   }
 
   static createInterstitialAd () {
@@ -44,12 +44,12 @@ export default class QQUtils {
         paySign: res.data.paySign,
         success () {
           UserStore.getMineUserAction().then(() => {
-            UniUtils.hint('开通会员成功')
+            UniUtil.hint('开通会员成功')
             PageUtil.reLaunch(PagePath.userMine)
           })
         },
         fail () {
-          UniUtils.error(HintMsg.vipOpenFailMsg)
+          UniUtil.error(HintMsg.vipOpenFailMsg)
         }
       })
     })

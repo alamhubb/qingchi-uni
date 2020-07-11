@@ -23,12 +23,12 @@ import {
   Vue,
   Component, Prop, Model, Emit
 } from 'vue-property-decorator'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 
   @Component
 export default class QTabs extends Vue {
     //唯一id值
-    uuid: string = 'u' + UniUtils.getUUID()
+    uuid: string = 'u' + UniUtil.getUUID()
 
     @Model('input') readonly value: number
     @Prop({ default: [] }) readonly tabs: any[]
@@ -77,14 +77,14 @@ export default class QTabs extends Vue {
         if (res && res.length) {
           res.forEach(item => {
             //设置每个tab滑块对应的位置
-            this.tabItemLefts.push(item.left + item.width / 2 - UniUtils.upxToPx(Number(this.barWidth) / 2) - res[0].left)
+            this.tabItemLefts.push(item.left + item.width / 2 - UniUtil.upxToPx(Number(this.barWidth) / 2) - res[0].left)
           })
           //首次完成2秒后切换首次加载状态，因为首次加载不需要动画，首次加载后开启动画
-          UniUtils.delayTime(2000).then(() => {
+          UniUtil.delayTime(2000).then(() => {
             this.firstLoadAfter = true
           })
         } else {
-          UniUtils.delayTime(100).then(() => {
+          UniUtil.delayTime(100).then(() => {
             this.getTabRect()
           })
         }

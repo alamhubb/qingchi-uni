@@ -79,7 +79,7 @@ import UserVO from '@/model/user/UserVO'
 import { namespace } from 'vuex-class'
 import PageUtil from '@/utils/PageUtil'
 import UserUtil from '@/utils/UserUtil'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import ReportContentType from '@/const/ReportContentType'
 import ReportType from '@/const/ReportType'
 import ReportAddVO from '@/model/report/ReportAddVO'
@@ -154,7 +154,7 @@ export default class MatchItem extends Vue {
     const userImg: ImgFileVO = this.user.imgs[0]
     reportAdd.userImgId = userImg.id
     if (ReportType.other === this.reportType && !this.reportContent) {
-      UniUtils.hint('选择其他违规时，请您补充观点')
+      UniUtil.hint('选择其他违规时，请您补充观点')
     } else {
       ReportAPI.addReportAPI(reportAdd).then((res: any) => {
         const reportNum: number = userImg.reportNum + 1
@@ -162,7 +162,7 @@ export default class MatchItem extends Vue {
           this.deleteMatchUser()
         }
         this.closeDialogAndInitData()
-        UniUtils.hint(res.data)
+        UniUtil.hint(res.data)
         PlatformUtils.requestSubscribeReport()
       })
     }

@@ -74,7 +74,7 @@ import TalkVO from '@/model/talk/TalkVO'
 import PagePath from '@/const/PagePath'
 import TalkAPI from '@/api/TalkAPI'
 import ReportContentType from '@/const/ReportContentType'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import HugAddVO from '@/model/HugAddVO'
 import ChildComment from '@/pages/talk/ChildComment.vue'
 import UserVO from '@/model/user/UserVO'
@@ -132,7 +132,7 @@ export default class TalkItemComment extends Vue {
     // 登录才可以点赞
     if (this.user) {
       if (this.talk.hasHugged) {
-        UniUtils.toast('已抱过不能取消')
+        UniUtil.toast('已抱过不能取消')
         return
       }
       this.talk.hasHugged = true

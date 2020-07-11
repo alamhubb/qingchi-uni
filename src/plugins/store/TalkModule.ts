@@ -5,7 +5,7 @@ import CommentVO from '@/model/comment/CommentVO'
 import TalkAPI from '@/api/TalkAPI'
 import TalkVO from '@/model/talk/TalkVO'
 import BalaBala from '@/utils/BalaBala'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import TalkTabVO from '@/model/talk/TalkTabVO'
 import TalkVueUtil from '@/utils/TalkVueUtil'
 import TalkFilterUtil from '@/utils/TalkFilterUtil'
@@ -102,7 +102,7 @@ export default class TalkModule extends VuexModule {
   @Action
   inputContentFocusEvent () {
     // 需要有延迟，要不然无法成功切换
-    UniUtils.delayTime(200).then(() => {
+    UniUtil.delayTime(200).then(() => {
       this.inputContentFocus = true
     })
   }
@@ -110,7 +110,7 @@ export default class TalkModule extends VuexModule {
   @Action
   inputContentBlur () {
     // 需要有延迟，要不然无法触发按钮事件
-    UniUtils.delayTime(100).then(() => {
+    UniUtil.delayTime(100).then(() => {
       this.inputContentFocus = false
     })
   }

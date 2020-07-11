@@ -100,7 +100,7 @@ import UnreadNotifyVO from '@/model/UnreadNotifyVO'
 import TagVO from '@/model/tag/TagVO'
 import PageUtil from '@/utils/PageUtil'
 import TalkFilterUtil from '@/utils/TalkFilterUtil'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import TalkSwipers from '@/pages/talk/talkSwipers.vue'
 import TabsTalk from '@/pages/talk/tabsTalk.vue'
 import { appModule, systemModule, talkModule } from '@/plugins/store'
@@ -136,14 +136,14 @@ export default class TalkVue extends Vue {
   }
 
   // 唯一id值
-  readonly uuid: string = 'u' + UniUtils.getUUID()
+  readonly uuid: string = 'u' + UniUtil.getUUID()
   readonly tabsId: string = this.uuid + '_tabs'
 
   // life
   onReady () {
     appModule.initGlobalDataReadyAPI()
     // 不这么写百度读不出来
-    UniUtils.delayTime(100).then(() => {
+    UniUtil.delayTime(100).then(() => {
       this.getTabBarTop()
     })
     // 这里是不是有问题应该选择异性
@@ -179,7 +179,7 @@ export default class TalkVue extends Vue {
           this.scrollEnable = true
         }
       } else {
-        UniUtils.delayTime(100).then(() => {
+        UniUtil.delayTime(100).then(() => {
           this.getTabBarTop()
         })
       }
@@ -332,7 +332,7 @@ export default class TalkVue extends Vue {
 
   @Watch('configShowSwipers')
   configShowSwipersWatch () {
-    UniUtils.delayTime(100).then(() => {
+    UniUtil.delayTime(100).then(() => {
       this.getTabBarTop()
     })
   }

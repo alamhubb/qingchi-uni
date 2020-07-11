@@ -55,7 +55,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import UserVO from '@/model/user/UserVO'
 import { namespace } from 'vuex-class'
 import LoveValueAPI from '@/api/LoveValueAPI'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import UserStore from '@/plugins/store/UserStore'
 import QQUtils from '@/utils/QQUtils'
 import AppConfig from '@/const/AppConfig'
@@ -84,17 +84,17 @@ export default class LoveValueVue extends Vue {
     })
 
     // #ifdef APP-PLUS
-    this.videoAd = UniUtils.createRewardedVideoAd(AppConfig.app_award_ad_id)
+    this.videoAd = UniUtil.createRewardedVideoAd(AppConfig.app_award_ad_id)
     // #endif
     // #ifdef MP-WEIXIN
-    this.videoAd = UniUtils.createRewardedVideoAd(AppConfig.wx_award_ad_id)
+    this.videoAd = UniUtil.createRewardedVideoAd(AppConfig.wx_award_ad_id)
     // #endif
     // #ifdef MP-QQ
     this.videoAd = QQUtils.createRewardedVideoAd()
     // #endif
     this.videoAd.load()
     this.videoAd.onError(() => {
-      UniUtils.hint('广告加载失败，请稍候重试')
+      UniUtil.hint('广告加载失败，请稍候重试')
     })
     this.videoAd.onClose((res: any) => {
       LoveValueAPI.watchVideoAdsAPI(res.isEnded).then((res: any) => {
@@ -109,7 +109,7 @@ export default class LoveValueVue extends Vue {
 
   openAd () {
     this.videoAd.show().catch((err) => {
-      UniUtils.hint(err.errMsg)
+      UniUtil.hint(err.errMsg)
     })
   }
 }

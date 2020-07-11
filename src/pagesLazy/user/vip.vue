@@ -32,7 +32,7 @@ import TalkItemContent from '@/pages/talk/TalkItemContent.vue'
 import { namespace } from 'vuex-class'
 import UserEdit from '@/pages/user/UserEdit.vue'
 import UserInfo from '@/pages/user/UserInfo.vue'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import ConfigMap from '@/const/ConfigMap'
 import PlatformUtils from '@/utils/PlatformUtils'
 
@@ -48,7 +48,7 @@ export default class VipVue extends Vue {
 
   postPay () {
     if (this.user.vipFlag) {
-      UniUtils.hint('您已开通会员，无需重复开通')
+      UniUtil.hint('您已开通会员，无需重复开通')
     } else {
       PlatformUtils.payVip()
     }

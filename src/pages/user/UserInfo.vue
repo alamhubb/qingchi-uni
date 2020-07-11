@@ -169,7 +169,8 @@
           </button>
         </view>
 
-        <view v-if="user.contactAccount" class="q-box-row row-between-center">
+        <view v-if="user.contactAccount" class="q-box-row row-between-center bg-active"
+              @click="$pageUtil.toUserContactInfoPage">
           <view class="row-col-center">
             <text class="text-lgg text-orange">他人获取您的联系方式时，您就能获得贝壳</text>
           </view>
@@ -189,7 +190,7 @@
           </view>
           <view v-if="isMine" class="row-between-center">
             <button v-if="user.showUserContact" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
-                    @click="$utils.textCopy(user.contactAccount)">
+                    @click="openEditDialog">
               填写联系方式
             </button>
             <view v-else class="row-between-center">
@@ -200,7 +201,7 @@
           </view>
           <view v-else>
             <button v-if="user.showUserContact" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
-                    @click="$utils.textCopy(user.contactAccount)">
+                    @click="$util.textCopy(user.contactAccount)">
               复制
             </button>
             <button v-else :disabled="showUserContactBtnDisabled"
@@ -294,7 +295,7 @@ import TalkItemContent from '@/pages/talk/TalkItemContent.vue'
 import FollowAddVO from '@/model/FollowAddVO'
 import { namespace } from 'vuex-class'
 import UserEdit from '@/pages/user/UserEdit.vue'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import PagePath from '@/const/PagePath'
 import FollowAPI from '@/api/FollowAPI'
 import FollowSatus from '@/const/FollowSatus'
@@ -374,7 +375,7 @@ export default class UserInfo extends Vue {
           this.showUserContactBtnDisabled = false
         })
       } else {
-        UniUtils.action('您没有贝壳了，是否直接使用现金支付').then(() => {
+        UniUtil.action('您没有贝壳了，是否直接使用现金支付').then(() => {
           PlatformUtils.cashPay(1).then(() => {
             UserAPI.getUserContactAPI(this.user.id).then((res) => {
               this.user.contactAccount = res.data
@@ -392,7 +393,7 @@ export default class UserInfo extends Vue {
         })
       }
     } else {
-      UniUtils.toast('获取中，请稍等')
+      UniUtil.toast('获取中，请稍等')
     }
   }
 
@@ -418,7 +419,7 @@ export default class UserInfo extends Vue {
     const userImg: ImgFileVO = this.user.imgs[0]
     reportAdd.userImgId = userImg.id
     if (ReportType.other === this.reportType && !this.reportContent) {
-      UniUtils.hint('选择其他违规时，请您补充观点')
+      UniUtil.hint('选择其他违规时，请您补充观点')
     } else {
       ReportAPI.addReportAPI(reportAdd).then((res: any) => {
         // todo  举报过后，是否大于系统阀值，大于系统阀值隐藏
@@ -427,7 +428,7 @@ export default class UserInfo extends Vue {
           this.frontDeleteUserImg()
         }
         this.closeDialogAndInitData()
-        UniUtils.hint(res.data)
+        UniUtil.hint(res.data)
         PlatformUtils.requestSubscribeReport()
       })
     }
@@ -454,7 +455,7 @@ export default class UserInfo extends Vue {
 
   showBottomMenuClick (imgIndex: number) {
     this.imgIndex = imgIndex
-    UniUtils.actionSheet(this.bottomMenuItemList).then((index: number) => {
+    UniUtil.actionSheet(this.bottomMenuItemList).then((index: number) => {
       if (this.isMine) {
         if (index === 0) {
           this.chooseImg()
@@ -475,20 +476,20 @@ export default class UserInfo extends Vue {
 
   deleteImg () {
     if (this.user.imgs.length > 1) {
-      UniUtils.warning('请确认是否删除照片？').then(() => {
+      UniUtil.warning('请确认是否删除照片？').then(() => {
         const imgs: ImgFileVO[] = this.user.imgs.splice(this.imgIndex, 1)
         UserAPI.deleteUserImgAPI(imgs[0]).then((res: any) => {
           UserStore.setMineUser(res.data)
         })
       })
     } else {
-      UniUtils.error('请至少保留一张照片')
+      UniUtil.error('请至少保留一张照片')
     }
   }
 
   chooseImg () {
     if (this.mineUser.imgs.length > 2) {
-      UniUtils.error('最多上传3张照片，请删除后继续！')
+      UniUtil.error('最多上传3张照片，请删除后继续！')
       return
     }
     uni.chooseImage({
@@ -501,10 +502,10 @@ export default class UserInfo extends Vue {
         // 不能大于10m大于10m就压缩不到100k
         const imgSize: number = imgFile.size
         if (imgSize / 1024 / 1024 > 10) {
-          UniUtils.error('图片大小不能超过10MB！')
+          UniUtil.error('图片大小不能超过10MB！')
           return
         }
-        UniUtils.showLoading('上传中')
+        UniUtil.showLoading('上传中')
         // 获取文件名
         // 朝着100kb压缩？
         uni.getImageInfo({
@@ -517,7 +518,7 @@ export default class UserInfo extends Vue {
               UserAPI.addUserImgAPI(imgFile).then((res: any) => {
                 UserStore.setMineUser(res.data)
               }).finally(() => {
-                UniUtils.hideLoading()
+                UniUtil.hideLoading()
               })
             })
           }
@@ -529,7 +530,7 @@ export default class UserInfo extends Vue {
   getPhoneNumberAfterHandler (loginData: LoginDataVO) {
     return LoginAPI.bindPhoneNumAPI(loginData).then((res: any) => {
       UserStore.setMineUser(res.data.user)
-      UniUtils.hint(res.data.hint)
+      UniUtil.hint(res.data.hint)
     })
   }
 
@@ -577,7 +578,7 @@ export default class UserInfo extends Vue {
         this.getPhoneNumberByLogin(obj)
       })
     } else {
-      UniUtils.toast('您选择了不绑定')
+      UniUtil.toast('您选择了不绑定')
     }
   }
 
@@ -598,7 +599,7 @@ export default class UserInfo extends Vue {
   }
 
   copyText (textCopy: string) {
-    UniUtils.textCopy(textCopy)
+    UniUtil.textCopy(textCopy)
   }
 
   deleteTalk (talkId: number) {
@@ -612,11 +613,11 @@ export default class UserInfo extends Vue {
   moreAction () {
     if (this.isMine) {
       const menuList: string [] = ['刷新', '编辑', '退出']
-      UniUtils.actionSheet(menuList).then((index: number) => {
+      UniUtil.actionSheet(menuList).then((index: number) => {
         if (index === 0) {
           this.refreshMine()
         } else if (index === 1) {
-          this.openDialog()
+          this.openEditDialog()
         } else if (index === 2) {
           this.loginOut()
         }
@@ -624,7 +625,7 @@ export default class UserInfo extends Vue {
     }
   }
 
-  openDialog () {
+  openEditDialog () {
     this.$refs.editPopup.open()
   }
 
@@ -670,11 +671,11 @@ export default class UserInfo extends Vue {
   }
 
   hintJusticeInfo () {
-    UniUtils.toastLong('正义值，正确举报会增加正义值')
+    UniUtil.toastLong('正义值，正确举报会增加正义值')
   }
 
   hintBindTwice () {
-    UniUtils.hint('因本软件系统升级导致老用户绑定手机号需要操作两次，给您带来不便，我们在此致以歉意，望您能够谅解，我们会努力做的更好，谢谢您的支持')
+    UniUtil.hint('因本软件系统升级导致老用户绑定手机号需要操作两次，给您带来不便，我们在此致以歉意，望您能够谅解，我们会努力做的更好，谢谢您的支持')
   }
 
   addFollow () {
@@ -738,15 +739,15 @@ export default class UserInfo extends Vue {
   }
 
   refreshMine () {
-    UniUtils.action('是否刷新用户信息').then(() => {
+    UniUtil.action('是否刷新用户信息').then(() => {
       UserStore.getMineUserAction().then(() => {
-        UniUtils.toast('刷新成功')
+        UniUtil.toast('刷新成功')
       })
     })
   }
 
   loginOut () {
-    UniUtils.action('是否退出登录').then(() => {
+    UniUtil.action('是否退出登录').then(() => {
       UserStore.loginOut()
     })
   }
@@ -766,9 +767,9 @@ export default class UserInfo extends Vue {
       actionMsg = '是否确定隐藏联系方式'
       hintMsg = '隐藏成功'
     }
-    UniUtils.action(actionMsg).then(() => {
+    UniUtil.action(actionMsg).then(() => {
       UserAPI.switchUserContactAPI(openContact).then(() => {
-        UniUtils.toast(hintMsg)
+        UniUtil.toast(hintMsg)
       }).catch(() => {
         this.user.openContact = !openContact
       })

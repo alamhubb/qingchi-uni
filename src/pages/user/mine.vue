@@ -109,7 +109,7 @@ import { namespace } from 'vuex-class'
 import UserEdit from '@/pages/user/UserEdit.vue'
 import UserInfo from '@/pages/user/UserInfo.vue'
 import LoginService from '@/pages/user/LoginService'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import UserStore from '@/plugins/store/UserStore'
 import CommonUtil from '@/utils/CommonUtil'
 import ConfigMap from '@/const/ConfigMap'
@@ -171,7 +171,7 @@ export default class MineVue extends Vue {
   initQuery () {
     if (this.user) {
       UserStore.getMineUserAction().then(() => {
-        UniUtils.toast('刷新成功')
+        UniUtil.toast('刷新成功')
       }).finally(() => {
         this.stopPullDownRefresh()
       })
@@ -186,7 +186,7 @@ export default class MineVue extends Vue {
     // #ifdef MP
     // #ifndef MP-TOUTIAO
     if (result.detail.errMsg !== Constants.loginSuccess) {
-      UniUtils.toast('您取消了登录')
+      UniUtil.toast('您取消了登录')
       return
     }
     // #endif

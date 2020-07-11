@@ -34,6 +34,7 @@ module.exports = {
     uni: true,
     UniApp: true,
     plus: true,
-    $utils: true
+    $util: true,
+    $pageUtil: true
   }
 }

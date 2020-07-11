@@ -7,7 +7,8 @@ import MsgInput from '@/components/MsgInput.vue'
 import Login from '@/pages/user/Login.vue'
 // main.js
 import uView from 'uview-ui'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from './utils/UniUtil'
+import PageUtil from '@/utils/PageUtil'
 
 Vue.use(uView)
 
@@ -22,7 +23,8 @@ Object.keys(utils).forEach(key => {
 })
 
 Vue.prototype.$store = store
-Vue.prototype.$utils = UniUtils
+Vue.prototype.$util = UniUtil
+Vue.prototype.$pageUtil = PageUtil
 
 new App({
   store

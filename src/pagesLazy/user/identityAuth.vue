@@ -44,7 +44,7 @@ import TalkItemContent from '@/pages/talk/TalkItemContent.vue'
 import { namespace } from 'vuex-class'
 import UserEdit from '@/pages/user/UserEdit.vue'
 import UserInfo from '@/pages/user/UserInfo.vue'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import UserStore from '@/plugins/store/UserStore'
 import UserAPI from '@/api/UserAPI'
 import ImgFileVO from '@/model/ImgFileVO'
@@ -81,17 +81,17 @@ export default class IdentityAuthVue extends Vue {
 
   identityAuth () {
     this.authBtnDisabled = true
-    UniUtils.showLoading('认证中')
+    UniUtil.showLoading('认证中')
     // 校验用户必须上传了照片，
     CosUtil.postObject(this.imgFile).then(() => {
       this.user.authNum = this.user.authNum + 1
       UserAPI.identityAuthAPI(this.imgFile).then((res: any) => {
         UserStore.setMineUser(res.data)
-        UniUtils.action(HintMsg.identityAuthSuccessMsg).then(() => {
+        UniUtil.action(HintMsg.identityAuthSuccessMsg).then(() => {
           PageUtil.toMinePage()
         })
       }).finally(() => {
-        UniUtils.hideLoading()
+        UniUtil.hideLoading()
         this.authBtnDisabled = false
       })
     }).catch(() => {

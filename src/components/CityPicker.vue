@@ -62,7 +62,7 @@ import { namespace } from 'vuex-class'
 import DistrictVO from '@/model/DistrictVO'
 import { appModule } from '@/plugins/store'
 import DistrictUtil from '@/utils/DistrictUtil'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 
 const appStore = namespace('app')
 @Component
@@ -124,7 +124,7 @@ export default class CityPicker extends Vue {
       this.bottomDistrict = district
       this.initPopupCity()
     }).catch(() => {
-      UniUtils.hint('定位功能已关闭，请手动开启')
+      UniUtil.hint('定位功能已关闭，请手动开启')
       throw Error()
     })
   }

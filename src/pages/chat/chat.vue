@@ -57,7 +57,7 @@ import PageUtil from '@/utils/PageUtil'
 import ChatType from '@/const/ChatType'
 import ChatAPI from '@/api/ChatAPI'
 import Constants from '@/const/Constant'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import CommonUtil from '@/utils/CommonUtil'
 import { chatModule } from '@/plugins/store'
 
@@ -96,7 +96,7 @@ export default class ChatVue extends Vue {
 
     showBottomMenuClick (chatId: number) {
       this.chatId = chatId
-      UniUtils.actionSheet(['解除匹配']).then((index: number) => {
+      UniUtil.actionSheet(['解除匹配']).then((index: number) => {
         if (index === 0) {
           this.relieveMatched()
         }
@@ -106,10 +106,10 @@ export default class ChatVue extends Vue {
     }
 
     relieveMatched () {
-      UniUtils.action('是否确定删除聊天').then(() => {
+      UniUtil.action('是否确定删除聊天').then(() => {
         ChatAPI.removeChat(this.chatId).then(() => {
           chatModule.deleteChatAction(this.chatId)
-          UniUtils.toast('已删除')
+          UniUtil.toast('已删除')
         }).finally(() => {
           this.chatId = null
         })

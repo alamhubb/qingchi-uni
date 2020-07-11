@@ -4,7 +4,7 @@ import UserAPI from '@/api/UserAPI'
 import ResultVO from '@/model/ResultVO'
 import WebsocketUtil from '@/utils/WebsocketUtil'
 import TokenUtil from '@/utils/TokenUtil'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import AppInitDataVO from '@/model/common/AppInitDataVO'
 import TalkFilterUtil from '@/utils/TalkFilterUtil'
 
@@ -66,6 +66,6 @@ export default class UserStore {
     chatModule.getChatsAction()
     //没必要重设地理位置吧
     // DistrictUtil.重设地理位(DistrictUtil.initDistrict)
-    UniUtils.toast('用户退出')
+    UniUtil.toast('用户退出')
   }
 }

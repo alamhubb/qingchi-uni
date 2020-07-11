@@ -115,7 +115,7 @@ import Constants from '@/const/Constant'
 import StorageUtil from '@/utils/StorageUtil'
 import TalkVueUtil from '@/utils/TalkVueUtil'
 import TalkTabVO from '@/model/talk/TalkTabVO'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import TalkSwipers from '@/pages/talk/talkSwipers.vue'
 import { appModule, systemModule, talkModule } from '@/plugins/store'
 import TalkOperate from '@/pages/talk/talkOperate.vue'
@@ -219,14 +219,14 @@ export default class TabsTalkVue extends Vue {
         // h5有头顶和下边导航栏都算了高度
         // #ifdef H5
         this.talksListHeightSub = 44 + this.tabsHeight
-        this.talksListPaddingBottom = UniUtils.upxToPx(100)
+        this.talksListPaddingBottom = UniUtil.upxToPx(100)
         // #endif
         // #ifndef H5
         this.talksListHeightSub = systemModule.statusBarHeight + 44 + this.tabsHeight
         // #endif
       } else {
         // 给5秒
-        UniUtils.delayTime(100).then(() => {
+        UniUtil.delayTime(100).then(() => {
           this.getTabBarTop()
         })
       }

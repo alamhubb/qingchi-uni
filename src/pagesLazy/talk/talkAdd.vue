@@ -102,7 +102,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import TalkAPI from '@/api/TalkAPI'
 import PagePath from '@/const/PagePath'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import DistrictVO from '@/model/DistrictVO'
 import { namespace } from 'vuex-class'
 import JsonUtils from '@/utils/JsonUtils'
@@ -203,7 +203,7 @@ export default class TalkAddVue extends Vue {
   checkTag (tag: TagVO) {
     if (this.selectTags.length > 4) {
       // todo 后台还没有校验
-      UniUtils.info('最多选择5个话题')
+      UniUtil.info('最多选择5个话题')
       return
     }
     let tagInTags: TagVO = this.tags.find(item => item.id === tag.id)
@@ -255,13 +255,13 @@ export default class TalkAddVue extends Vue {
     this.buttonDisabled = true
     if (this.talkContent || this.showsImgSrcs.length) {
       if (this.talkContent && this.talkContent.length > 200) {
-        return UniUtils.hint('动态最多支持200个字，请精简动态内容')
+        return UniUtil.hint('动态最多支持200个字，请精简动态内容')
       }
       this.addTalkHandler()
       // 申请订阅
       PlatformUtils.requestSubscribeTalk()
     } else {
-      UniUtils.error('不能发布文字和图片均为空的动态')
+      UniUtil.error('不能发布文字和图片均为空的动态')
       this.buttonDisabled = false
     }
   }
@@ -309,7 +309,7 @@ export default class TalkAddVue extends Vue {
       }
     }
     const count = this.imgMaxSize - this.showsImgSrcs.length
-    UniUtils.chooseImage(count).then(imgFiles => {
+    UniUtil.chooseImage(count).then(imgFiles => {
       for (const imgFile of imgFiles) {
         imgFile.src = ImgUtil.getTalkUploadFormat(this.user.id, imgFile.path)
         this.showsImgSrcs.push(imgFile)

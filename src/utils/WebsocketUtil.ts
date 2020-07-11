@@ -1,6 +1,6 @@
 import TokenUtil from '@/utils/TokenUtil'
 import NotifyVO from '@/model/NotifyVO'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from './UniUtil'
 import JsonUtils from '@/utils/JsonUtils'
 import { appModule, chatModule } from '@/plugins/store'
 import NotifyType from '@/const/NotifyType'
@@ -13,7 +13,7 @@ export default class WebsocketUtil {
     if (TokenUtil.hasToken()) {
       token = TokenUtil.get()
     } else {
-      token = UniUtils.getUUID()
+      token = UniUtil.getUUID()
     }
     uni.connectSocket({
       url: AppConfig.websocketUrl + 'webSocket/message?token=' + token,
@@ -37,7 +37,7 @@ export default class WebsocketUtil {
     uni.onSocketError(() => {
       console.log('触发了错误')
       // #ifndef MP
-      UniUtils.delayTime(5000).then(() => {
+      UniUtil.delayTime(5000).then(() => {
         WebsocketUtil.websocketConnect(true)
       })
       // #endif
@@ -45,7 +45,7 @@ export default class WebsocketUtil {
 
     uni.onSocketClose(() => {
       console.log('触发了关闭')
-      UniUtils.delayTime(5000).then(() => {
+      UniUtil.delayTime(5000).then(() => {
         WebsocketUtil.websocketConnect(true)
       })
     })

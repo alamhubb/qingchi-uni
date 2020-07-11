@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import QQUtils from '@/utils/QQUtils'
 
   @Component
@@ -49,10 +49,10 @@ export default class MorePage extends Vue {
       /* 建议放在onReady里执行，提前加载广告 */
       this.interstitialAd.onLoad()
       this.videoAd.onError((err) => {
-        UniUtils.hint(err.errMsg)
+        UniUtil.hint(err.errMsg)
       })
       this.interstitialAd.onError((err) => {
-        UniUtils.hint(err.errMsg)
+        UniUtil.hint(err.errMsg)
       })
       // #endif
     }
@@ -60,13 +60,13 @@ export default class MorePage extends Vue {
     openAd () {
       /* 建议放在需要展示插屏广告的时机执行 */
       this.interstitialAd.show().catch((err) => {
-        UniUtils.hint(err.errMsg)
+        UniUtil.hint(err.errMsg)
       })
     }
 
     openVideoAd () {
       this.videoAd.show().catch((err) => {
-        UniUtils.hint(err.errMsg)
+        UniUtil.hint(err.errMsg)
       })
     }
 }

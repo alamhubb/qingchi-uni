@@ -8,7 +8,7 @@ import ChatAPI from '@/api/ChatAPI'
 import PageUtil from '@/utils/PageUtil'
 import PagePath from '@/const/PagePath'
 import MessageAPI from '@/api/MessageAPI'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import ScrollUtil from '@/utils/ScrollUtil'
 import PlatformUtils from '@/utils/PlatformUtils'
 
@@ -49,7 +49,7 @@ export default class ChatModule extends VuexModule {
 
   @Action
   scrollToBottomAction () {
-    UniUtils.delayTime(100).then(() => {
+    UniUtil.delayTime(100).then(() => {
       this.scrollTop = this.messages.length * 500
     })
   }

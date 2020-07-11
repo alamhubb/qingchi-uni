@@ -36,7 +36,7 @@ import ReportType from '@/const/ReportType'
 import ReportContentType from '@/const/ReportContentType'
 import MessageVO from '@/model/message/MessageVO'
 import ReportAddVO from '@/model/report/ReportAddVO'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import ReportAPI from '@/api/ReportAPI'
 import UserVO from '@/model/user/UserVO'
 import BalaBala from '@/utils/BalaBala'
@@ -89,14 +89,14 @@ export default class ReportDialog extends Vue {
       const reportAdd: ReportAddVO = new ReportAddVO(this.reportContentType, this.reportType, this.reportContent)
       reportAdd.messageId = this.reportInfo.id
       if (ReportType.other === this.reportType && !this.reportContent) {
-        UniUtils.hint('选择其他违规时，请您补充观点')
+        UniUtil.hint('选择其他违规时，请您补充观点')
       } else {
         ReportAPI.addReportAPI(reportAdd).then((res: any) => {
           chatModule.deleteMsgAction(reportAdd.messageId)
           // 调用删除内容
           // 关闭弹框病初始化数据
           this.closeDialogAndInitData()
-          UniUtils.hint(res.data)
+          UniUtil.hint(res.data)
           PlatformUtils.requestSubscribeReport()
         })
       }

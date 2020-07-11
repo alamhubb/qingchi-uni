@@ -145,7 +145,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 import UserVO from '@/model/user/UserVO'
 import { namespace } from 'vuex-class'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import NumberUtil from '@/utils/NumberUtil'
 import UserAPI from '@/api/UserAPI'
 import PageUtil from '@/utils/PageUtil'
@@ -226,14 +226,14 @@ export default class LoginVue extends Vue {
 
   phoneNumClear () {
     this.phoneNum = ''
-    UniUtils.delayTime(100).then(() => {
+    UniUtil.delayTime(100).then(() => {
       this.phoneNumInputFocus()
     })
   }
 
   authCodeClear () {
     this.authCode = ''
-    UniUtils.delayTime(100).then(() => {
+    UniUtil.delayTime(100).then(() => {
       this.authCodeInputFocus()
     })
   }
@@ -243,15 +243,15 @@ export default class LoginVue extends Vue {
   }
 
   copyServiceNum () {
-    UniUtils.textCopy('491369310', '客服联系方式已复制')
+    UniUtil.textCopy('491369310', '客服联系方式已复制')
   }
 
   sendCodeClick () {
     if (!this.phoneNumberRight) {
-      return UniUtils.toast('请输入正确的手机号')
+      return UniUtil.toast('请输入正确的手机号')
     }
     if (this.countDown) {
-      return UniUtils.toast('验证码发送频繁，请等待')
+      return UniUtil.toast('验证码发送频繁，请等待')
     }
 
     this.countDown++
@@ -266,7 +266,7 @@ export default class LoginVue extends Vue {
     // 如果怕太频繁，就显示相同手机号每天只能发送几次，一小时内只能5次
     UserAPI.sendAuthCodeAPI(this.phoneNum).then(() => {
       // 提示验证码发送成功
-      UniUtils.toast('验证码发送成功')
+      UniUtil.toast('验证码发送成功')
     })
   }
 
@@ -310,13 +310,13 @@ export default class LoginVue extends Vue {
   bindPhoneNum () {
     //再次校验
     if (!this.phoneNumberRight) {
-      return UniUtils.toast('请输入正确的手机号')
+      return UniUtil.toast('请输入正确的手机号')
     }
     if (!this.authCodeRight) {
-      return UniUtils.toast('请输入正确的验证码')
+      return UniUtil.toast('请输入正确的验证码')
     }
     if (!this.contractChecked) {
-      return UniUtils.hint('请仔细阅读用户协议、隐私政策等内容后勾选同意')
+      return UniUtil.hint('请仔细阅读用户协议、隐私政策等内容后勾选同意')
     }
     if (!this.bindBtnDisabled) {
       this.bindBtnDisabled = true
@@ -324,7 +324,7 @@ export default class LoginVue extends Vue {
         UserAPI.bindPhoneNumAPI(this.phoneNum, this.authCode).then((res: any) => {
           UserStore.setMineUser(res.data)
           // 提示验证码发送成功
-          UniUtils.hint('绑定成功').finally(() => {
+          UniUtil.hint('绑定成功').finally(() => {
             PageUtil.toMinePage()
           })
         }).finally(() => {
@@ -333,7 +333,7 @@ export default class LoginVue extends Vue {
       } else {
         LoginAPI.nmpAppLoginAPI(this.phoneNum, this.authCode).then(() => {
           // 提示验证码发送成功
-          UniUtils.hint('登录成功')
+          UniUtil.hint('登录成功')
         }).finally(() => {
           this.bindBtnDisabled = false
         })

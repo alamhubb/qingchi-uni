@@ -108,7 +108,7 @@ import { Vue, Component, Watch, Emit } from 'vue-property-decorator'
 import UserVO from '@/model/user/UserVO'
 import UserAPI from '@/api/UserAPI'
 import { namespace } from 'vuex-class'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import UserStore from '@/plugins/store/UserStore'
 import { parseDate } from '@/utils'
 
@@ -178,7 +178,7 @@ export default class UserEdit extends Vue {
   saveUser () {
     this.btnDisabled = true
     this.closeUserEditPop()
-    UniUtils.action('是否确定修改个人信息').then(() => {
+    UniUtil.action('是否确定修改个人信息').then(() => {
       this.user.nickname = this.nickname
       this.user.gender = this.gender
       this.user.birthday = this.birthday
@@ -188,7 +188,7 @@ export default class UserEdit extends Vue {
       this.user.wbAccount = this.wbAccount
       UserAPI.editUserAPI(this.user).then((res: any) => {
         UserStore.setMineUser(res.data)
-        UniUtils.toast('已修改')
+        UniUtil.toast('已修改')
       }).finally(() => {
         this.btnDisabled = false
       })

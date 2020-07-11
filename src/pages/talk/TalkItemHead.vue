@@ -77,7 +77,7 @@ import UserUtil from '@/utils/UserUtil'
 import UserVO from '@/model/user/UserVO'
 import JsonUtils from '@/utils/JsonUtils'
 import { namespace } from 'vuex-class'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import FollowAPI from '@/api/FollowAPI'
 import PageUtil from '@/utils/PageUtil'
 import BalaBala from '@/utils/BalaBala'
@@ -117,7 +117,7 @@ export default class TalkItemHead extends Vue {
   }
 
   hintJusticeInfo () {
-    UniUtils.toastLong('正义值，正确举报会增加正义值')
+    UniUtil.toastLong('正义值，正确举报会增加正义值')
   }
 
   // 自己不为null，且是自己
@@ -132,7 +132,7 @@ export default class TalkItemHead extends Vue {
   }
 
   confirmDeleteTalk () {
-    UniUtils.action('是否确定删除此条动态，此操作无法恢复').then(() => {
+    UniUtil.action('是否确定删除此条动态，此操作无法恢复').then(() => {
       this.$emit('deleteTalk', this.talk.id)
       TalkAPI.deleteTalkAPI(this.talk.id)
     })
@@ -147,7 +147,7 @@ export default class TalkItemHead extends Vue {
       if (!this.followBtnDisabled) {
         const followAdd: FollowAddVO = new FollowAddVO(this.talk.user.id)
         if (this.talk.hasFollowed) {
-          UniUtils.info('是否取消关注用户：' + this.talk.user.nickname).then(() => {
+          UniUtil.info('是否取消关注用户：' + this.talk.user.nickname).then(() => {
             this.followBtnDisabled = true
             this.talk.hasFollowed = false
             FollowAPI.cancelFollowAPI(followAdd).finally(() => {

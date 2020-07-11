@@ -22,7 +22,7 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from '@/utils/UniUtil'
 import SelectorQuery = UniApp.SelectorQuery
 import NodesRef = UniApp.NodesRef
 
@@ -34,7 +34,7 @@ export default class AboutLinkage extends Vue {
   /**
    * 避免组件重复，设置uuid
    */
-  readonly uuid: string = 'u' + UniUtils.getUUID()
+  readonly uuid: string = 'u' + UniUtil.getUUID()
   /**
    * 展示的数据
    */
@@ -99,7 +99,7 @@ export default class AboutLinkage extends Vue {
       if (res) {
         this.componentHeight = res.height
       } else {
-        UniUtils.delayTime(100).then(() => {
+        UniUtil.delayTime(100).then(() => {
           this.initComponentsHeight()
         })
       }
@@ -113,7 +113,7 @@ export default class AboutLinkage extends Vue {
     const nodeLeft: NodesRef = query.selectAll('.' + this.uuid + '.sidebar-left-item')
     nodeLeft.boundingClientRect((res: any) => {
       if (!res.length) {
-        UniUtils.delayTime(100).then(() => {
+        UniUtil.delayTime(100).then(() => {
           this.initLeftBoxItemTops()
         })
       } else {
@@ -135,7 +135,7 @@ export default class AboutLinkage extends Vue {
     const node: NodesRef = query.selectAll('.' + this.uuid + '.sidebar-right-item')
     node.boundingClientRect((res: any) => {
       if (!res.length) {
-        UniUtils.delayTime(100).then(() => {
+        UniUtil.delayTime(100).then(() => {
           this.initRightBoxItemTops()
         })
       } else {

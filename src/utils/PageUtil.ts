@@ -1,6 +1,6 @@
 import PagePath from '../const/PagePath'
 import store, { chatModule, systemModule, userModule } from '@/plugins/store'
-import UniUtils from '@/utils/UniUtils'
+import UniUtil from './UniUtil'
 import UserVO from '@/model/user/UserVO'
 import ChatVO from '@/model/chat/ChatVO'
 import BalaBala from '@/utils/BalaBala'
@@ -182,8 +182,12 @@ export default class PageUtil {
   }
 
   static toFaceValuePage () {
-    UniUtils.action('是否查看颜值分介绍').then(() => {
+    UniUtil.action('是否查看颜值分介绍').then(() => {
       PageUtil.navigateTo(PagePath.faceValueInfo)
     })
+  }
+
+  static toUserContactInfoPage () {
+    PageUtil.navigateTo(PagePath.userContactInfo)
   }
 }

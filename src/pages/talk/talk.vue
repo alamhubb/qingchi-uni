@@ -131,6 +131,7 @@ export default class TalkVue extends Vue {
   }
 
   onLoad () {
+    console.log('触发onload')
     CommonUtil.showShareMenu()
   }
 

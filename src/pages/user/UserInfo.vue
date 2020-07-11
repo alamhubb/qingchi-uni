@@ -1,5 +1,5 @@
 <template>
-  <view v-if="user" class="overflow-scroll bg-default">
+  <view v-if="user" class="bg-default">
     <view class="bg-white">
       <view>
         <swiper v-if="imgUrls.length" class="square-dot size100vw">
@@ -177,7 +177,7 @@
             联系方式：
             <text>{{user.contactAccount}}</text>
           </view>
-          <button v-if="showUserContact" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
+          <button v-if="user.showUserContact" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
                   @click="$utils.textCopy(user.contactAccount)">
             复制
           </button>
@@ -199,17 +199,6 @@
         </view>
       </view>
     </view>
-
-    <!--<u-popup v-model="showUserContactPopup" mode="bottom" border-radius="20">
-      <view class="mt-20px">
-        <view>提示</view>
-        <view>您没有贝壳了，是否直接支付</view>
-        <view>出淤泥而不染，濯清涟而不妖</view>
-        <view>出淤泥而不染，濯清涟而不妖</view>
-        <view>出淤泥而不染，濯清涟而不妖</view>
-        <view>出淤泥而不染，濯清涟而不妖</view>
-      </view>
-    </u-popup>-->
 
     <uni-popup ref="reportDialog" :custom="true" :mask-click="false">
       <view class="uni-tip">
@@ -244,6 +233,7 @@
         </view>
       </view>
     </uni-popup>
+
     <talk-operate @deleteTalk="deleteTalk"></talk-operate>
     <!--qq平台显示的广告-->
     <!--  #ifdef MP-QQ -->
@@ -355,7 +345,7 @@ export default class UserInfo extends Vue {
       if (userShell >= 10) {
         UserAPI.getUserContactAPI(this.user.id).then((res) => {
           this.user.contactAccount = res.data
-          this.showUserContact = !this.showUserContact
+          this.user.showUserContact = true
           this.mineUser.shell = userShell - 10
         }).finally(() => {
           this.showUserContactBtnDisabled = false
@@ -365,7 +355,7 @@ export default class UserInfo extends Vue {
           PlatformUtils.cashPay(1).then(() => {
             UserAPI.getUserContactAPI(this.user.id).then((res) => {
               this.user.contactAccount = res.data
-              this.showUserContact = !this.showUserContact
+              this.user.showUserContact = true
             }).catch(() => {
               MsgUtil.sysErrMsg()
             }).finally(() => {

@@ -9,14 +9,14 @@
   .q-box-row {
     @extend .row-col-center;
     @extend .text-lgg;
-    @extend .py-xs;
+    @extend .py-sm;
   }
   .q-box-col {
     @extend .flex-col;
     @extend .text-lgg;
     @extend .py-xs;
   }
-  /*.q-box-item:not(:last-child) {
+  .q-box-row:not(:last-child) {
     @extend .q-solid-bottom;
-  }*/
+  }
 }

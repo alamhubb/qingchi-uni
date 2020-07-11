@@ -257,7 +257,6 @@ export default class UniUtils {
             // 不能大于10m大于10m就压缩不到100k
             // 获取压缩比
             const imgSize: number = imgFile.size
-            console.log(imgSize)
             if (imgSize / 1024 / 1024 > 10) {
               UniUtils.error(HintMsg.imgSizeNotGt10MBMsg)
               reject(HintMsg.imgSizeNotGt10MBMsg)

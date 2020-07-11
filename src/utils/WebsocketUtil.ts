@@ -27,7 +27,6 @@ export default class WebsocketUtil {
     })
 
     uni.onSocketOpen(res => {
-      console.log(res)
       console.log('打开')
       if (reload) {
         console.log('重新加载')

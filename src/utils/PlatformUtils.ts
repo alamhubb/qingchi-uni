@@ -75,8 +75,10 @@ export default class PlatformUtils {
       .catch((err) => {
         if (err.errMsg === Constants.payCancel) {
           UniUtils.toast(HintMsg.payCancelMsg)
+          throw err
         } else {
           MsgUtil.payFailMsg()
+          throw err
         }
       })
   }

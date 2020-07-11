@@ -1,6 +1,6 @@
 <template>
   <view class="bg-default h100r">
-    <block v-if="user">
+    <view v-if="user">
       <u-navbar :is-back="false">
         <view class="row-between w100r">
           <view class="ml-xl text-bold text-lg">
@@ -11,6 +11,13 @@
           </view>
         </view>
       </u-navbar>
+
+      <user-info :user="user"></user-info>
+
+      <!-- #ifdef H5 -->
+      <view class="h50px w100r"></view>
+      <!-- #endif -->
+
       <u-popup v-model="showMoreList" mode="right" :border-radius="15">
         <view class="w65vw flex-col py-xl mt-xl h100r">
           <q-row>
@@ -54,10 +61,9 @@
           </q-row>
         </view>
       </u-popup>
-      <user-info :user="user"></user-info>
       <msg-input v-if="showMsgInput">
       </msg-input>
-    </block>
+    </view>
     <view v-else class="h100r col-all-center bg-white">
       <u-navbar :is-back="false">
         <view class="flex-row w100r">

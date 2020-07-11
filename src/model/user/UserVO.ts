@@ -51,4 +51,10 @@ export default class UserVO {
   //展示联系方式
   showUserContact: boolean = null
   contactAccount: string = null
+  //贝壳
+  shell: number = null
+  //经验值
+  experience: number = null
+  //用户是否展示联系方式
+  openContact: boolean = null
 }

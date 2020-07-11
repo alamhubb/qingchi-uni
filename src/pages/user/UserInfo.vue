@@ -26,7 +26,6 @@
         </view>
       </view>
 
-
       <view class="q-box">
         <view class="q-box-row">
           <image
@@ -70,7 +69,6 @@
             </view>
           </view>
         </view>
-
         <view class="q-box-row">
           <view class="cu-tag radius text-df"
                 :class="[getGenderBgColor(user)]">
@@ -171,23 +169,28 @@
           </button>
         </view>
 
+        <!-- 如果自己的话-->
+        <!-- 左边格式不变，如果未填写则可以填写，填写之后可以选择开启或者关闭，填写后可选择隐藏展示。-->
         <view class="q-box-row row-between-center">
           <view class="row-col-center">
             <q-icon class="text-gray mr-xs" size="50" icon="account"/>
             联系方式：
-            <text selectable>{{user.wxAccount}}</text>
-            <view>
-              ******
-            </view>
+            <text>{{user.contactAccount}}</text>
           </view>
-          <button class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-blue">
-            获取
+          <button v-if="showUserContact" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
+                  @click="$utils.textCopy(user.contactAccount)">
+            复制
+          </button>
+          <button v-else :disabled="showUserContactBtnDisabled"
+                  class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-blue"
+                  @click="shellPayForUserContact">
+            10 贝壳获取
           </button>
         </view>
         <view class="q-box-row row-between-center" @click="toUserShell">
           <view class="row-col-center">
             <q-icon class="text-green mr-xs" size="50" icon="mdi-bitcoin"/>
-            <text class="text-lgg">我的贝壳（0）</text>
+            <text class="text-lgg">我的贝壳（{{mineUser.shell}}）</text>
           </view>
           <view class="text-gray row-col-center pr-xs">
             <text class="text-lgg text-gray text-lgg">充值</text>
@@ -196,6 +199,17 @@
         </view>
       </view>
     </view>
+
+    <!--<u-popup v-model="showUserContactPopup" mode="bottom" border-radius="20">
+      <view class="mt-20px">
+        <view>提示</view>
+        <view>您没有贝壳了，是否直接支付</view>
+        <view>出淤泥而不染，濯清涟而不妖</view>
+        <view>出淤泥而不染，濯清涟而不妖</view>
+        <view>出淤泥而不染，濯清涟而不妖</view>
+        <view>出淤泥而不染，濯清涟而不妖</view>
+      </view>
+    </u-popup>-->
 
     <uni-popup ref="reportDialog" :custom="true" :mask-click="false">
       <view class="uni-tip">
@@ -280,7 +294,6 @@ import ErrorCode from '@/const/ErrorCode'
 import ImgFileVO from '@/model/ImgFileVO'
 import ImgUtil from '@/utils/ImgUtil'
 import CosUtil from '@/utils/CosUtil'
-import CosConst from '@/const/CosConst'
 import UserAPI from '@/api/UserAPI'
 import Constants from '@/const/Constant'
 import ReportContentType from '@/const/ReportContentType'
@@ -295,14 +308,15 @@ import ConfigMap from '@/const/ConfigMap'
 import PlatformUtils from '@/utils/PlatformUtils'
 import { systemModule } from '@/plugins/store'
 import QRowItem from '@/components/q-row-item/q-row-item.vue'
-import HintMsg from '@/const/HintMsg'
+import QRow from '@/components/q-row/q-row.vue'
+import MsgUtil from '@/utils/MsgUtil'
 
 const userStore = namespace('user')
 const appStore = namespace('app')
 const configStore = namespace('config')
 
 @Component({
-  components: { QRowItem, TalkOperate, UserEdit, TalkItem, TalkItemContent }
+  components: { QRow, QRowItem, TalkOperate, UserEdit, TalkItem, TalkItemContent }
 })
 export default class UserInfo extends Vue {
   public $refs!: {
@@ -327,9 +341,48 @@ export default class UserInfo extends Vue {
   talks: TalkVO[] = []
   @configStore.Getter(ConfigMap.reportHideCountKey) reportHideCount: number
 
-  getLargeUserImg (src: string) {
-    return ImgUtil.getUserLargeImgUrl(src)
+  showUserContactPopup = true
+
+  //后台计算此人是否有权限查看他的联系方式
+  showUserContact = false
+
+  showUserContactBtnDisabled = false
+
+  shellPayForUserContact () {
+    if (!this.showUserContactBtnDisabled) {
+      this.showUserContactBtnDisabled = true
+      const userShell = this.mineUser.shell
+      if (userShell >= 10) {
+        UserAPI.getUserContactAPI(this.user.id).then((res) => {
+          this.user.contactAccount = res.data
+          this.showUserContact = !this.showUserContact
+          this.mineUser.shell = userShell - 10
+        }).finally(() => {
+          this.showUserContactBtnDisabled = false
+        })
+      } else {
+        UniUtils.action('您没有贝壳了，是否直接使用现金支付').then(() => {
+          PlatformUtils.cashPay(1).then(() => {
+            UserAPI.getUserContactAPI(this.user.id).then((res) => {
+              this.user.contactAccount = res.data
+              this.showUserContact = !this.showUserContact
+            }).catch(() => {
+              MsgUtil.sysErrMsg()
+            }).finally(() => {
+              this.showUserContactBtnDisabled = false
+            })
+          }).catch(() => {
+            this.showUserContactBtnDisabled = false
+          })
+        }).catch(() => {
+          this.showUserContactBtnDisabled = false
+        })
+      }
+    } else {
+      UniUtils.toast('获取中，请稍等')
+    }
   }
+
 
   openReportDialog () {
     if (this.user) {

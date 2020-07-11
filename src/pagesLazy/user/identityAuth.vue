@@ -87,7 +87,7 @@ export default class IdentityAuthVue extends Vue {
       this.user.authNum = this.user.authNum + 1
       UserAPI.identityAuthAPI(this.imgFile).then((res: any) => {
         UserStore.setMineUser(res.data)
-        UniUtils.action(HintMsg.identityAuthSuccess).then(() => {
+        UniUtils.action(HintMsg.identityAuthSuccessMsg).then(() => {
           PageUtil.toMinePage()
         })
       }).finally(() => {

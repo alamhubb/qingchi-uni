@@ -52,4 +52,9 @@ export default class UserAPI {
   static updateAvatarAPI (avatar: string) {
     return http.post('user/updateAvatar?avatar=' + avatar)
   }
+
+  static getUserContactAPI (userId: number) {
+    const user = new UserQueryVO(userId)
+    return http.post<string>('user/getUserContact', user)
+  }
 }

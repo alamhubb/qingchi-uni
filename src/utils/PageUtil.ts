@@ -7,6 +7,8 @@ import BalaBala from '@/utils/BalaBala'
 import SkipUtil from '@/utils/SkipUtil'
 import SkipType from '@/const/SkipType'
 import SkipUrlConst from '@/const/SkipUrlConst'
+import HintMsg from '@/const/HintMsg'
+import MsgUtil from '@/utils/MsgUtil'
 
 export default class PageUtil {
   /**
@@ -103,7 +105,7 @@ export default class PageUtil {
     const isIos: boolean = systemModule.isIos
     if (isIos) {
       // 由于相关规范，iOS功能暂不可用
-      UniUtils.hint('由于ios相关规则限制，ios系统被禁止支持此类付费功能')
+      MsgUtil.iosDisablePay()
     } else {
       const user: UserVO = userModule.user
       if (user) {
@@ -117,7 +119,7 @@ export default class PageUtil {
   static toShellPage () {
     if (systemModule.isIos) {
       // 由于相关规范，iOS功能暂不可用
-      UniUtils.hint('由于ios相关规则限制，ios系统被禁止支持此类付费功能')
+      MsgUtil.iosDisablePay()
     } else {
       if (userModule.user) {
         PageUtil.navigateTo(PagePath.userShell)

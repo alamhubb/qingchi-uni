@@ -33,6 +33,7 @@ module.exports = {
     qq: true,
     uni: true,
     UniApp: true,
-    plus: true
+    plus: true,
+    $utils: true
   }
 }

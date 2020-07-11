@@ -9,6 +9,7 @@ import PageUtil from '@/utils/PageUtil'
 import PagePath from '@/const/PagePath'
 import HintMsg from '@/const/HintMsg'
 import Constants from '@/const/Constant'
+import MsgUtil from '@/utils/MsgUtil'
 
 // 统一处理各平台的订阅
 export default class PlatformUtils {
@@ -62,26 +63,32 @@ export default class PlatformUtils {
     // #endif
   }
 
-  static userPay (amount: number) {
-    if (systemModule.isMp) {
-      PlatformUtils.requestPayment(amount)
-        .then(() => {
-          UserStore.getMineUserAction().then(() => {
-            UniUtils.hint(HintMsg.paySuccessMsg)
-            PageUtil.reLaunch(PagePath.userMine)
-          })
-        })
-        .catch((err) => {
-          console.log(err)
-          if (err.errMsg === Constants.payCancel) {
-            UniUtils.toast(HintMsg.payCancelMsg)
-          } else {
-            UniUtils.error(HintMsg.payFailMsg)
-          }
-        })
-    } else {
-      UniUtils.hint('非小程序平台暂不支持开通VIP')
+  static async cashPay (amount: number): Promise<any> {
+    if (systemModule.isIos) {
+      MsgUtil.iosDisablePay()
+      throw ''
+    } else if (!systemModule.isMp) {
+      MsgUtil.notMpDisablePay()
+      throw ''
     }
+    return PlatformUtils.requestPayment(amount)
+      .catch((err) => {
+        if (err.errMsg === Constants.payCancel) {
+          UniUtils.toast(HintMsg.payCancelMsg)
+        } else {
+          MsgUtil.payFailMsg()
+        }
+      })
+  }
+
+  static userPay (amount: number) {
+    PlatformUtils.cashPay(amount)
+      .then(() => {
+        UserStore.getMineUserAction().then(() => {
+          UniUtils.hint(HintMsg.paySuccessMsg)
+          PageUtil.reLaunch(PagePath.userMine)
+        })
+      })
   }
 
   // 统一处理各平台的支付

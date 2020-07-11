@@ -8,6 +8,12 @@
   },
   "pages": [
     {
+      "path": "pages/talk/talk",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/user/mine",
       "style": {
         "navigationStyle": "custom"
@@ -15,12 +21,6 @@
     },
     {
       "path": "pages/talk/tempTest"
-    },
-    {
-      "path": "pages/talk/talk",
-      "style": {
-        "navigationStyle": "custom"
-      }
     },
     {
       "path": "pages/talk/empty"

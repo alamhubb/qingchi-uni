@@ -19,6 +19,7 @@ export default class UniUtils {
   }
 
   public static textCopy (copyText: string, hint?: string) {
+    console.log(copyText)
     return new Promise((resolve, reject) => {
       uni.setClipboardData({
         data: copyText,
@@ -258,8 +259,8 @@ export default class UniUtils {
             const imgSize: number = imgFile.size
             console.log(imgSize)
             if (imgSize / 1024 / 1024 > 10) {
-              UniUtils.error(HintMsg.imgSizeNotGt10MB)
-              reject(HintMsg.imgSizeNotGt10MB)
+              UniUtils.error(HintMsg.imgSizeNotGt10MBMsg)
+              reject(HintMsg.imgSizeNotGt10MBMsg)
             }
             let ratio: number = 100
             //如果大于100k 按照100k标准压缩

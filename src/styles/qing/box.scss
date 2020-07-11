@@ -14,9 +14,6 @@
   .q-box-col {
     @extend .flex-col;
     @extend .text-lgg;
-    @extend .py-xs;
-  }
-  .q-box-row:not(:last-child) {
-    @extend .q-solid-bottom;
+    @extend .py-sm;
   }
 }

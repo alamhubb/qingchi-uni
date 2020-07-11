@@ -57,4 +57,8 @@ export default class UserAPI {
     const user = new UserQueryVO(userId)
     return http.post<string>('user/getUserContact', user)
   }
+
+  static switchUserContactAPI (openContact: boolean) {
+    return http.post<string>('user/switchUserContact?openContact=' + openContact)
+  }
 }

@@ -104,12 +104,12 @@
           </view>
         </view>
 
-        <view class="q-box-row">
+        <view class="q-box-row q-solid-bottom">
           <q-icon class="text-gray mr-xs" size="50" icon="map-fill"/>
           地区：{{user.location}}
         </view>
 
-        <view v-if="isMine" class="q-box-row">
+        <view v-if="isMine" class="q-box-row q-solid-bottom">
           <q-icon class="text-gray mr-xs" size="50" icon="mdi-cellphone-android"/>
           手机号(仅自己可见)：
           <view v-if="user.phoneNum">
@@ -139,7 +139,7 @@
         </view>
 
         <!-- #ifndef MP-WEIXIN -->
-        <view class="q-box-row">
+        <view class="q-box-row q-solid-bottom">
           <q-icon class="text-gray mr-xs" size="50" icon="mdi-alpha-v-circle"/>
           照片认证：
           <!-- 为自己且未绑定-->
@@ -160,7 +160,7 @@
         </view>
         <!-- #endif -->
 
-        <view v-if="user.wxAccount" class="q-box-row">
+        <view v-if="user.wxAccount" class="q-box-row q-solid-bottom">
           微信：
           <text selectable>{{user.wxAccount}}</text>
           <button class="cu-btn radius sm bd-blue ml-10px bg-white"
@@ -169,25 +169,48 @@
           </button>
         </view>
 
+        <view v-if="user.contactAccount" class="q-box-row row-between-center">
+          <view class="row-col-center">
+            <text class="text-lgg text-orange">他人获取您的联系方式时，您就能获得贝壳</text>
+          </view>
+          <view class="text-gray row-col-center pr-xs">
+            <text class="text-lgg text-gray text-lgg">详情</text>
+            <q-icon class="text-gray" size="32" icon="arrow-right"/>
+          </view>
+        </view>
+
         <!-- 如果自己的话-->
         <!-- 左边格式不变，如果未填写则可以填写，填写之后可以选择开启或者关闭，填写后可选择隐藏展示。-->
-        <view class="q-box-row row-between-center">
+        <view class="q-box-row row-between-center q-solid-bottom">
           <view class="row-col-center">
             <q-icon class="text-gray mr-xs" size="50" icon="account"/>
             联系方式：
             <text>{{user.contactAccount}}</text>
           </view>
-          <button v-if="user.showUserContact" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
-                  @click="$utils.textCopy(user.contactAccount)">
-            复制
-          </button>
-          <button v-else :disabled="showUserContactBtnDisabled"
-                  class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-blue"
-                  @click="shellPayForUserContact">
-            10 贝壳获取
-          </button>
+          <view v-if="isMine" class="row-between-center">
+            <button v-if="user.showUserContact" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
+                    @click="$utils.textCopy(user.contactAccount)">
+              填写联系方式
+            </button>
+            <view v-else class="row-between-center">
+              <text v-if="user.openContact" class="mr-xs text-green">展示中</text>
+              <text v-else class="mr-xs text-gray">已隐藏</text>
+              <u-switch v-model="user.openContact" active-color="#00C853" @change="switchOpenContact"></u-switch>
+            </view>
+          </view>
+          <view v-else>
+            <button v-if="user.showUserContact" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
+                    @click="$utils.textCopy(user.contactAccount)">
+              复制
+            </button>
+            <button v-else :disabled="showUserContactBtnDisabled"
+                    class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-blue"
+                    @click="shellPayForUserContact">
+              10 贝壳获取
+            </button>
+          </view>
         </view>
-        <view class="q-box-row row-between-center" @click="toUserShell">
+        <view v-if="isMine" class="q-box-row row-between-center" @click="toUserShell">
           <view class="row-col-center">
             <q-icon class="text-green mr-xs" size="50" icon="mdi-bitcoin"/>
             <text class="text-lgg">我的贝壳（{{mineUser.shell}}）</text>
@@ -255,7 +278,7 @@
     <!--    <ad class="bg-white mb-5px" adpid="1890536227"></ad>-->
     <!--  #endif -->
 
-    <uni-popup ref="popup" type="center">
+    <uni-popup ref="editPopup" type="center">
       <user-edit @close="closeUserEditPop"></user-edit>
     </uni-popup>
   </view>
@@ -309,9 +332,9 @@ const configStore = namespace('config')
   components: { QRow, QRowItem, TalkOperate, UserEdit, TalkItem, TalkItemContent }
 })
 export default class UserInfo extends Vue {
-  public $refs!: {
+  $refs!: {
     reportDialog: any;
-    popup: any;
+    editPopup: any;
   }
 
   @userStore.State('user') mineUser: UserVO
@@ -583,7 +606,7 @@ export default class UserInfo extends Vue {
   }
 
   closeUserEditPop () {
-    this.$refs.popup.close()
+    this.$refs.editPopup.close()
   }
 
   moreAction () {
@@ -602,7 +625,7 @@ export default class UserInfo extends Vue {
   }
 
   openDialog () {
-    this.$refs.popup.open()
+    this.$refs.editPopup.open()
   }
 
   @Watch('user')
@@ -731,6 +754,25 @@ export default class UserInfo extends Vue {
   //前往贝壳页面
   toUserShell () {
     PageUtil.toShellPage()
+  }
+
+  switchOpenContact (openContact) {
+    let actionMsg
+    let hintMsg
+    if (openContact) {
+      actionMsg = '是否确定展示联系方式'
+      hintMsg = '展示成功'
+    } else {
+      actionMsg = '是否确定隐藏联系方式'
+      hintMsg = '隐藏成功'
+    }
+    UniUtils.action(actionMsg).then(() => {
+      UserAPI.switchUserContactAPI(openContact).then(() => {
+        UniUtils.toast(hintMsg)
+      }).catch(() => {
+        this.user.openContact = !openContact
+      })
+    })
   }
 }
 </script>

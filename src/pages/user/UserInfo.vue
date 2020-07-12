@@ -221,7 +221,7 @@
             <q-icon class="text-green mr-xs" size="50" icon="mdi-bitcoin"/>
             <text class="text-lgg">我的贝壳（{{mineUser.shell}}）</text>
           </view>
-          <view class="text-gray row-col-center pr-xs">
+          <view v-if="!isIos" class="text-gray row-col-center pr-xs">
             <text class="text-lgg text-gray text-lgg">充值</text>
             <q-icon class="text-gray" size="32" icon="arrow-right"/>
           </view>
@@ -333,6 +333,7 @@ import MsgUtil from '@/utils/MsgUtil'
 const userStore = namespace('user')
 const appStore = namespace('app')
 const configStore = namespace('config')
+const systemStore = namespace('system')
 
 @Component({
   components: { QRow, QRowItem, TalkOperate, UserEdit, TalkItem, TalkItemContent }
@@ -346,6 +347,7 @@ export default class UserInfo extends Vue {
   @userStore.State('user') mineUser: UserVO
   @appStore.State('appConfig') readonly appConfig: object
   @appStore.State('reportTypes') reportTypes: string[]
+  @systemStore.State('isIos') isIos: boolean
   @PropSync('user') userProp: UserVO
   followBtnDisabled = false
   hasFollowed = false

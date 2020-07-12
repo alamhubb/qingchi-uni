@@ -1,6 +1,6 @@
 import QQUtils from '@/utils/QQUtils'
 import CommonUtil from '@/utils/CommonUtil'
-import { platformModule, systemModule } from '@/plugins/store'
+import { appModule, platformModule, systemModule, userModule } from '@/plugins/store'
 import WxUtils from '@/utils/WxUtils'
 import UniUtil from './UniUtil'
 import UserAPI from '@/api/UserAPI'
@@ -12,6 +12,7 @@ import Constants from '@/const/Constant'
 import MsgUtil from '@/utils/MsgUtil'
 import ProviderType from '@/const/ProviderType'
 import UserPayResultVO from '@/model/user/UserPayResultVO'
+import BalaBala from '@/utils/BalaBala'
 
 // 统一处理各平台的订阅
 export default class PlatformUtils {
@@ -92,7 +93,9 @@ export default class PlatformUtils {
   }
 
   static async cashPay (res: UserPayResultVO): Promise<any> {
-    if (systemModule.isIos) {
+    if (!userModule.user) {
+      return BalaBala.unLoginMessage()
+    } else if (systemModule.isIos) {
       MsgUtil.iosDisablePay()
       throw ''
     } else if (!systemModule.isMp) {

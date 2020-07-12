@@ -6,6 +6,7 @@ import ImgFileVO from '@/model/ImgFileVO'
 import UserPayVO from '@/model/user/UserPayVO'
 import UserPayResultVO from '@/model/user/UserPayResultVO'
 import PayType from '@/const/PayType'
+import ShellOrderVO from '@/model/ShellOrderVO'
 
 export default class UserAPI {
   static getMineUserInfoAPI () {
@@ -61,5 +62,9 @@ export default class UserAPI {
   static userPayAPI (platform: string, amount?: number) {
     const userPayVO = new UserPayVO(platform, PayType.shell, amount)
     return http.post<UserPayResultVO>('user/pay', userPayVO)
+  }
+
+  static queryShellAPI () {
+    return http.post<ShellOrderVO[]>('shell/queryShells')
   }
 }

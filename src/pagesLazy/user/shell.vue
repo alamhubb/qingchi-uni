@@ -36,7 +36,20 @@
           历史获得和消费记录：
         </view>
         <view class="pt-xs">
-          <view v-if="shellOrders.length"></view>
+          <view v-if="shellOrders.length">
+            <u-table>
+              <u-tr>
+                <u-th>贝壳</u-th>
+                <u-th>类型</u-th>
+                <u-th>时间</u-th>
+              </u-tr>
+              <u-tr v-for="shellOrder in shellOrders">
+                <u-td>{{shellOrder.shell}}</u-td>
+                <u-td>{{shellOrder.type}}</u-td>
+                <u-td>{{shellOrder.createTime | parseTime}}</u-td>
+              </u-tr>
+            </u-table>
+          </view>
           <view v-else class="text-lg text-gray row-center">暂无</view>
         </view>
       </view>
@@ -56,6 +69,8 @@ import PlatformUtils from '@/utils/PlatformUtils'
 import QCol from '@/components/q-col/q-col.vue'
 import { namespace } from 'vuex-class'
 import UserVO from '@/model/user/UserVO'
+import ShellOrderVO from '@/model/ShellOrderVO'
+import UserAPI from '@/api/UserAPI'
 
 const userStore = namespace('user')
 
@@ -72,10 +87,16 @@ export default class ShellVue extends Vue {
 
   currentAmount = Number(this.payValues[0].value)
 
-  shellOrders = []
+  shellOrders: ShellOrderVO[] = []
 
   switchAmount (index) {
     this.currentAmount = Number(this.payValues[index].value)
+  }
+
+  onLoad () {
+    UserAPI.queryShellAPI().then(res => {
+      this.shellOrders = res.data
+    })
   }
 
   toShellInfo () {

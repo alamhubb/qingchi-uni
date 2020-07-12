@@ -7,7 +7,7 @@ import Constants from '@/const/Constant'
  * @returns {string}
  */
 export function parseTime (dateProp: Date, cFormat?: string) {
-  const format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}'
+  const format = cFormat || '{y}-{m}-{d} {h}:{i}'
   const date = new Date(dateProp)
   const formatObj = {
     y: date.getFullYear(),

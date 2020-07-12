@@ -192,17 +192,17 @@
             </text>
           </view>
           <view v-if="isMine" class="row-between-center">
-            <button v-if="!user.contactAccount" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
-                    @click="openEditDialog">
-              填写联系方式
-            </button>
-            <view v-else class="row-between-center">
+            <view v-if="user.contactAccount" class="row-between-center">
               <text v-if="user.openContact" class="mr-xs text-green">展示中</text>
               <text v-else class="mr-xs text-gray">已隐藏</text>
               <u-switch v-model="user.openContact" active-color="#00C853" @change="switchOpenContact"></u-switch>
             </view>
+            <button v-else class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
+                    @click="openEditDialog">
+              填写联系方式
+            </button>
           </view>
-          <view v-else>
+          <view v-else-if="user.contactAccount">
             <view v-if="!user.openContact" class="mr-sm">
               对方隐藏了联系方式
             </view>
@@ -368,9 +368,16 @@ export default class UserInfo extends Vue {
 
   showUserContactBtnDisabled = false
 
+  @Watch('mineUser')
+  watchUser (user, old) {
+    console.log(user)
+    console.log(old)
+  }
+
   shellPayForUserContact () {
     if (!this.showUserContactBtnDisabled) {
       this.showUserContactBtnDisabled = true
+      console.log(this.mineUser)
       const userShell = this.mineUser.shell
       if (userShell >= 10) {
         UserAPI.getUserContactAPI(this.user.id).then((res) => {

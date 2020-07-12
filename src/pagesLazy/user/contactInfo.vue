@@ -17,7 +17,7 @@
     </view>
 
     <view class="text-xl text-orange text-bold mt-xl">
-      举例填写方式：wx:491369310
+      举例填写方式：vx:491369310
     </view>
     <view class="text-xl text-orange text-bold">
       填写后可通过展示/隐藏按钮，控制别人是否能获取您的联系方式
@@ -27,7 +27,7 @@
       了解了此功能的优点后，快去填写联系方式，更优质的处关系吧
     </view>
     <view class="text-xl text-orange text-bold mt-lg">
-      有任何疑问，客服qq或wx：491369310
+      有任何疑问，客服qq或vx：491369310
     </view>
   </view>
 </template>

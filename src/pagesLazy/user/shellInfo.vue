@@ -44,16 +44,16 @@ import PlatformUtils from '@/utils/PlatformUtils'
 import QCol from '@/components/q-col/q-col.vue'
 import { namespace } from 'vuex-class'
 import ConfigMap from '@/const/ConfigMap'
+import UserVO from '@/model/user/UserVO'
 
 const configStore = namespace('config')
+const userStore = namespace('user')
 
 @Component({
   components: { QCol, QRowItem, QRow, FollowItem }
 })
-export default class ContactInfoVue extends Vue {
-  @configStore.Getter(ConfigMap.contactExpenseShellKey) contactExpenseShell: number
-  @configStore.Getter(ConfigMap.sysServiceReceiveRatioKey) sysServiceReceiveRatio: number
-  @configStore.Getter(ConfigMap.contactUserReceiveShellKey) contactUserReceiveShell: number
+export default class ShellInfoVue extends Vue {
+  @userStore.State('user') user: UserVO
 
   payValues = [
     new EnumVO(1, '1元'),

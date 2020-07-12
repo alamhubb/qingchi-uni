@@ -169,7 +169,7 @@
           </button>
         </view>
 
-        <view v-if="user.contactAccount" class="q-box-row row-between-center bg-active"
+        <view v-if="isMine && !user.contactAccount" class="q-box-row row-between-center bg-active"
               @click="$pageUtil.toUserContactInfoPage">
           <view class="row-col-center">
             <text class="text-lgg text-orange">他人获取您的联系方式时，您就能获得贝壳</text>
@@ -186,10 +186,13 @@
           <view class="row-col-center">
             <q-icon class="text-gray mr-xs" size="50" icon="account"/>
             联系方式：
-            <text>{{user.contactAccount}}</text>
+            <text v-if="user.contactAccount">{{user.contactAccount}}</text>
+            <text v-else>
+              未填写
+            </text>
           </view>
           <view v-if="isMine" class="row-between-center">
-            <button v-if="user.showUserContact" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
+            <button v-if="!user.contactAccount" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
                     @click="openEditDialog">
               填写联系方式
             </button>
@@ -200,7 +203,10 @@
             </view>
           </view>
           <view v-else>
-            <button v-if="user.showUserContact" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
+            <view v-if="!user.openContact" class="mr-sm">
+              对方隐藏了联系方式
+            </view>
+            <button v-else-if="user.showUserContact" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
                     @click="$util.textCopy(user.contactAccount)">
               复制
             </button>
@@ -624,6 +630,10 @@ export default class UserInfo extends Vue {
       })
     }
   }
+
+  /*mounted () {
+    this.openEditDialog()
+  }*/
 
   openEditDialog () {
     this.$refs.editPopup.open()

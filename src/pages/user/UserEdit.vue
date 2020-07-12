@@ -49,11 +49,10 @@
 
         <view class="cu-form-group">
           <view class="title">
-            <q-icon class="text-green mr-xs" size="40" icon="mdi-wechat"></q-icon>
-            微信
+            联系方式
           </view>
-          <input :cursor-spacing="20" v-model="wxAccount" maxlength="20" placeholder="微信号"/>
-          <view class="uni-icon uni-icon-clear" v-if="wxAccount" @click="clearWxAccount"></view>
+          <input :cursor-spacing="20" v-model="contactAccount" maxlength="30" placeholder="例如：vx:491369310"/>
+          <view class="uni-icon uni-icon-clear" v-if="contactAccount" @click="clearContactAccount"></view>
         </view>
         <!--<view class="cu-form-group margin-top">
             <view class="title">
@@ -122,6 +121,7 @@ export default class UserEdit extends Vue {
   birthday = '1999-01-01'
   location = ''
   wxAccount = ''
+  contactAccount = ''
   qqAccount = ''
   wbAccount = ''
   endDate = ''
@@ -138,6 +138,7 @@ export default class UserEdit extends Vue {
       this.gender = this.user.gender || '女'
       this.birthday = this.user.birthday || '1999-01-01'
       this.location = this.user.location || ''
+      this.contactAccount = this.user.contactAccount || ''
       this.wxAccount = this.user.wxAccount || ''
       this.qqAccount = this.user.qqAccount || ''
       this.wbAccount = this.user.wbAccount || ''
@@ -167,6 +168,10 @@ export default class UserEdit extends Vue {
     this.wxAccount = ''
   }
 
+  clearContactAccount () {
+    this.contactAccount = ''
+  }
+
   clearQqAccount () {
     this.qqAccount = ''
   }
@@ -176,6 +181,15 @@ export default class UserEdit extends Vue {
   }
 
   saveUser () {
+    if (this.contactAccount) {
+      if (this.contactAccount.length > 30) {
+        UniUtil.hint('联系方式不能超过30个字符，例如：vx:491369310')
+        return
+      } else if (this.contactAccount.length < 5) {
+        UniUtil.hint('联系方式必须大于4个字符，例如：vx:491369310')
+        return
+      }
+    }
     this.btnDisabled = true
     this.closeUserEditPop()
     UniUtil.action('是否确定修改个人信息').then(() => {
@@ -183,6 +197,7 @@ export default class UserEdit extends Vue {
       this.user.gender = this.gender
       this.user.birthday = this.birthday
       this.user.location = this.location
+      this.user.contactAccount = this.contactAccount
       this.user.wxAccount = this.wxAccount
       this.user.qqAccount = this.qqAccount
       this.user.wbAccount = this.wbAccount

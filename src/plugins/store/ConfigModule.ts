@@ -151,4 +151,30 @@ export default class ConfigModule extends VuexModule {
       return this.appConfig[ConfigMap.talkCacheNumKey]
     }
   }
+
+  get [ConfigMap.contactExpenseShellKey] (): number {
+    if (Lodash.isEmpty(this.appConfig)) {
+      return ConfigMap.contactExpenseShellDefault
+    } else {
+      return this.appConfig[ConfigMap.contactExpenseShellKey]
+    }
+  }
+
+  get [ConfigMap.sysServiceReceiveRatioKey] (): number {
+    if (Lodash.isEmpty(this.appConfig)) {
+      return ConfigMap.sysServiceReceiveRatioDefault
+    } else {
+      return this.appConfig[ConfigMap.sysServiceReceiveRatioKey]
+    }
+  }
+
+  get [ConfigMap.contactUserReceiveShellKey] (): number {
+    if (Lodash.isEmpty(this.appConfig)) {
+      return ConfigMap.contactUserReceiveShellDefault
+    } else {
+      const expenseShell = this[ConfigMap.contactExpenseShellKey]
+      const ratio = this[ConfigMap.sysServiceReceiveRatioKey]
+      return expenseShell * ratio / 10
+    }
+  }
 }

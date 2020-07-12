@@ -1,47 +1,31 @@
 <template>
-  <view class="bg-white">
-
-
-    <q-row>
-      <view class="row-col-center">
-        <q-icon class="text-green" size="50" icon="mdi-bitcoin"/>
-        <text class="ml-xs text-lg text-bold">
-          贝壳余额：
-        </text>
-      </view>
-      <text class="row-col-center text-lg text-bold">
-        50
-      </text>
-    </q-row>
-    <q-row>
-      <text class="text-lg text-bold">
-        充值：
-      </text>
-    </q-row>
-    <view class="px">
-      <u-subsection :list="payValues" :current="0" @change="switchAmount"></u-subsection>
-      <view class="pt-sm">
-        <view class="text-lg" @click="toShellInfo">
-          提示：1元 = 10贝壳，并赠送与贝壳数量同等的等级积分。详细介绍请点 -
-          <q-icon class="text-gray" icon="arrow-right" size="32"></q-icon>
-          <text class="text-bold">贝壳介绍</text>
-        </view>
-      </view>
-      <button class="bg-green-light text-white text-lg bd-none mt bg-active round" @click="userPay">
-        充值
-      </button>
+  <view class="bg-white px">
+    <view class="text-xl text-bold mt-xl">
+      优点介绍:
     </view>
-    <q-row>
-      <view class="w100r flex-col">
-        <view class="text-xl text-bold">
-          历史充值和消费记录：
-        </view>
-        <view class="pt-xs">
-          <view v-if="shellOrders.length"></view>
-          <view v-else class="text-lg text-gray row-center">暂无</view>
-        </view>
-      </view>
-    </q-row>
+    <view class="text-xl text-bold mt-sm">
+      1.使用此功能处关系加好友，可提高交友质量，过滤低质量人员。
+    </view>
+    <view class="text-xl text-bold mt-sm">
+      2. 他人通过此功能获取您的联系方式时，需要支付{{contactExpenseShell}}个贝壳，您可获得{{contactUserReceiveShell}}个贝壳奖励
+    </view>
+    <view class="text-xl text-bold mt-sm">
+      2.他人只有具有真实想加您好友的意愿，才愿意支付10个贝壳，获取您的联系方式，此功能可帮您过滤掉其他低质量杂乱人员。
+    </view>
+    <view class="text-xl text-bold mt-sm">
+      4. 10个贝壳等于1元人民币，如果连10个贝壳都不愿意支付的人，很有可能是乱加好友，或者其他低质量好友。
+    </view>
+
+    <view class="text-xl text-orange text-bold mt-xl">
+      举例填写方式：wx:491369310
+    </view>
+
+    <view class="text-xl text-orange text-bold mt-xl">
+      了解了此功能的优点后，快去填写联系方式，更优质的处关系吧
+    </view>
+    <view class="text-xl text-orange text-bold mt-xl">
+      有任何疑问，客服qq或wx：491369310
+    </view>
   </view>
 </template>
 
@@ -55,11 +39,19 @@ import SkipUrlConst from '@/const/SkipUrlConst'
 import EnumVO from '@/const/EnumVO'
 import PlatformUtils from '@/utils/PlatformUtils'
 import QCol from '@/components/q-col/q-col.vue'
+import { namespace } from 'vuex-class'
+import ConfigMap from '@/const/ConfigMap'
+
+const configStore = namespace('config')
 
 @Component({
   components: { QCol, QRowItem, QRow, FollowItem }
 })
-export default class ShellVue extends Vue {
+export default class ContactInfoVue extends Vue {
+  @configStore.Getter(ConfigMap.contactExpenseShellKey) contactExpenseShell: number
+  @configStore.Getter(ConfigMap.sysServiceReceiveRatioKey) sysServiceReceiveRatio: number
+  @configStore.Getter(ConfigMap.contactUserReceiveShellKey) contactUserReceiveShell: number
+
   payValues = [
     new EnumVO(1, '1元'),
     new EnumVO(5, '5元'),

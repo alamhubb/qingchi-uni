@@ -52,4 +52,14 @@ export default class ConfigMap {
 
   static readonly talkCacheNumKey: string = 'talkCacheNum'
   static readonly talkCacheNumDefault: number = 4
+
+  static readonly contactExpenseShellKey: string = 'contactExpenseShell'
+  static readonly contactExpenseShellDefault: number = 99999
+
+  //用户获得的贝壳数量
+  static readonly contactUserReceiveShellKey: string = 'contactUserReceiveShell'
+  static readonly contactUserReceiveShellDefault: number = 5
+
+  static readonly sysServiceReceiveRatioKey: string = 'sysServiceReceiveRatio'
+  static readonly sysServiceReceiveRatioDefault: number = 5
 }

@@ -1,6 +1,6 @@
 <template>
   <view class="bg-white">
-    <q-row>
+    <q-row v-if="user">
       <view class="row-col-center">
         <q-icon class="text-green" size="50" icon="mdi-bitcoin"/>
         <text class="ml-xs text-lg text-bold">
@@ -20,7 +20,7 @@
       <u-subsection :list="payValues" :current="0" @change="switchAmount"></u-subsection>
       <view class="pt-sm">
         <view class="text-lg" @click="toShellInfo">
-          提示：1元 = 10贝壳
+          提示：1元 = 10贝壳，可用于获取他人联系方式，一但交易成功，不支持退款，请谨慎付款
           <!--，并赠送与贝壳数量同等的等级积分。详细介绍请点 -
           <q-icon class="text-gray" icon="arrow-right" size="32"></q-icon>
           <text class="text-bold">贝壳介绍</text>-->
@@ -83,7 +83,7 @@ export default class ShellVue extends Vue {
   }
 
   userPay () {
-    PlatformUtils.userPay(this.currentAmount)
+    PlatformUtils.shellPay(this.currentAmount)
   }
 }
 </script>

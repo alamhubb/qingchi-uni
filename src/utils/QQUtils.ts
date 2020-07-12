@@ -34,25 +34,7 @@ export default class QQUtils {
     })
   }
 
-  static payVipAPI () {
-    UserAPI.payVipAPI(ProviderType.qq).then((res: any) => {
-      qq.requestPayment({
-        package: res.data.package,
-        bargainor_id: AppConfig.qq_bargainor_id,
-        success () {
-          UserStore.getMineUserAction().then(() => {
-            UniUtil.hint('开通会员成功')
-            PageUtil.reLaunch(PagePath.userMine)
-          })
-        },
-        fail () {
-          UniUtil.error(HintMsg.vipOpenFailMsg)
-        }
-      })
-    })
-  }
-
-  static async userPay (amount: number, payResult: UserPayResultVO): Promise<void> {
+  static async requestPayment (payResult: UserPayResultVO): Promise<void> {
     return new Promise((resolve, reject) => {
       qq.requestPayment({
         package: payResult.package,

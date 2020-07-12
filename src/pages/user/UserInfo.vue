@@ -1,5 +1,5 @@
 <template>
-  <view v-if="user" class="bg-default">
+  <view v-if="userProp" class="bg-default">
     <view class="bg-white">
       <view>
         <swiper v-if="imgUrls.length" class="square-dot size100vw">
@@ -31,24 +31,24 @@
           <image
               class="avatar mr-sm"
               mode="aspectFill"
-              :src="user.avatar"
+              :src="userProp.avatar"
           />
           <view class="flex-auto row-between">
             <view class="flex-col flex-auto">
-              <view v-if="user.vipFlag" class="text-red text-lg">
-                {{user.nickname}}
+              <view v-if="userProp.vipFlag" class="text-red text-lg">
+                {{userProp.nickname}}
               </view>
               <view v-else class="text-lg">
-                {{user.nickname}}
+                {{userProp.nickname}}
               </view>
               <view>
                 <view v-if="isMine" class="cu-tag bd-red radius sm mr-10px bg-white"
                       @click.stop="toFollowVue">
-                  关注：{{user.followNum}}
+                  关注：{{userProp.followNum}}
                 </view>
 
                 <view class="cu-tag bd-orange radius sm mr-10px bg-white" @click.stop="toFollowVue">
-                  粉丝：{{user.fansNum}}
+                  粉丝：{{userProp.fansNum}}
                 </view>
               </view>
             </view>
@@ -71,19 +71,19 @@
         </view>
         <view class="q-box-row">
           <view class="cu-tag radius text-df"
-                :class="[getGenderBgColor(user)]">
-            {{user.age}}
+                :class="[getGenderBgColor(userProp)]">
+            {{userProp.age}}
             <q-icon class="row-col-start ml-2px" size="24"
-                    :icon="getGenderIcon(user)"/>
+                    :icon="getGenderIcon(userProp)"/>
           </view>
-          <view v-if="user.vipFlag" class="cu-tag bg-red radius" @click="openVip">VIP</view>
+          <view v-if="userProp.vipFlag" class="cu-tag bg-red radius" @click="openVip">VIP</view>
           <view v-else class="cu-tag bg-grey radius" @click="openVip">VIP</view>
           <view class="ml-5px cu-capsule radius" @click="hintJusticeInfo">
             <view class='cu-tag bg-green'>
               <q-icon size="24" icon="mdi-sword-cross"/>
             </view>
             <view class="cu-tag bg-white bd-green bd-r-radius">
-              {{user.justiceValue}}
+              {{userProp.justiceValue}}
             </view>
           </view>
           <view class="ml-5px cu-capsule radius" @click="toLoveValuePage">
@@ -91,7 +91,7 @@
               <q-icon size="24" icon="heart-fill"/>
             </view>
             <view class="cu-tag bg-white bd-red bd-r-radius">
-              {{user.loveValue}}
+              {{userProp.loveValue}}
             </view>
           </view>
           <view class="ml-5px cu-capsule radius" @click="toFaceValuePage">
@@ -99,21 +99,21 @@
               <q-icon size="26" icon="mdi-face"/>
             </view>
             <view class="cu-tag bg-white bd-orange bd-r-radius">
-              {{user.faceRatio}}
+              {{userProp.faceRatio}}
             </view>
           </view>
         </view>
 
         <view class="q-box-row q-solid-bottom">
           <q-icon class="text-gray mr-xs" size="50" icon="map-fill"/>
-          地区：{{user.location}}
+          地区：{{userProp.location}}
         </view>
 
         <view v-if="isMine" class="q-box-row q-solid-bottom">
           <q-icon class="text-gray mr-xs" size="50" icon="mdi-cellphone-android"/>
           手机号(仅自己可见)：
-          <view v-if="user.phoneNum">
-            {{user.phoneNum}}
+          <view v-if="userProp.phoneNum">
+            {{userProp.phoneNum}}
             <view class="ml-10px sm cu-tag bg-white bd-gray radius">
               已绑定
             </view>
@@ -143,14 +143,14 @@
           <q-icon class="text-gray mr-xs" size="50" icon="mdi-alpha-v-circle"/>
           照片认证：
           <!-- 为自己且未绑定-->
-          <view class="row-between-center flex-auto" v-if="user.isMine && !user.isSelfAuth">
+          <view class="row-between-center flex-auto" v-if="userProp.isMine && !userProp.isSelfAuth">
             未认证
             <button class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
                     @click="toIdentityAuth">认证
             </button>
           </view>
           <view v-else>
-            <view class="ml-10px sm cu-tag bg-blue radius" v-if="user.isSelfAuth">
+            <view class="ml-10px sm cu-tag bg-blue radius" v-if="userProp.isSelfAuth">
               已认证
             </view>
             <view class="ml-10px sm cu-tag bg-white bd-gray radius" v-else>
@@ -160,16 +160,16 @@
         </view>
         <!-- #endif -->
 
-        <view v-if="user.wxAccount" class="q-box-row q-solid-bottom">
+        <view v-if="userProp.wxAccount" class="q-box-row q-solid-bottom">
           微信：
-          <text selectable>{{user.wxAccount}}</text>
+          <text selectable>{{userProp.wxAccount}}</text>
           <button class="cu-btn radius sm bd-blue ml-10px bg-white"
-                  @click="copyText(user.wxAccount)">
+                  @click="copyText(userProp.wxAccount)">
             复制
           </button>
         </view>
 
-        <view v-if="isMine && !user.contactAccount" class="q-box-row row-between-center bg-active"
+        <view v-if="isMine && !userProp.contactAccount" class="q-box-row row-between-center bg-active"
               @click="$pageUtil.toUserContactInfoPage">
           <view class="row-col-center">
             <text class="text-lgg text-orange">他人获取您的联系方式时，您就能获得贝壳</text>
@@ -179,35 +179,34 @@
             <q-icon class="text-gray" size="32" icon="arrow-right"/>
           </view>
         </view>
-
         <!-- 如果自己的话-->
         <!-- 左边格式不变，如果未填写则可以填写，填写之后可以选择开启或者关闭，填写后可选择隐藏展示。-->
         <view class="q-box-row row-between-center q-solid-bottom">
           <view class="row-col-center">
             <q-icon class="text-gray mr-xs" size="50" icon="account"/>
             联系方式：
-            <text v-if="user.contactAccount">{{user.contactAccount}}</text>
+            <text v-if="userProp.contactAccount">{{userProp.contactAccount}}</text>
             <text v-else>
               未填写
             </text>
           </view>
           <view v-if="isMine" class="row-between-center">
-            <view v-if="user.contactAccount" class="row-between-center">
-              <text v-if="user.openContact" class="mr-xs text-green">展示中</text>
+            <view v-if="userProp.contactAccount" class="row-between-center">
+              <text v-if="userProp.openContact" class="mr-xs text-green">展示中</text>
               <text v-else class="mr-xs text-gray">已隐藏</text>
-              <u-switch v-model="user.openContact" active-color="#00C853" @change="switchOpenContact"></u-switch>
+              <u-switch v-model="userProp.openContact" active-color="#00C853" @change="switchOpenContact"></u-switch>
             </view>
             <button v-else class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
                     @click="openEditDialog">
               填写联系方式
             </button>
           </view>
-          <view v-else-if="user.contactAccount">
-            <view v-if="!user.openContact" class="mr-sm">
+          <view v-else-if="userProp.contactAccount">
+            <view v-if="!userProp.openContact" class="mr-sm">
               对方隐藏了联系方式
             </view>
-            <button v-else-if="user.showUserContact" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
-                    @click="$util.textCopy(user.contactAccount)">
+            <button v-else-if="userProp.showUserContact" class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
+                    @click="$util.textCopy(userProp.contactAccount)">
               复制
             </button>
             <button v-else :disabled="showUserContactBtnDisabled"
@@ -292,7 +291,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch, Emit, PropSync } from 'vue-property-decorator'
 import TalkAPI from '@/api/TalkAPI'
 import TalkItem from '@/pages/talk/TalkItem.vue'
 import UserVO from '@/model/user/UserVO'
@@ -347,7 +346,7 @@ export default class UserInfo extends Vue {
   @userStore.State('user') mineUser: UserVO
   @appStore.State('appConfig') readonly appConfig: object
   @appStore.State('reportTypes') reportTypes: string[]
-  @Prop() readonly user: UserVO
+  @PropSync('user') userProp: UserVO
   followBtnDisabled = false
   hasFollowed = false
   followStatus: string = FollowSatus.follow
@@ -361,47 +360,35 @@ export default class UserInfo extends Vue {
   talks: TalkVO[] = []
   @configStore.Getter(ConfigMap.reportHideCountKey) reportHideCount: number
 
-  showUserContactPopup = true
-
-  //后台计算此人是否有权限查看他的联系方式
-  showUserContact = false
-
   showUserContactBtnDisabled = false
-
-  @Watch('mineUser')
-  watchUser (user, old) {
-    console.log(user)
-    console.log(old)
-  }
 
   shellPayForUserContact () {
     if (!this.showUserContactBtnDisabled) {
       this.showUserContactBtnDisabled = true
-      console.log(this.mineUser)
       const userShell = this.mineUser.shell
       if (userShell >= 10) {
-        UserAPI.getUserContactAPI(this.user.id).then((res) => {
-          this.user.contactAccount = res.data
-          this.user.showUserContact = true
-          this.mineUser.shell = userShell - 10
+        UniUtil.action('是否消耗10个贝壳查看用户：' + this.userProp.nickname + ' 的联系方式').then(() => {
+          UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
+            this.$nextTick(() => {
+              this.userProp.contactAccount = res.data
+              this.userProp.showUserContact = true
+              this.mineUser.shell = userShell - 10
+            })
+          })
         }).finally(() => {
           this.showUserContactBtnDisabled = false
         })
       } else {
         UniUtil.action('您没有贝壳了，是否直接使用现金支付').then(() => {
-          PlatformUtils.cashPay(1).then(() => {
-            UserAPI.getUserContactAPI(this.user.id).then((res) => {
-              this.user.contactAccount = res.data
-              this.user.showUserContact = true
+          PlatformUtils.shellPay(1).then(() => {
+            UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
+              this.userProp.contactAccount = res.data
+              this.userProp.showUserContact = true
             }).catch(() => {
               MsgUtil.sysErrMsg()
-            }).finally(() => {
-              this.showUserContactBtnDisabled = false
             })
-          }).catch(() => {
-            this.showUserContactBtnDisabled = false
           })
-        }).catch(() => {
+        }).finally(() => {
           this.showUserContactBtnDisabled = false
         })
       }
@@ -412,7 +399,7 @@ export default class UserInfo extends Vue {
 
 
   openReportDialog () {
-    if (this.user) {
+    if (this.userProp) {
       this.$refs.reportDialog.open()
     } else {
       BalaBala.unLoginMessage()
@@ -420,7 +407,7 @@ export default class UserInfo extends Vue {
   }
 
   frontDeleteUserImg () {
-    this.user.imgs.splice(this.imgIndex, 1)
+    this.userProp.imgs.splice(this.imgIndex, 1)
   }
 
   reportTypeChange ({ target }) {
@@ -429,7 +416,7 @@ export default class UserInfo extends Vue {
 
   addReport () {
     const reportAdd: ReportAddVO = new ReportAddVO(this.reportContentType, this.reportType, this.reportContent)
-    const userImg: ImgFileVO = this.user.imgs[0]
+    const userImg: ImgFileVO = this.userProp.imgs[0]
     reportAdd.userImgId = userImg.id
     if (ReportType.other === this.reportType && !this.reportContent) {
       UniUtil.hint('选择其他违规时，请您补充观点')
@@ -488,9 +475,9 @@ export default class UserInfo extends Vue {
   }
 
   deleteImg () {
-    if (this.user.imgs.length > 1) {
+    if (this.userProp.imgs.length > 1) {
       UniUtil.warning('请确认是否删除照片？').then(() => {
-        const imgs: ImgFileVO[] = this.user.imgs.splice(this.imgIndex, 1)
+        const imgs: ImgFileVO[] = this.userProp.imgs.splice(this.imgIndex, 1)
         UserAPI.deleteUserImgAPI(imgs[0]).then((res: any) => {
           UserStore.setMineUser(res.data)
         })
@@ -526,7 +513,7 @@ export default class UserInfo extends Vue {
           success: (image) => {
             imgFile.aspectRatio = image.width / image.height
             // user/id/talk/24324.img
-            imgFile.src = ImgUtil.getUserImgUploadFormat(this.user.id, imgFile.path)
+            imgFile.src = ImgUtil.getUserImgUploadFormat(this.userProp.id, imgFile.path)
             CosUtil.postObject(imgFile).then(() => {
               UserAPI.addUserImgAPI(imgFile).then((res: any) => {
                 UserStore.setMineUser(res.data)
@@ -601,7 +588,7 @@ export default class UserInfo extends Vue {
 
   get isMine (): boolean {
     // 两个都有值，且两个都相等，才为自己
-    return this.user && this.mineUser && this.user.id === this.mineUser.id
+    return this.userProp && this.mineUser && this.userProp.id === this.mineUser.id
   }
 
   get talkIds () {
@@ -656,10 +643,10 @@ export default class UserInfo extends Vue {
   }
 
   queryMineTalks () {
-    if (this.user) {
-      this.followStatus = this.user.followStatus
-      this.hasFollowed = this.user.hasFollowed
-      TalkAPI.queryUserTalksAPI(this.user.id, this.talkIds).then((res: any) => {
+    if (this.userProp) {
+      this.followStatus = this.userProp.followStatus
+      this.hasFollowed = this.userProp.hasFollowed
+      TalkAPI.queryUserTalksAPI(this.userProp.id, this.talkIds).then((res: any) => {
         this.talks = res.data
       })
     }
@@ -699,11 +686,11 @@ export default class UserInfo extends Vue {
     if (this.mineUser) {
       if (!this.followBtnDisabled) {
         this.followBtnDisabled = true
-        const followAdd: FollowAddVO = new FollowAddVO(this.user.id)
+        const followAdd: FollowAddVO = new FollowAddVO(this.userProp.id)
         // 如果已经关注
         if (this.followStatus === FollowSatus.follow) {
           this.hasFollowed = true
-          if (this.user.beFollow) {
+          if (this.userProp.beFollow) {
             // 进行关注操作
             this.followStatus = FollowSatus.eachFollow
           } else {
@@ -735,8 +722,8 @@ export default class UserInfo extends Vue {
   }
 
   get imgUrls () {
-    if (this.user && this.user.imgs) {
-      return this.user.imgs.map(item => ImgUtil.getUserLargeImgUrl(item.src))
+    if (this.userProp && this.userProp.imgs) {
+      return this.userProp.imgs.map(item => ImgUtil.getUserLargeImgUrl(item.src))
     } else {
       return []
     }
@@ -788,7 +775,7 @@ export default class UserInfo extends Vue {
       UserAPI.switchUserContactAPI(openContact).then(() => {
         UniUtil.toast(hintMsg)
       }).catch(() => {
-        this.user.openContact = !openContact
+        this.userProp.openContact = !openContact
       })
     })
   }

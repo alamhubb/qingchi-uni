@@ -34,28 +34,7 @@ export default class QQUtils {
     })
   }
 
-  static payVipAPI () {
-    UserAPI.payVipAPI(ProviderType.wx).then((res: any) => {
-      wx.requestPayment({
-        timeStamp: res.data.timeStamp,
-        nonceStr: res.data.nonceStr,
-        package: res.data.package,
-        signType: 'MD5',
-        paySign: res.data.paySign,
-        success () {
-          UserStore.getMineUserAction().then(() => {
-            UniUtil.hint('开通会员成功')
-            PageUtil.reLaunch(PagePath.userMine)
-          })
-        },
-        fail () {
-          UniUtil.error(HintMsg.vipOpenFailMsg)
-        }
-      })
-    })
-  }
-
-  static async userPay (amount: number, payResult: UserPayResultVO): Promise<void> {
+  static async requestPayment (payResult: UserPayResultVO): Promise<void> {
     return new Promise((resolve, reject) => {
       wx.requestPayment({
         timeStamp: payResult.timeStamp,

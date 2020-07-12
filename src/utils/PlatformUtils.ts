@@ -10,6 +10,8 @@ import PagePath from '@/const/PagePath'
 import HintMsg from '@/const/HintMsg'
 import Constants from '@/const/Constant'
 import MsgUtil from '@/utils/MsgUtil'
+import ProviderType from '@/const/ProviderType'
+import UserPayResultVO from '@/model/user/UserPayResultVO'
 
 // 统一处理各平台的订阅
 export default class PlatformUtils {
@@ -63,7 +65,33 @@ export default class PlatformUtils {
     // #endif
   }
 
-  static async cashPay (amount: number): Promise<any> {
+
+  // 统一处理各平台的支付
+  static shellPay (amount: number) {
+    return UserAPI.userPayAPI(systemModule.provider, amount).then((res) => {
+      return PlatformUtils.userPay(res.data)
+    })
+  }
+
+  // 统一处理各平台的支付
+  static payVip () {
+    UserAPI.payVipAPI(systemModule.provider).then((res) => {
+      return PlatformUtils.userPay(res.data)
+    })
+  }
+
+  //负责统一处理跳转到刷新用户并跳转到用户页面
+  static userPay (res: UserPayResultVO) {
+    return PlatformUtils.cashPay(res)
+      .then(() => {
+        UserStore.getMineUserAction().then(() => {
+          UniUtil.hint(HintMsg.paySuccessMsg)
+          PageUtil.reLaunch(PagePath.userMine)
+        })
+      })
+  }
+
+  static async cashPay (res: UserPayResultVO): Promise<any> {
     if (systemModule.isIos) {
       MsgUtil.iosDisablePay()
       throw ''
@@ -71,7 +99,7 @@ export default class PlatformUtils {
       MsgUtil.notMpDisablePay()
       throw ''
     }
-    return PlatformUtils.requestPayment(amount)
+    return PlatformUtils.requestPayment(res)
       .catch((err) => {
         if (err.errMsg === Constants.payCancel) {
           UniUtil.toast(HintMsg.payCancelMsg)
@@ -83,39 +111,17 @@ export default class PlatformUtils {
       })
   }
 
-  static userPay (amount: number) {
-    PlatformUtils.cashPay(amount)
-      .then(() => {
-        UserStore.getMineUserAction().then(() => {
-          UniUtil.hint(HintMsg.paySuccessMsg)
-          PageUtil.reLaunch(PagePath.userMine)
-        })
-      })
-  }
-
-  // 统一处理各平台的支付
-  static requestPayment (amount: number) {
-    return UserAPI.userPayAPI(systemModule.provider, amount).then((res) => {
-      if (systemModule.isMpQQ) {
-        return QQUtils.userPay(amount, res.data)
-      } else if (systemModule.isMpWX) {
-        return WxUtils.userPay(amount, res.data)
-      } else {
-        throw '不存在的支付渠道'
-      }
-    })
-  }
-
-  // 统一处理各平台的支付
-  static payVip () {
-    if (systemModule.isMp) {
-      if (systemModule.isMpQQ) {
-        QQUtils.payVipAPI()
-      } else if (systemModule.isMpWX) {
-        WxUtils.payVipAPI()
-      }
+  //会员走payVip
+  //会员走userPay
+  //会员走cashPay
+  //底层requestPayment处理平台差异。
+  static requestPayment (payResult: UserPayResultVO) {
+    if (systemModule.isMpQQ) {
+      return QQUtils.requestPayment(payResult)
+    } else if (systemModule.isMpWX) {
+      return WxUtils.requestPayment(payResult)
     } else {
-      UniUtil.hint('非小程序平台暂不支持开通VIP')
+      throw '不存在的支付渠道'
     }
   }
 }

@@ -5,6 +5,7 @@ import PhoneNumVO from '@/model/user/PhoneNumVO'
 import ImgFileVO from '@/model/ImgFileVO'
 import UserPayVO from '@/model/user/UserPayVO'
 import UserPayResultVO from '@/model/user/UserPayResultVO'
+import PayType from '@/const/PayType'
 
 export default class UserAPI {
   static getMineUserInfoAPI () {
@@ -40,15 +41,6 @@ export default class UserAPI {
     return http.post('identity/auth', userImg)
   }
 
-  static payVipAPI (platform: string) {
-    return http.post('user/payVip?platform=' + platform)
-  }
-
-  static userPayAPI (platform: string, amount: number) {
-    const userPayVO = new UserPayVO(platform, amount)
-    return http.post<UserPayResultVO>('user/pay', userPayVO)
-  }
-
   static updateAvatarAPI (avatar: string) {
     return http.post('user/updateAvatar?avatar=' + avatar)
   }
@@ -60,5 +52,14 @@ export default class UserAPI {
 
   static switchUserContactAPI (openContact: boolean) {
     return http.post<string>('user/switchUserContact?openContact=' + openContact)
+  }
+
+  static payVipAPI (platform: string) {
+    return http.post<UserPayResultVO>('user/payVip?platform=' + platform)
+  }
+
+  static userPayAPI (platform: string, amount?: number) {
+    const userPayVO = new UserPayVO(platform, PayType.shell, amount)
+    return http.post<UserPayResultVO>('user/pay', userPayVO)
   }
 }

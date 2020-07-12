@@ -1,6 +1,6 @@
 <template>
   <view class="bg-default">
-    <user-info :user="user"></user-info>
+    <user-info :user.sync="user"></user-info>
     <msg-input v-if="showMsgInput">
     </msg-input>
   </view>

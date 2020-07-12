@@ -26,7 +26,7 @@
     <view class="text-xl text-orange text-bold mt-lg">
       了解了此功能的优点后，快去填写联系方式，更优质的处关系吧
     </view>
-    <view class="text-xl text-orange text-bold mt-lg">
+    <view class="text-xl text-orange text-bold mt-lg pb-lg">
       有任何疑问，客服qq或vx：491369310
     </view>
   </view>
@@ -37,10 +37,6 @@ import { Vue, Component } from 'vue-property-decorator'
 import FollowItem from '@/pagesLazy/user/FollowItem.vue'
 import QRow from '@/components/q-row/q-row.vue'
 import QRowItem from '@/components/q-row-item/q-row-item.vue'
-import PageUtil from '@/utils/PageUtil'
-import SkipUrlConst from '@/const/SkipUrlConst'
-import EnumVO from '@/const/EnumVO'
-import PlatformUtils from '@/utils/PlatformUtils'
 import QCol from '@/components/q-col/q-col.vue'
 import { namespace } from 'vuex-class'
 import ConfigMap from '@/const/ConfigMap'
@@ -52,29 +48,6 @@ const configStore = namespace('config')
 })
 export default class ContactInfoVue extends Vue {
   @configStore.Getter(ConfigMap.contactExpenseShellKey) contactExpenseShell: number
-  @configStore.Getter(ConfigMap.sysServiceReceiveRatioKey) sysServiceReceiveRatio: number
   @configStore.Getter(ConfigMap.contactUserReceiveShellKey) contactUserReceiveShell: number
-
-  payValues = [
-    new EnumVO(1, '1元'),
-    new EnumVO(5, '5元'),
-    new EnumVO(30, '30元')
-  ]
-
-  currentAmount = Number(this.payValues[0].value)
-
-  shellOrders = []
-
-  switchAmount (index) {
-    this.currentAmount = Number(this.payValues[index].value)
-  }
-
-  toShellInfo () {
-    PageUtil.navigateTo(SkipUrlConst.shellInfoUrl())
-  }
-
-  userPay () {
-    PlatformUtils.userPay(this.currentAmount)
-  }
 }
 </script>

@@ -369,11 +369,9 @@ export default class UserInfo extends Vue {
       if (userShell >= 10) {
         UniUtil.action('是否消耗10个贝壳查看用户：' + this.userProp.nickname + ' 的联系方式').then(() => {
           UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
-            this.$nextTick(() => {
-              this.userProp.contactAccount = res.data
-              this.userProp.showUserContact = true
-              this.mineUser.shell = userShell - 10
-            })
+            this.userProp.contactAccount = res.data
+            this.userProp.showUserContact = true
+            this.mineUser.shell = userShell - 10
           })
         }).finally(() => {
           this.showUserContactBtnDisabled = false

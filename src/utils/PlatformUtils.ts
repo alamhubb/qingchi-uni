@@ -67,6 +67,12 @@ export default class PlatformUtils {
 
 
   // 统一处理各平台的支付
+  static getUserContactPay (amount: number) {
+    return UserAPI.userPayAPI(systemModule.provider, amount).then((res) => {
+      return PlatformUtils.cashPay(res.data)
+    })
+  }
+
   static shellPay (amount: number) {
     return UserAPI.userPayAPI(systemModule.provider, amount).then((res) => {
       return PlatformUtils.userPay(res.data)

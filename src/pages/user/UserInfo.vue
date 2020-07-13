@@ -264,19 +264,19 @@
     <talk-operate @deleteTalk="deleteTalk"></talk-operate>
     <!--qq平台显示的广告-->
     <!--  #ifdef MP-QQ -->
-    <ad v-if="talks.length>0" class="bg-white mb-5px" unit-id="72d8cb09a1bae9fa30d9e03e7cb8a25d" type="feeds"></ad>
+    <ad v-if="talks.length>0" class="bg-white mb-5px w100vw" unit-id="72d8cb09a1bae9fa30d9e03e7cb8a25d" type="feeds"></ad>
     <!--  #endif -->
-    <!--<view v-for="talk in talks" :key="talk.id">
+    <view v-for="talk in talks" :key="talk.id">
       <talk-item :talk="talk" @deleteTalk="deleteTalk"></talk-item>
-    </view>-->
+    </view>
     <!--wx平台显示的广告-->
     <!--  #ifdef MP-WEIXIN -->
-    <ad class="bg-white mb-5px" unit-id="adunit-ffa7bc1c73c7d46a"></ad>
+    <ad class="bg-white mb-5px w100vw" unit-id="adunit-ffa7bc1c73c7d46a"></ad>
     <!-- <ad class="bg-white mb-5px" unit-id="adunit-65c8911d279d228f" ad-type="video" ad-theme="white"></ad>-->
     <!--  #endif -->
     <!--qq平台显示的广告-->
     <!--  #ifdef MP-QQ -->
-    <ad class="bg-white mb-5px" unit-id="b10fe0e7c39b9ca9e7ce19660f6d0761" test-banner-type="one"></ad>
+    <ad class="bg-white mb-5px w100vw" unit-id="b10fe0e7c39b9ca9e7ce19660f6d0761" test-banner-type="one"></ad>
     <!--  #endif -->
 
     <!--  #ifdef APP-PLUS -->

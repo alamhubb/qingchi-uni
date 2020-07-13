@@ -25,7 +25,6 @@ import UserVO from '@/model/user/UserVO'
 import { namespace } from 'vuex-class'
 import ImgUtil from '@/utils/ImgUtil'
 import UniUtil from '@/utils/UniUtil'
-import CosConst from '@/const/CosConst'
 
 import JsonUtils from '@/utils/JsonUtils'
 import ImgFileVO from '@/model/ImgFileVO'
@@ -33,7 +32,6 @@ import CosUtil from '@/utils/CosUtil'
 import PageUtil from '@/utils/PageUtil'
 import UserStore from '@/plugins/store/UserStore'
 import UserAPI from '@/api/UserAPI'
-import HintMsg from '@/const/HintMsg'
 
 const userStore = namespace('user')
 

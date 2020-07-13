@@ -1,11 +1,5 @@
-import PageUtil from '@/utils/PageUtil'
 import UniUtil from './UniUtil'
 import AppConfig from '@/const/AppConfig'
-import UserStore from '@/plugins/store/UserStore'
-import PagePath from '@/const/PagePath'
-import UserAPI from '@/api/UserAPI'
-import ProviderType from '@/const/ProviderType'
-import HintMsg from '@/const/HintMsg'
 import UserPayResultVO from '@/model/user/UserPayResultVO'
 
 export default class QQUtils {

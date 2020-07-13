@@ -50,7 +50,6 @@ import UserAPI from '@/api/UserAPI'
 import ImgFileVO from '@/model/ImgFileVO'
 import CosUtil from '@/utils/CosUtil'
 import ImgUtil from '@/utils/ImgUtil'
-import CosConst from '@/const/CosConst'
 import PageUtil from '@/utils/PageUtil'
 import HintMsg from '@/const/HintMsg'
 

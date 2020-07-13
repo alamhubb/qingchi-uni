@@ -42,7 +42,7 @@ import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
 import UserVO from '@/model/user/UserVO'
 import FollowAPI from '@/api/FollowAPI'
 import UserUtil from '@/utils/UserUtil'
-import FollowSatus from '@/const/FollowSatus'
+import FollowStatus from '@/const/FollowStatus'
 import FollowAddVO from '@/model/FollowAddVO'
 import PagePath from '@/const/PagePath'
 import PageUtil from '@/utils/PageUtil'
@@ -74,18 +74,18 @@ export default class FollowItem extends Vue {
       if (!this.followBtnDisabled) {
         this.followBtnDisabled = true
         const followAdd: FollowAddVO = new FollowAddVO(this.user.id)
-        if (this.followStatus === FollowSatus.follow) {
+        if (this.followStatus === FollowStatus.follow) {
           // 如果对方关注了自己
           if (this.user.beFollow) {
-            this.followStatus = FollowSatus.eachFollow
+            this.followStatus = FollowStatus.eachFollow
           } else {
-            this.followStatus = FollowSatus.followed
+            this.followStatus = FollowStatus.followed
           }
           FollowAPI.addFollowAPI(followAdd).finally(() => {
             this.followBtnDisabled = false
           })
         } else {
-          this.followStatus = FollowSatus.follow
+          this.followStatus = FollowStatus.follow
           // 进行取消关注操作
           FollowAPI.cancelFollowAPI(followAdd).finally(() => {
             this.followBtnDisabled = false

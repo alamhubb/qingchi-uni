@@ -1,7 +1,7 @@
 import Constants from '@/const/Constant'
 import GenderType from '@/const/GenderType'
 import UserVO from '@/model/user/UserVO'
-import FollowSatus from '@/const/FollowSatus'
+import FollowStatus from '@/const/FollowStatus'
 
 export default class UserUtil {
   static getGenderIcon (user: UserVO): string {
@@ -37,9 +37,9 @@ export default class UserUtil {
   }
 
   static getFollowStatusIcon (followStatus: string): string {
-    if (followStatus === FollowSatus.follow) {
+    if (followStatus === FollowStatus.follow) {
       return 'plus'
-    } else if (followStatus === FollowSatus.eachFollow) {
+    } else if (followStatus === FollowStatus.eachFollow) {
       // return 'swap_horiz'
       return ''
     } else {
@@ -48,7 +48,7 @@ export default class UserUtil {
   }
 
   static getFollowStatusColor (followStatus: string): string {
-    if (followStatus === FollowSatus.follow) {
+    if (followStatus === FollowStatus.follow) {
       return 'blue'
     } else {
       return 'gray'

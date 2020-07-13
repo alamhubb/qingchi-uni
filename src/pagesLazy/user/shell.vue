@@ -43,7 +43,7 @@
                 <u-th>类型</u-th>
                 <u-th>时间</u-th>
               </u-tr>
-              <u-tr v-for="shellOrder in shellOrders">
+              <u-tr v-for="shellOrder in shellOrders" :key="shellOrder.id">
                 <u-td>{{shellOrder.shell}}</u-td>
                 <u-td>{{shellOrder.type}}</u-td>
                 <u-td>{{shellOrder.createTime | parseTime}}</u-td>

@@ -2,7 +2,7 @@
   <view v-if="userProp" class="bg-default">
     <view class="bg-white">
       <view>
-        <swiper v-if="imgUrls.length" class="square-dot size100vw">
+        <swiper v-if="imgUrls.length" class="square-dot sizeUserImg">
           <swiper-item v-for="(img,index) in imgUrls" :key="img">
             <image class="size100vw" @longpress="showBottomMenuClick(index)"
                    :data-src="img"
@@ -159,16 +159,14 @@
           </view>
         </view>
         <!-- #endif -->
-
-        <view v-if="userProp.wxAccount" class="q-box-row q-solid-bottom">
+        <!--<view v-if="userProp.wxAccount" class="q-box-row q-solid-bottom">
           微信：
           <text selectable>{{userProp.wxAccount}}</text>
           <button class="cu-btn radius sm bd-blue ml-10px bg-white"
                   @click="copyText(userProp.wxAccount)">
             复制
           </button>
-        </view>
-
+        </view>-->
         <view v-if="isMine && !userProp.contactAccount" class="q-box-row row-between-center bg-active"
               @click="$pageUtil.toUserContactInfoPage">
           <view class="row-col-center">
@@ -291,7 +289,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch, Emit, PropSync } from 'vue-property-decorator'
+import { Vue, Component, Watch, PropSync } from 'vue-property-decorator'
 import TalkAPI from '@/api/TalkAPI'
 import TalkItem from '@/pages/talk/TalkItem.vue'
 import UserVO from '@/model/user/UserVO'
@@ -303,7 +301,7 @@ import UserEdit from '@/pages/user/UserEdit.vue'
 import UniUtil from '@/utils/UniUtil'
 import PagePath from '@/const/PagePath'
 import FollowAPI from '@/api/FollowAPI'
-import FollowSatus from '@/const/FollowSatus'
+import FollowStatus from '@/const/FollowStatus'
 import PageUtil from '@/utils/PageUtil'
 import LoginDataVO from '@/model/login/LoginDataVO'
 import LoginService from '@/pages/user/LoginService'
@@ -351,7 +349,7 @@ export default class UserInfo extends Vue {
   @PropSync('user') userProp: UserVO
   followBtnDisabled = false
   hasFollowed = false
-  followStatus: string = FollowSatus.follow
+  followStatus: string = FollowStatus.follow
   phoneBtnDisabled = false
   imgIndex = 0
   showUploadImgHint: boolean = uni.getStorageSync(Constants.showUploadImgHintKey) !== 'false'
@@ -688,20 +686,20 @@ export default class UserInfo extends Vue {
         this.followBtnDisabled = true
         const followAdd: FollowAddVO = new FollowAddVO(this.userProp.id)
         // 如果已经关注
-        if (this.followStatus === FollowSatus.follow) {
+        if (this.followStatus === FollowStatus.follow) {
           this.hasFollowed = true
           if (this.userProp.beFollow) {
             // 进行关注操作
-            this.followStatus = FollowSatus.eachFollow
+            this.followStatus = FollowStatus.eachFollow
           } else {
-            this.followStatus = FollowSatus.followed
+            this.followStatus = FollowStatus.followed
           }
           FollowAPI.addFollowAPI(followAdd).finally(() => {
             this.followBtnDisabled = false
           })
         } else {
           this.hasFollowed = false
-          this.followStatus = FollowSatus.follow
+          this.followStatus = FollowStatus.follow
           // 进行取消关注操作
           FollowAPI.cancelFollowAPI(followAdd).finally(() => {
             this.followBtnDisabled = false

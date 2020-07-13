@@ -1,4 +1,4 @@
-export default class FollowSatus {
+export default class FollowStatus {
     // 私信
     static readonly follow: string = '关注'
     static readonly followed: string = '已关注'

@@ -4,8 +4,6 @@ import GetProviderRes = UniApp.GetProviderRes
 import LoginRes = UniApp.LoginRes
 import { Provider } from '@/const/ProviderType'
 import GetUserInfoRes = UniApp.GetUserInfoRes
-import CosConst from '@/const/CosConst'
-import ImgUtil from '@/utils/ImgUtil'
 import ImgFileVO from '@/model/ImgFileVO'
 import HintMsg from '@/const/HintMsg'
 import { systemModule } from '@/plugins/store'

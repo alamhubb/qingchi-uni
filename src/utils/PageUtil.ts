@@ -7,7 +7,6 @@ import BalaBala from '@/utils/BalaBala'
 import SkipUtil from '@/utils/SkipUtil'
 import SkipType from '@/const/SkipType'
 import SkipUrlConst from '@/const/SkipUrlConst'
-import HintMsg from '@/const/HintMsg'
 import MsgUtil from '@/utils/MsgUtil'
 
 export default class PageUtil {

@@ -130,8 +130,10 @@ export default class TalkVue extends Vue {
     tabsTalk: any;
   }
 
-  onLoad () {
-    console.log('触发onload')
+  onLoad (params: any) {
+    if (params.load) {
+      this.initQuery()
+    }
     CommonUtil.showShareMenu()
   }
 

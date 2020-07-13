@@ -281,7 +281,7 @@ export default class TalkAddVue extends Vue {
       .then(() => {
         this.buttonDisabled = false
         uni.hideLoading()
-        PageUtil.reLaunch(PagePath.talk)
+        PageUtil.reLaunch(PagePath.talk + '?load=true')
       })
       .catch(() => {
         this.buttonDisabled = false

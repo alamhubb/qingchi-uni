@@ -5,7 +5,6 @@ import PhoneNumVO from '@/model/user/PhoneNumVO'
 import ImgFileVO from '@/model/ImgFileVO'
 import UserPayVO from '@/model/user/UserPayVO'
 import UserPayResultVO from '@/model/user/UserPayResultVO'
-import PayType from '@/const/PayType'
 import ShellOrderVO from '@/model/ShellOrderVO'
 
 export default class UserAPI {

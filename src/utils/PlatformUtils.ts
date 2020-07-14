@@ -14,7 +14,6 @@ import UserPayResultVO from '@/model/user/UserPayResultVO'
 import BalaBala from '@/utils/BalaBala'
 import MPUtil from '@/utils/MPUtil'
 import APPUtil from '@/utils/APPUtil'
-import PayType from '@/const/PayType'
 
 // 统一处理各平台的订阅
 export default class PlatformUtils {

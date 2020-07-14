@@ -132,7 +132,6 @@ import Constants from '@/const/Constant'
 import QNavbar from '@/components/q-navbar/q-navbar.vue'
 
 const userStore = namespace('user')
-const configStore = namespace('config')
 
 @Component({
   components: { QNavbar, UserInfo, UserEdit, TalkItem, TalkItemContent }

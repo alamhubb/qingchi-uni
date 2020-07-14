@@ -4,9 +4,6 @@ import { appModule } from '@/plugins/store/index'
 import ProviderType, { Provider } from '@/const/ProviderType'
 import PlatformType from '@/const/PlatformType'
 import GetSystemInfoResult = UniApp.GetSystemInfoResult
-import JsonUtils from '@/utils/JsonUtils'
-import AppInitAPI from '@/api/AppInitAPI'
-import MPUtil from '@/utils/MPUtil'
 import PlatformUtils from '@/utils/PlatformUtils'
 
 @Module({ generateMutationSetters: true })

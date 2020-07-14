@@ -17,7 +17,6 @@ export default class UniUtil {
   }
 
   public static textCopy (copyText: string, hint?: string) {
-    console.log(copyText)
     return new Promise((resolve, reject) => {
       uni.setClipboardData({
         data: copyText,

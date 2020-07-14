@@ -264,25 +264,27 @@
     <talk-operate @deleteTalk="deleteTalk"></talk-operate>
     <!--qq平台显示的广告-->
     <!--  #ifdef MP-QQ -->
-    <ad v-if="talks.length>0" class="bg-white mb-5px w100vw" unit-id="72d8cb09a1bae9fa30d9e03e7cb8a25d" type="feeds"></ad>
+    <ad v-if="talks.length>0" class="bg-white mb-5px w100vw" unit-id="72d8cb09a1bae9fa30d9e03e7cb8a25d"
+        type="feeds" ad-height="160"></ad>
+    <!--  #endif -->
+    <!--  #ifdef MP-WEIXIN -->
+    <ad v-if="talks.length>1" class="bg-white mb-5px w100vw" unit-id="adunit-ffa7bc1c73c7d46a"></ad>
     <!--  #endif -->
     <view v-for="talk in talks" :key="talk.id">
       <talk-item :talk="talk" @deleteTalk="deleteTalk"></talk-item>
     </view>
     <!--wx平台显示的广告-->
     <!--  #ifdef MP-WEIXIN -->
-    <ad class="bg-white mb-5px w100vw" unit-id="adunit-ffa7bc1c73c7d46a"></ad>
-    <!-- <ad class="bg-white mb-5px" unit-id="adunit-65c8911d279d228f" ad-type="video" ad-theme="white"></ad>-->
+    <ad class="bg-white mt-20px mb-100px w100vw" unit-id="adunit-65c8911d279d228f" ad-type="video"
+        ad-theme="white"></ad>
     <!--  #endif -->
     <!--qq平台显示的广告-->
     <!--  #ifdef MP-QQ -->
-    <ad class="bg-white mb-5px w100vw" unit-id="b10fe0e7c39b9ca9e7ce19660f6d0761" test-banner-type="one"></ad>
+    <ad class="bg-white mt-20px mb-100px w100vw" unit-id="b10fe0e7c39b9ca9e7ce19660f6d0761" test-banner-type="one"></ad>
     <!--  #endif -->
-
     <!--  #ifdef APP-PLUS -->
     <!--    <ad class="bg-white mb-5px" adpid="1890536227"></ad>-->
     <!--  #endif -->
-
     <uni-popup ref="editPopup" type="center">
       <user-edit @close="closeUserEditPop"></user-edit>
     </uni-popup>
@@ -491,38 +493,17 @@ export default class UserInfo extends Vue {
       UniUtil.error('最多上传3张照片，请删除后继续！')
       return
     }
-    uni.chooseImage({
-      sourceType: ['album'],
-      sizeType: ['original'],
-      // sizeType: ['compressed'],
-      count: 1,
-      success: (res) => {
-        const imgFile: ImgFileVO = res.tempFiles[0]
-        // 不能大于10m大于10m就压缩不到100k
-        const imgSize: number = imgFile.size
-        if (imgSize / 1024 / 1024 > 10) {
-          UniUtil.error('图片大小不能超过10MB！')
-          return
-        }
-        UniUtil.showLoading('上传中')
-        // 获取文件名
-        // 朝着100kb压缩？
-        uni.getImageInfo({
-          src: imgFile.path,
-          success: (image) => {
-            imgFile.aspectRatio = image.width / image.height
-            // user/id/talk/24324.img
-            imgFile.src = ImgUtil.getUserImgUploadFormat(this.userProp.id, imgFile.path)
-            CosUtil.postObject(imgFile).then(() => {
-              UserAPI.addUserImgAPI(imgFile).then((res: any) => {
-                UserStore.setMineUser(res.data)
-              }).finally(() => {
-                UniUtil.hideLoading()
-              })
-            })
-          }
+    UniUtil.chooseImage(1).then(imgFiles => {
+      const imgFile: ImgFileVO = imgFiles[0]
+      imgFile.src = ImgUtil.getUserImgUploadFormat(this.userProp.id, imgFile.path)
+      UniUtil.showLoading('上传中')
+      CosUtil.postObject(imgFile).then(() => {
+        UserAPI.addUserImgAPI(imgFile).then((res: any) => {
+          UserStore.setMineUser(res.data)
         })
-      }
+      }).finally(() => {
+        UniUtil.hideLoading()
+      })
     })
   }
 

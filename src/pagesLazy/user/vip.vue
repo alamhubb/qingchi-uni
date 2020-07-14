@@ -35,6 +35,8 @@ import UserInfo from '@/pages/user/UserInfo.vue'
 import UniUtil from '@/utils/UniUtil'
 import ConfigMap from '@/const/ConfigMap'
 import PlatformUtils from '@/utils/PlatformUtils'
+import { systemModule } from '@/plugins/store'
+import PayType from '@/const/PayType'
 
 const userStore = namespace('user')
 const configStore = namespace('config')
@@ -50,7 +52,7 @@ export default class VipVue extends Vue {
     if (this.user.vipFlag) {
       UniUtil.hint('您已开通会员，无需重复开通')
     } else {
-      PlatformUtils.payVip()
+      PlatformUtils.userPay(systemModule.provider, PayType.vip)
     }
   }
 }

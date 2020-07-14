@@ -41,7 +41,11 @@ http.interceptor.response(
           // 理论上不需要，因为token不会失效，也不会错误
           // 已知可能，切换环境导致token不同
           TokenUtil.remove()
-          BalaBala.unLoginMessage()
+          if (result && result.errorMsg) {
+            UniUtil.error(result.errorMsg)
+          } else {
+            BalaBala.unLoginMessage()
+          }
           break
         case ErrorCode.banned:
           TokenUtil.remove()

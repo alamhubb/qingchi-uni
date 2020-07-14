@@ -14,6 +14,7 @@ import UserPayResultVO from '@/model/user/UserPayResultVO'
 import BalaBala from '@/utils/BalaBala'
 import MPUtil from '@/utils/MPUtil'
 import APPUtil from '@/utils/APPUtil'
+import PayType from '@/const/PayType'
 
 // 统一处理各平台的订阅
 export default class PlatformUtils {
@@ -67,48 +68,34 @@ export default class PlatformUtils {
     // #endif
   }
 
-
   // 统一处理各平台的支付
-  static getUserContactPay (amount: number) {
-    return UserAPI.userPayAPI(systemModule.provider, amount).then((res) => {
-      return PlatformUtils.cashPay(res.data)
-    })
-  }
-
-  static shellPay (amount: number) {
-    return UserAPI.userPayAPI(systemModule.provider, amount).then((res) => {
-      return PlatformUtils.userPay(res.data)
-    })
-  }
-
-  // 统一处理各平台的支付
-  static payVip () {
-    UserAPI.payVipAPI(systemModule.provider).then((res) => {
-      return PlatformUtils.userPay(res.data)
-    })
-  }
-
-  //负责统一处理跳转到刷新用户并跳转到用户页面
-  static userPay (res: UserPayResultVO) {
-    return PlatformUtils.cashPay(res)
-      .then(() => {
-        UserStore.getMineUserAction().then(() => {
-          UniUtil.hint(HintMsg.paySuccessMsg)
-          PageUtil.reLaunch(PagePath.userMine)
-        })
+  static userPay (provider: string, payType: string, amount?: number) {
+    return PlatformUtils.pay(provider, payType, amount).then(() => {
+      UserStore.getMineUserAction().then(() => {
+        UniUtil.hint(HintMsg.paySuccessMsg)
+        PageUtil.reLaunch(PagePath.userMine)
       })
+    })
   }
 
-  static async cashPay (res: UserPayResultVO): Promise<any> {
+  //所有只能直接调用这个
+  static async pay (provider: string, payType: string, amount?: number) {
     if (!userModule.user) {
       return BalaBala.unLoginMessage()
     } else if (systemModule.isIos) {
       MsgUtil.iosDisablePay()
       throw ''
-    } else if (!systemModule.isMp) {
+    }
+    /*else if (!systemModule.isMp) {
       MsgUtil.notMpDisablePay()
       throw ''
-    }
+    }*/
+    return UserAPI.userPayAPI(provider, payType, amount).then((res) => {
+      return PlatformUtils.cashPay(res.data)
+    })
+  }
+
+  private static async cashPay (res: UserPayResultVO): Promise<any> {
     return PlatformUtils.requestPayment(res)
       .catch((err) => {
         if (err.errMsg === Constants.payCancel) {
@@ -125,7 +112,7 @@ export default class PlatformUtils {
   //会员走userPay
   //会员走cashPay
   //底层requestPayment处理平台差异。
-  static requestPayment (payResult: UserPayResultVO) {
+  private static async requestPayment (payResult: UserPayResultVO) {
     if (systemModule.isMpQQ) {
       return QQUtils.requestPayment(payResult)
     } else if (systemModule.isMpWX) {

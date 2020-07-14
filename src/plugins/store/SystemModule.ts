@@ -43,6 +43,7 @@ export default class SystemModule extends VuexModule {
     WebsocketUtil.websocketConnect(false)
     // 初始化数据看一下这些请求是否可以合并 登陆之后也要链接websocket
     appModule.initGlobalDataLoadAPI()
+    appModule.initGlobalDataReadyAPI()
     // 不为app平台在这里设置platform否则在systemInfo中设置
   }
 

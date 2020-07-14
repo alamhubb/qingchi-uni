@@ -71,6 +71,8 @@ import { namespace } from 'vuex-class'
 import UserVO from '@/model/user/UserVO'
 import ShellOrderVO from '@/model/ShellOrderVO'
 import UserAPI from '@/api/UserAPI'
+import { systemModule } from '@/plugins/store'
+import PayType from '@/const/PayType'
 
 const userStore = namespace('user')
 
@@ -104,7 +106,7 @@ export default class ShellVue extends Vue {
   }
 
   userPay () {
-    PlatformUtils.shellPay(this.currentAmount)
+    PlatformUtils.userPay(systemModule.provider, PayType.shell, this.currentAmount)
   }
 }
 </script>

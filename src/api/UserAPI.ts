@@ -55,12 +55,8 @@ export default class UserAPI {
     return http.post<string>('user/switchUserContact?openContact=' + openContact)
   }
 
-  static payVipAPI (platform: string) {
-    return http.post<UserPayResultVO>('user/payVip?platform=' + platform)
-  }
-
-  static userPayAPI (platform: string, amount?: number) {
-    const userPayVO = new UserPayVO(platform, PayType.shell, amount)
+  static userPayAPI (provider: string, payType: string, amount?: number) {
+    const userPayVO = new UserPayVO(provider, payType, amount)
     return http.post<UserPayResultVO>('user/pay', userPayVO)
   }
 

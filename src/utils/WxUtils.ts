@@ -28,7 +28,7 @@ export default class WxUtils {
     })
   }
 
-  static async requestPayment (payResult: UserPayResultVO): Promise<void> {
+  static requestPayment (payResult: UserPayResultVO): Promise<void> {
     return new Promise((resolve, reject) => {
       wx.requestPayment({
         timeStamp: payResult.timeStamp,

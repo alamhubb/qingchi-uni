@@ -330,6 +330,7 @@ import { systemModule } from '@/plugins/store'
 import QRowItem from '@/components/q-row-item/q-row-item.vue'
 import QRow from '@/components/q-row/q-row.vue'
 import MsgUtil from '@/utils/MsgUtil'
+import PayType from '@/const/PayType'
 
 const userStore = namespace('user')
 const appStore = namespace('app')
@@ -381,7 +382,7 @@ export default class UserInfo extends Vue {
         })
       } else {
         UniUtil.action('您没有贝壳了，是否直接使用现金支付').then(() => {
-          PlatformUtils.getUserContactPay(1).then(() => {
+          PlatformUtils.pay(systemModule.provider, PayType.shell, 1).then(() => {
             UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
               this.userProp.contactAccount = res.data
               this.userProp.showUserContact = true

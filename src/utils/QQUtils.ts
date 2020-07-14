@@ -28,7 +28,7 @@ export default class QQUtils {
     })
   }
 
-  static async requestPayment (payResult: UserPayResultVO): Promise<void> {
+  static requestPayment (payResult: UserPayResultVO): Promise<void> {
     return new Promise((resolve, reject) => {
       qq.requestPayment({
         package: payResult.package,

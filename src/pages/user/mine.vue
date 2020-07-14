@@ -1,16 +1,14 @@
 <template>
   <view class="bg-default h100r">
     <view v-if="user">
-      <u-navbar :is-back="false">
-        <view class="row-between w100r">
-          <view class="ml-xl text-bold text-lg">
-            个人资料
-          </view>
-          <view class="mr">
-            <q-icon icon="list" size="56" @click="showMoreList=true"></q-icon>
-          </view>
+      <q-navbar class="q-solid-bottom">
+        <view class="ml-xl text-bold text-lg flex-auto">
+          个人资料
         </view>
-      </u-navbar>
+        <view class="mr">
+          <q-icon icon="list" size="56" @click="showMoreList=true"></q-icon>
+        </view>
+      </q-navbar>
 
       <user-info :user="user"></user-info>
 
@@ -37,6 +35,14 @@
             <navigator :url="contactUsUrl" class="row-col-center flex-auto">
               <view class="row-col-center flex-auto">
                 联系我们
+              </view>
+              <q-icon icon="arrow-right" class="text-lg margin-right-sm"></q-icon>
+            </navigator>
+          </q-row-item>
+          <q-row-item>
+            <navigator :url="homeUrl" class="row-col-center flex-auto">
+              <view class="row-col-center flex-auto">
+                关于我们
               </view>
               <q-icon icon="arrow-right" class="text-lg margin-right-sm"></q-icon>
             </navigator>
@@ -116,15 +122,15 @@ import ConfigMap from '@/const/ConfigMap'
 import SkipUrlConst from '@/const/SkipUrlConst'
 import { systemModule } from '@/plugins/store'
 import Constants from '@/const/Constant'
+import QNavbar from '@/components/q-navbar/q-navbar.vue'
 
 const userStore = namespace('user')
 const configStore = namespace('config')
 
 @Component({
-  components: { UserInfo, UserEdit, TalkItem, TalkItemContent }
+  components: { QNavbar, UserInfo, UserEdit, TalkItem, TalkItemContent }
 })
 export default class MineVue extends Vue {
-  @configStore.Getter(ConfigMap.homeUrlKey) homeUrl: string
   @userStore.State('user') user: UserVO
   showMsgInput = false
   showMoreList = false
@@ -147,12 +153,16 @@ export default class MineVue extends Vue {
     this.initQuery()
   }
 
+  get homeUrl (): string {
+    return SkipUrlConst.homeUrl()
+  }
+
   get suggestUrl (): string {
     return SkipUrlConst.suggestUrl()
   }
 
   get contactUsUrl (): string {
-    return SkipUrlConst.homeUrl()
+    return SkipUrlConst.contactUsUrl()
   }
 
   get userAgreementUrl (): string {

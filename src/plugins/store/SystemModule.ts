@@ -4,6 +4,10 @@ import { appModule } from '@/plugins/store/index'
 import ProviderType, { Provider } from '@/const/ProviderType'
 import PlatformType from '@/const/PlatformType'
 import GetSystemInfoResult = UniApp.GetSystemInfoResult
+import JsonUtils from '@/utils/JsonUtils'
+import AppInitAPI from '@/api/AppInitAPI'
+import MPUtil from '@/utils/MPUtil'
+import PlatformUtils from '@/utils/PlatformUtils'
 
 @Module({ generateMutationSetters: true })
 export default class SystemModule extends VuexModule {
@@ -36,36 +40,13 @@ export default class SystemModule extends VuexModule {
 
   @Action
   appInit () {
-    this.requestUpdate()
+    // 执行获取系统信息的函数
+    this.getSystemInfo()
+    PlatformUtils.checkUpdate()
     WebsocketUtil.websocketConnect(false)
     // 初始化数据看一下这些请求是否可以合并 登陆之后也要链接websocket
     appModule.initGlobalDataLoadAPI()
     // 不为app平台在这里设置platform否则在systemInfo中设置
-    // 执行获取系统信息的函数
-    this.getSystemInfo()
-  }
-
-  @Action
-  requestUpdate () {
-    // 如果小程序平台则需要更新
-    // #ifdef MP
-    const updateManager = uni.getUpdateManager()
-    updateManager.onCheckForUpdate(() => {
-    })
-    updateManager.onUpdateReady(() => {
-      uni.showModal({
-        title: '更新提示',
-        content: '新版本已经准备好，是否重启应用？',
-        success (res) {
-          if (res.confirm) {
-            // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
-            updateManager.applyUpdate()
-          }
-        }
-      })
-    })
-    updateManager.onUpdateFailed()
-    // #endif
   }
 
   @Action

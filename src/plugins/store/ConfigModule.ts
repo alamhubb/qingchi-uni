@@ -1,6 +1,7 @@
 import { VuexModule, Module } from 'vuex-class-modules'
 import ConfigMap from '@/const/ConfigMap'
 import Lodash from '@/utils/Lodash'
+import { configModule } from '@/plugins/store/index'
 
 @Module({ generateMutationSetters: true })
 export default class ConfigModule extends VuexModule {
@@ -126,6 +127,10 @@ export default class ConfigModule extends VuexModule {
     } else {
       return this.appConfig[ConfigMap.qqServiceKey]
     }
+  }
+
+  get contactService (): string {
+    return '请联系客服：' + this.qqService
   }
 
   get wbService (): string {

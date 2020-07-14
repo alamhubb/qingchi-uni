@@ -122,7 +122,6 @@ export default class AppModule extends VuexModule {
           }
         }
       }
-      UserStore.initUserStore(res)
     }).finally(() => {
       tabObj.loadMore = LoadMoreType.more
       //延迟1秒。避免user watch重复查询，只要在这些时间内不登陆就没问题，只要在watch之后就没问题。在差的机子500毫秒也反应过来了吧。
@@ -136,6 +135,7 @@ export default class AppModule extends VuexModule {
   @Action
   initGlobalDataReadyAPI () {
     AppInitAPI.queryAppInitDataReadyAPI().then((res: ResultVO<AppInitDataVO>) => {
+      UserStore.initUserStore(res)
       // 应用全局数据
       this.tags = res.data.tags
       this.tagTypes = res.data.tagTypes

@@ -135,11 +135,12 @@ export default class UniUtil {
     })
   }
 
-  public static action (msg: string, okLabel?: string) {
+  public static action (msg: string, okLabel = '确定', cancel = '取消') {
     return new Promise((resolve, reject) => {
       uni.showModal({
         content: msg,
-        confirmText: okLabel || '确定',
+        confirmText: okLabel,
+        cancelText: cancel,
         success (res) {
           if (res.confirm) {
             resolve()
@@ -303,6 +304,18 @@ export default class UniUtil {
         fail: err => {
           reject(err)
         }
+      })
+    })
+  }
+
+  public static install (filePath: string) {
+    return new Promise<any>((resolve, reject) => {
+      plus.runtime.install(filePath, {
+        force: false
+      }, () => {
+        resolve()
+      }, (e) => {
+        reject(e)
       })
     })
   }

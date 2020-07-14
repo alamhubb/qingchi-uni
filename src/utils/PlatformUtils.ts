@@ -12,6 +12,8 @@ import Constants from '@/const/Constant'
 import MsgUtil from '@/utils/MsgUtil'
 import UserPayResultVO from '@/model/user/UserPayResultVO'
 import BalaBala from '@/utils/BalaBala'
+import MPUtil from '@/utils/MPUtil'
+import APPUtil from '@/utils/APPUtil'
 
 // 统一处理各平台的订阅
 export default class PlatformUtils {
@@ -131,5 +133,15 @@ export default class PlatformUtils {
     } else {
       throw '不存在的支付渠道'
     }
+  }
+
+
+  static checkUpdate () {
+    // #ifdef MP
+    MPUtil.checkUpdate()
+    // #endif
+    // #ifdef APP-PLUS
+    APPUtil.checkUpdate()
+    // #endif
   }
 }

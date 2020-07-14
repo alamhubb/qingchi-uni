@@ -1,0 +1,29 @@
+import AppInitAPI from '@/api/AppInitAPI'
+import UniUtil from '@/utils/UniUtil'
+import AppUpdateType from '@/const/AppUpdateType'
+import { configModule } from '@/plugins/store'
+
+export default class APPUtil {
+  static checkUpdate () {
+    plus.runtime.getProperty(plus.runtime.appid, (widgetInfo) => {
+      const version = widgetInfo.version.split('.').join('')
+      AppInitAPI.checkUpdateAPI(Number(version)).then((res) => {
+        const updateType = res.data.updateType
+        const updateUrl = res.data.updateUrl
+        if (AppUpdateType.install === updateType) {
+          UniUtil.action('应用有新版本，请点击更新，即前往应用商店更新', '更新').then(() => {
+            plus.runtime.openURL(updateUrl)
+          })
+        } else if (AppUpdateType.hot === updateType) {
+          UniUtil.install(updateUrl).then(() => {
+            UniUtil.action('更新成功，是否现在重启清池app', '重启', '稍后').then(() => {
+              plus.runtime.restart()
+            })
+          }).catch(() => {
+            UniUtil.hint('更新失败，' + configModule.contactUsUrl)
+          })
+        }
+      })
+    })
+  }
+}

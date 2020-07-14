@@ -86,7 +86,10 @@ export default class SystemModule extends VuexModule {
     const platform: string = systemInfo.platform
     if ((platform && (platform === PlatformType.ios)) || (model && (model.indexOf('iPhone') > -1 || model.indexOf('iPad') > -1))) {
       this.isIos = true
-      this.platform = PlatformType.ios
+      //必须有此判断，要不然会覆盖mp的值
+      if (this.isApp) {
+        this.platform = PlatformType.ios
+      }
     }
     this.screenHeight = systemInfo.screenHeight
     this.windowHeight = systemInfo.windowHeight

@@ -1,6 +1,7 @@
 export default class JsonUtils {
   // 改成any类型
   public static deepClone (object: any): any {
+    console.log(object)
     return JSON.parse(JSON.stringify(object))
   }
 

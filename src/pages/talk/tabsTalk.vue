@@ -382,7 +382,8 @@ export default class TabsTalkVue extends Vue {
     // 切换时截取其他的只保留后20条
     this.talkTabs.forEach((item, index) => {
       if (index !== current) {
-        item.talks = item.talks.slice(-10)
+        //截取20
+        item.talks = item.talks.slice(-20)
         item.loadMore = LoadMoreType.more
       }
     })

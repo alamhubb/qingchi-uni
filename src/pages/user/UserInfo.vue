@@ -192,7 +192,7 @@
             <view v-if="userProp.contactAccount" class="row-between-center">
               <text v-if="userProp.openContact" class="mr-xs text-green">展示中</text>
               <text v-else class="mr-xs text-gray">已隐藏</text>
-              <u-switch v-model="userProp.openContact" active-color="#00C853" @change="switchOpenContact"></u-switch>
+              <u-switch v-model="mineUser.openContact" active-color="#00C853" @change="switchOpenContact"></u-switch>
             </view>
             <button v-else class="mr-xs cu-btn sm bd-none text-sm bd-box-radius bg-orange"
                     @click="openEditDialog">
@@ -744,6 +744,7 @@ export default class UserInfo extends Vue {
   switchOpenContact (openContact) {
     let actionMsg
     let hintMsg
+    //修改后状态
     if (openContact) {
       actionMsg = '是否确定展示联系方式'
       hintMsg = '展示成功'
@@ -755,7 +756,7 @@ export default class UserInfo extends Vue {
       UserAPI.switchUserContactAPI(openContact).then(() => {
         UniUtil.toast(hintMsg)
       }).catch(() => {
-        this.userProp.openContact = !openContact
+        this.mineUser.openContact = !openContact
       })
     })
   }

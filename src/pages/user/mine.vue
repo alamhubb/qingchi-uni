@@ -6,7 +6,7 @@
           个人资料
         </view>
         <view class="mr">
-          <q-icon icon="list" size="56" @click="showMoreList=true"></q-icon>
+          <q-icon icon="list" size="56" @click="showMoreListAction"></q-icon>
         </view>
       </q-navbar>
 
@@ -46,6 +46,14 @@
               </view>
               <q-icon icon="arrow-right" class="text-lg margin-right-sm"></q-icon>
             </navigator>
+          </q-row-item>
+          <q-row-item>
+            <view class="row-col-center flex-auto" @click="logout">
+              <view class="row-col-center flex-auto">
+                退出登陆
+              </view>
+              <q-icon icon="arrow-right" class="text-lg margin-right-sm"></q-icon>
+            </view>
           </q-row-item>
           <q-row>
             <view class="w100r row-grid">
@@ -118,7 +126,6 @@ import LoginService from '@/pages/user/LoginService'
 import UniUtil from '@/utils/UniUtil'
 import UserStore from '@/plugins/store/UserStore'
 import CommonUtil from '@/utils/CommonUtil'
-import ConfigMap from '@/const/ConfigMap'
 import SkipUrlConst from '@/const/SkipUrlConst'
 import { systemModule } from '@/plugins/store'
 import Constants from '@/const/Constant'
@@ -147,6 +154,21 @@ export default class MineVue extends Vue {
 
   onHide () {
     this.showMsgInput = false
+  }
+
+  logout () {
+    this.hideMoreList()
+    UserStore.loginOut().catch(() => {
+      this.showMoreListAction()
+    })
+  }
+
+  showMoreListAction () {
+    this.showMoreList = true
+  }
+
+  hideMoreList () {
+    this.showMoreList = false
   }
 
   onPullDownRefresh () {

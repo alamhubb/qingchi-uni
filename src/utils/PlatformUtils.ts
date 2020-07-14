@@ -85,11 +85,10 @@ export default class PlatformUtils {
     } else if (systemModule.isIos) {
       MsgUtil.iosDisablePay()
       throw ''
-    }
-    /*else if (!systemModule.isMp) {
+    } else if (!systemModule.isMp) {
       MsgUtil.notMpDisablePay()
       throw ''
-    }*/
+    }
     return UserAPI.userPayAPI(provider, payType, amount).then((res) => {
       return PlatformUtils.cashPay(res.data)
     })

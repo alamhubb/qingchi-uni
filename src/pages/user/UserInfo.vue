@@ -593,7 +593,7 @@ export default class UserInfo extends Vue {
 
   moreAction () {
     if (this.isMine) {
-      const menuList: string [] = ['刷新', '编辑', '退出']
+      const menuList: string [] = ['刷新', '编辑', '退出登陆']
       UniUtil.actionSheet(menuList).then((index: number) => {
         if (index === 0) {
           this.refreshMine()
@@ -732,9 +732,7 @@ export default class UserInfo extends Vue {
   }
 
   loginOut () {
-    UniUtil.action('是否退出登录').then(() => {
-      UserStore.loginOut()
-    })
+    UserStore.loginOut()
   }
 
   //前往贝壳页面

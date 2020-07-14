@@ -60,12 +60,14 @@ export default class UserStore {
   }
 
   static loginOut () {
-    TokenUtil.remove()
-    WebsocketUtil.websocketClose()
-    UserStore.setMineUser(null)
-    chatModule.getChatsAction()
-    //没必要重设地理位置吧
-    // DistrictUtil.重设地理位(DistrictUtil.initDistrict)
-    UniUtil.toast('用户退出')
+    return UniUtil.action('是否退出登录').then(() => {
+      TokenUtil.remove()
+      WebsocketUtil.websocketClose()
+      UserStore.setMineUser(null)
+      chatModule.getChatsAction()
+      //没必要重设地理位置吧
+      // DistrictUtil.重设地理位(DistrictUtil.initDistrict)
+      UniUtil.toast('用户退出')
+    })
   }
 }

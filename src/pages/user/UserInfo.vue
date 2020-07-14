@@ -1,6 +1,6 @@
 <template>
-  <view v-if="userProp" class="bg-default">
-    <view class="bg-white">
+  <view v-if="userProp" class="bg-default pb-100px">
+    <view class="bg-white mb-5px">
       <view>
         <swiper v-if="imgUrls.length" class="square-dot sizeUserImg">
           <swiper-item v-for="(img,index) in imgUrls" :key="img">
@@ -275,12 +275,12 @@
     </view>
     <!--wx平台显示的广告-->
     <!--  #ifdef MP-WEIXIN -->
-    <ad class="bg-white mt-20px mb-100px w100vw" unit-id="adunit-65c8911d279d228f" ad-type="video"
+    <ad class="bg-white mt-10px w100vw" unit-id="adunit-65c8911d279d228f" ad-type="video"
         ad-theme="white"></ad>
     <!--  #endif -->
     <!--qq平台显示的广告-->
     <!--  #ifdef MP-QQ -->
-    <ad class="bg-white mt-20px mb-100px w100vw" unit-id="b10fe0e7c39b9ca9e7ce19660f6d0761" test-banner-type="one"></ad>
+    <ad class="bg-white mt-10px w100vw" unit-id="b10fe0e7c39b9ca9e7ce19660f6d0761" test-banner-type="one"></ad>
     <!--  #endif -->
     <!--  #ifdef APP-PLUS -->
     <!--    <ad class="bg-white mb-5px" adpid="1890536227"></ad>-->

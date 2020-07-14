@@ -1,7 +1,6 @@
 import { VuexModule, Module } from 'vuex-class-modules'
 import ConfigMap from '@/const/ConfigMap'
 import Lodash from '@/utils/Lodash'
-import { configModule } from '@/plugins/store/index'
 
 @Module({ generateMutationSetters: true })
 export default class ConfigModule extends VuexModule {

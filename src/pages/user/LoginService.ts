@@ -13,7 +13,7 @@ export default class LoginService {
   static getLoginData (provider: Provider) {
     return UniUtil.login(provider).then((loginRes) => {
       const loginData: LoginDataVO = new LoginDataVO()
-      loginData.loginType = provider
+      loginData.provider = provider
       loginData.platform = systemModule.platform
       if (PlatformType.mp === loginData.platform) {
         loginData.code = loginRes.code

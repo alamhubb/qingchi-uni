@@ -16,7 +16,6 @@ import UnreadNotifyVO from '@/model/UnreadNotifyVO'
 import UserVO from '@/model/user/UserVO'
 import AppInitQueryVO from '@/model/common/AppInitQueryVO'
 import TalkVueUtil from '@/utils/TalkVueUtil'
-import TalkFilterUtil from '@/utils/TalkFilterUtil'
 import LoadMoreType from '@/const/LoadMoreType'
 import UniUtil from '@/utils/UniUtil'
 
@@ -79,28 +78,12 @@ export default class AppModule extends VuexModule {
   initGlobalDataLoadAPI () {
     // 静态类，方法，只要使用这个方法，参数能自动传进来
     // 查询所有地区相关
-    const initQueryVO = new AppInitQueryVO()
-    const district = appModule.district
-    //如果为初始才传ad
-    if (appModule.openPosition) {
-      initQueryVO.adCode = district.adCode
-      initQueryVO.openPosition = appModule.openPosition
-      DistrictUtil.getCurPositionBySDK().then((res: DistrictVO) => {
-        if (res) {
-          initQueryVO.lon = res.lon
-          initQueryVO.lat = res.lat
-        }
-      })
-    } else {
-      initQueryVO.adCode = district.adCode
-    }
     const talkTabIndex = TalkVueUtil.getCurTalkTabIndex()
     const tabObj = talkModule.talkTabs[talkTabIndex]
     tabObj.loadMore = LoadMoreType.loading
-    initQueryVO.homeType = tabObj.type
-    initQueryVO.gender = TalkFilterUtil.getGenderFilter()
-    initQueryVO.minAge = TalkFilterUtil.getMinAgeFilter()
-    initQueryVO.maxAge = TalkFilterUtil.getMaxAgeFilter()
+    const district = appModule.district
+
+    const initQueryVO = new AppInitQueryVO(tabObj, district)
 
     AppInitAPI.queryAppInitDataLoadAPI(initQueryVO).then((res: ResultVO<AppInitDataVO>) => {
       tabObj.talks = res.data.talks

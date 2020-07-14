@@ -158,6 +158,8 @@ import QIcon from '@/components/q-icon/q-icon.vue'
 import SkipUrlConst from '@/const/SkipUrlConst'
 import ProviderType from '@/const/ProviderType'
 import LoginService from '@/pages/user/LoginService'
+import LoginDataVO from '@/model/login/LoginDataVO'
+import { systemModule } from '@/plugins/store'
 
 const userStore = namespace('user')
 const configStore = namespace('config')
@@ -331,7 +333,13 @@ export default class LoginVue extends Vue {
           this.bindBtnDisabled = false
         })
       } else {
-        LoginAPI.nmpAppLoginAPI(this.phoneNum, this.authCode).then(() => {
+        const loginData = new LoginDataVO()
+        loginData.phoneNum = this.phoneNum
+        loginData.authCode = this.authCode
+        loginData.provider = ProviderType.phone
+        loginData.platform = systemModule.platform
+
+        LoginAPI.platformLoginAPI(loginData).then(() => {
           // 提示验证码发送成功
           UniUtil.hint('登录成功')
         }).finally(() => {

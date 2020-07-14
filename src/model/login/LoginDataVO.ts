@@ -1,5 +1,5 @@
 export default class LoginDataVO {
-  loginType = ''
+  provider = ''
   platform = ''
 
   openId = ''

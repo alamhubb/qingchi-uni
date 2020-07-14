@@ -129,7 +129,7 @@ export default class ConfigModule extends VuexModule {
   }
 
   get contactService (): string {
-    return '请联系客服：' + this.qqService
+    return '请联系客服qq：' + this.qqService
   }
 
   get wbService (): string {

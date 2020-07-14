@@ -135,7 +135,6 @@ export default class PlatformUtils {
     }
   }
 
-
   static checkUpdate () {
     // #ifdef MP
     MPUtil.checkUpdate()

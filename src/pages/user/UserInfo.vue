@@ -179,7 +179,7 @@
         </view>
         <!-- 如果自己的话-->
         <!-- 左边格式不变，如果未填写则可以填写，填写之后可以选择开启或者关闭，填写后可选择隐藏展示。-->
-        <view class="q-box-row row-between-center q-solid-bottom">
+        <view class="q-box-row row-between-center">
           <view class="row-col-center">
             <q-icon class="text-gray mr-xs" size="50" icon="account"/>
             联系方式：
@@ -214,7 +214,7 @@
             </button>
           </view>
         </view>
-        <view v-if="isMine" class="q-box-row row-between-center" @click="toUserShell">
+        <view v-if="isMine" class="q-solid-top q-box-row row-between-center" @click="toUserShell">
           <view class="row-col-center">
             <q-icon class="text-green mr-xs" size="50" icon="mdi-bitcoin"/>
             <text class="text-lgg">我的贝壳（{{mineUser.shell}}）</text>

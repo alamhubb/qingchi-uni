@@ -296,7 +296,8 @@ export default class UniUtil {
     return new Promise<string>((resolve, reject) => {
       uni.compressImage({
         src: filePath,
-        quality: quality,
+        //默认最低20
+        quality: Math.max(quality, 20),
         success: res => {
           resolve(res.tempFilePath)
         },

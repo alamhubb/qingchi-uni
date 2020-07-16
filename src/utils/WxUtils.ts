@@ -1,6 +1,8 @@
 import UniUtil from './UniUtil'
 import AppConfig from '@/const/AppConfig'
 import UserPayResultVO from '@/model/user/UserPayResultVO'
+import PlatformType from '@/const/PlatformType'
+import { systemModule } from '@/plugins/store'
 
 export default class WxUtils {
   static subscribeAppMsg (tmplIds: string[]) {
@@ -30,19 +32,41 @@ export default class WxUtils {
 
   static requestPayment (payResult: UserPayResultVO): Promise<void> {
     return new Promise((resolve, reject) => {
-      wx.requestPayment({
-        timeStamp: payResult.timeStamp,
-        nonceStr: payResult.nonceStr,
-        package: payResult.package,
-        signType: 'MD5',
-        paySign: payResult.paySign,
-        success () {
-          resolve()
-        },
-        fail (err) {
-          reject(err)
+      if (PlatformType.mp === systemModule.platform) {
+        wx.requestPayment({
+          timeStamp: payResult.timeStamp,
+          nonceStr: payResult.nonceStr,
+          package: payResult.package,
+          signType: 'MD5',
+          paySign: payResult.paySign,
+          success () {
+            resolve()
+          },
+          fail (err) {
+            reject(err)
+          }
+        })
+      } else {
+        const orderInfo = {
+          appid: AppConfig.wx_app_id,
+          partnerid: AppConfig.wx_partnerid_id,
+          prepayid: payResult.prepayid,
+          package: payResult.package,
+          noncestr: payResult.nonceStr,
+          timestamp: payResult.timeStamp,
+          sign: payResult.paySign
         }
-      })
+        uni.requestPayment({
+          provider: 'wxpay',
+          orderInfo: orderInfo,
+          success () {
+            resolve()
+          },
+          fail (err) {
+            reject(err)
+          }
+        })
+      }
     })
   }
 }

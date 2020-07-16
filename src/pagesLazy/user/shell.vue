@@ -19,7 +19,7 @@
     <view class="px">
       <u-subsection :list="payValues" :current="0" @change="switchAmount"></u-subsection>
       <view class="pt-sm">
-        <view class="text-lg" @click="toShellInfo">
+        <view class="text-lg">
           提示：1元 = 10贝壳，可用于获取他人联系方式，一但交易成功，不支持退款，请谨慎付款
           <!--，并赠送与贝壳数量同等的等级积分。详细介绍请点 -
           <q-icon class="text-gray" icon="arrow-right" size="32"></q-icon>
@@ -71,8 +71,8 @@ import { namespace } from 'vuex-class'
 import UserVO from '@/model/user/UserVO'
 import ShellOrderVO from '@/model/ShellOrderVO'
 import UserAPI from '@/api/UserAPI'
-import { systemModule } from '@/plugins/store'
 import PayType from '@/const/PayType'
+import ProviderType from '@/const/ProviderType'
 
 const userStore = namespace('user')
 
@@ -106,7 +106,7 @@ export default class ShellVue extends Vue {
   }
 
   userPay () {
-    PlatformUtils.userPay(systemModule.provider, PayType.shell, this.currentAmount)
+    PlatformUtils.userPay(ProviderType.wx, PayType.shell, this.currentAmount)
   }
 }
 </script>

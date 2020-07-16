@@ -7,7 +7,7 @@ export default class AppConfig {
 
   // qq相关
   // qq小程序商户
-  static readonly qq_bargainor_id: string = process.env.VUE_APPE_QQ_BARGAINOR_ID
+  static readonly qq_bargainor_id: string = process.env.VUE_APP_QQ_BARGAINOR_ID
   //app广告id
   static readonly app_feed_ad_id: string = '1890536227'
   static readonly app_award_ad_id: string = '1947278043'
@@ -23,6 +23,9 @@ export default class AppConfig {
   //微信相关
   //wx小程序广告id
   static readonly wx_award_ad_id: string = 'adunit-214a21564a070b18'
+  //微信商户号
+  static readonly wx_app_id: string = process.env.VUE_APP_WX_APP_ID
+  static readonly wx_partnerid_id: string = process.env.VUE_APP_WX_PARTNERID_ID
 
   static wx_talkTemplateId: string = 'mLMGMJWfz5dJVVclHIFCacD4hdMmIAly60TpQ1NF6hc'
   static wx_commentTemplateId: string = '-lNlHFDVTCFM53t-UnDa6GIqdm_JsCrQbuj7VW9PwfM'

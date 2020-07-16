@@ -34,6 +34,7 @@ export default class SystemModule extends VuexModule {
   statusBarHeight = 0
   navBarHeight = 44
   titleHeight = 0
+  appVersion = 0
 
   @Action
   appInit () {
@@ -55,6 +56,10 @@ export default class SystemModule extends VuexModule {
     this.isApp = true
     this.isNApp = false
     this.platform = PlatformType.android
+    //获取app版本号
+    plus.runtime.getProperty(plus.runtime.appid, (widgetInfo) => {
+      this.appVersion = Number(widgetInfo.version.split('.').join(''))
+    })
     // #endif
     // #ifdef MP
     this.isMp = true

@@ -14,6 +14,7 @@ import UserPayResultVO from '@/model/user/UserPayResultVO'
 import BalaBala from '@/utils/BalaBala'
 import MPUtil from '@/utils/MPUtil'
 import APPUtil from '@/utils/APPUtil'
+import AppInitAPI from '@/api/AppInitAPI'
 
 // 统一处理各平台的订阅
 export default class PlatformUtils {
@@ -84,9 +85,6 @@ export default class PlatformUtils {
     } else if (systemModule.isIos) {
       MsgUtil.iosDisablePay()
       throw ''
-    } else if (!systemModule.isMp) {
-      MsgUtil.notMpDisablePay()
-      throw ''
     }
     return UserAPI.userPayAPI(provider, payType, amount).then((res) => {
       return PlatformUtils.cashPay(res.data)
@@ -100,6 +98,8 @@ export default class PlatformUtils {
           UniUtil.toast(HintMsg.payCancelMsg)
           throw err
         } else {
+          console.log(err)
+          AppInitAPI.sendErrorLog(null, '支付失败', res, err)
           MsgUtil.payFailMsg()
           throw err
         }
@@ -113,7 +113,7 @@ export default class PlatformUtils {
   private static async requestPayment (payResult: UserPayResultVO) {
     if (systemModule.isMpQQ) {
       return QQUtils.requestPayment(payResult)
-    } else if (systemModule.isMpWX) {
+    } else if (systemModule.isMpWX || systemModule.isApp) {
       return WxUtils.requestPayment(payResult)
     } else {
       throw '不存在的支付渠道'

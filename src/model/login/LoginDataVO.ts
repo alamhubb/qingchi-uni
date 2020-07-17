@@ -2,6 +2,9 @@ export default class LoginDataVO {
   provider = ''
   platform = ''
 
+  //设备id
+  clientid = ''
+
   openId = ''
   unionId = ''
   //app三方登陆使用
@@ -22,7 +25,7 @@ export default class LoginDataVO {
   encryptedData = ''
   iv = ''
   //微信绑定手机号使用
-  sessionEnable: boolean = null
+  sessionEnable = false
 
   //暂未使用
   inviteCode = ''

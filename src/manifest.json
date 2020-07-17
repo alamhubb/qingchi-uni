@@ -9,10 +9,13 @@
         /* 5+App特有相关 */
         "modules" : {
             "Maps" : {},
-            "OAuth" : {}
+            "OAuth" : {},
+            "Payment" : {},
+            "Push" : {}
         },
         "privacy" : {
-            "prompt" : "template", //可取值template、custom、none
+            "prompt" : "template",
+            //可取值template、custom、none
             "template" : {
                 "title" : "服务协议和隐私政策",
                 "message" : "　　请你务必审慎阅读、充分理解“服务协议”和“隐私政策”各条款，包括但不限于：为了更好的向你提供服务，我们需要收集你的设备标识、操作日志等信息用于分析、优化应用性能。<br/>　　你可阅读<a href=\"https://www.qingchi1.com/agreement\">《服务协议》</a>和<a href=\"https://www.qingchi1.com/privacy\">《隐私政策》</a>了解详细信息。如果你同意，请点击下面按钮开始接受我们的服务。",
@@ -42,7 +45,7 @@
                     "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
                     // 允许访问网络 产生gprs
                     "<uses-permission android:name=\"android.permission.INTERNET\"/>",
-                    // 修改声音设置信息
+                    // 修改声音设置信息，微信支付
                     "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
                     // 挂载外部文件
                     "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
@@ -53,7 +56,19 @@
                     // 写入外部sd
                     "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
                     // 允许读写系统设置
-                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>",
+                    // 允许程序开机自动运行
+                    "<uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\" />",
+                    // 允许程序振动
+                    "<uses-permission android:name=\"android.permission.VIBRATE\" />",
+                    // 允许一个程序获取信息有关当前或最近运行的任务，一个缩略的任务状态，是否活动等等
+                    "<uses-permission android:name=\"android.permission.GET_TASKS\" />",
+                    // 允许程序连接配对过的蓝牙设备
+                    "<uses-permission android:name=\"android.permission.BLUETOOTH\" />",
+                    // 允许程序进行发现和配对新的蓝牙设备
+                    "<uses-permission android:name=\"android.permission.BLUETOOTH_ADMIN\" />",
+                    // 允许应用显示系统窗口
+                    "<uses-permission android:name=\"android.permission.SYSTEM_ALERT_WINDOW\" />"
                 ]
             },
             "ios" : {},
@@ -63,10 +78,29 @@
                     "gdt" : {}
                 },
                 "maps" : {
-
+                    "amap" : {
+                        "appkey_ios" : "",
+                        "appkey_android" : ""
+                    }
                 },
                 "oauth" : {
-
+                    "qq" : {
+                        "appid" : ""
+                    },
+                    "weixin" : {
+                        "appid" : "",
+                        "appsecret" : "",
+                        "UniversalLinks" : ""
+                    }
+                },
+                "payment" : {
+                    "weixin" : {
+                        "appid" : "",
+                        "UniversalLinks" : ""
+                    }
+                },
+                "push" : {
+                    "unipush" : {}
                 }
             },
             "icons" : {
@@ -114,6 +148,7 @@
     "mp-weixin" : {
         /* 小程序特有相关 */
         "usingComponents" : true,
+        //        腾讯地图FZDBZ-5XCLO-OCYW6-SRG4Y-ZFP7O-IJBSD
         "appid" : "",
         "setting" : {
             "urlCheck" : true

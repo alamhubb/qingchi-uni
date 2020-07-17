@@ -20,6 +20,9 @@ export default class SystemModule extends VuexModule {
   isH5 = false
   isNH5 = true
 
+  //推送使用，用于app端记录给谁推送，区分用户
+  clientid = ''
+
   // 条件编译属性
   // ios android h5,默认安卓
   platform = PlatformType.android
@@ -60,6 +63,8 @@ export default class SystemModule extends VuexModule {
     plus.runtime.getProperty(plus.runtime.appid, (widgetInfo) => {
       this.appVersion = Number(widgetInfo.version.split('.').join(''))
     })
+    const phoneInfo = plus.push.getClientInfo()
+    this.clientid = phoneInfo.clientid
     // #endif
     // #ifdef MP
     this.isMp = true

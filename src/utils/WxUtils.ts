@@ -21,7 +21,7 @@ export default class WxUtils {
   }
 
   static createRewardedVideoAd () {
-    return UniUtil.createRewardedVideoAd(AppConfig.qq_award_ad_id)
+    return UniUtil.createRewardedVideoAd(AppConfig.wx_award_ad_id)
   }
 
   static createInterstitialAd () {

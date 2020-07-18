@@ -95,13 +95,11 @@ export default class PlatformUtils {
   private static async cashPay (res: UserPayResultVO): Promise<any> {
     return PlatformUtils.requestPayment(res)
       .catch((err) => {
-        JsonUtils.log(err)
         // qq的取消支付没有走着里
         if (err.errMsg === Constants.wxPayCancel || err.errMsg === Constants.qqPayCancel) {
           UniUtil.toast(HintMsg.payCancelMsg)
           throw err
         } else {
-          console.log(err)
           AppInitAPI.sendErrorLog(null, '支付失败', res, err)
           MsgUtil.payFailMsg()
           throw err

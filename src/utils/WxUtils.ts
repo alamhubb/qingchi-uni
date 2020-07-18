@@ -58,6 +58,8 @@ export default class WxUtils {
         }
         uni.requestPayment({
           provider: 'wxpay',
+          //eslint-disable-next-line
+          //@ts-ignore
           orderInfo: orderInfo,
           success () {
             resolve()

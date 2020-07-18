@@ -147,7 +147,7 @@ const userStore = namespace('user')
 export default class MineVue extends Vue {
   @userStore.State('user') user: UserVO
   showMsgInput = false
-  showMoreList = true
+  showMoreList = false
   // 登录
   disabledLoginBtn = false
 

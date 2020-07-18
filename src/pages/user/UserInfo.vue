@@ -271,9 +271,14 @@
     <ad v-if="talks.length>0" class="bg-white mb-5px w100vw" unit-id="72d8cb09a1bae9fa30d9e03e7cb8a25d"
         type="feeds" ad-height="160"></ad>
     <!--  #endif -->
+    <!--  #ifdef APP-PLUS -->
+    <ad v-if="talks.length>0" class="bg-white mb-5px w100vw" adpid="1890536227"></ad>
+    <!--  #endif -->
+
     <view v-for="talk in talks" :key="talk.id">
       <talk-item :talk="talk" @deleteTalk="deleteTalk"></talk-item>
     </view>
+
     <!--wx平台显示的广告-->
     <!--  #ifdef MP-WEIXIN -->
     <ad class="bg-white mt-10px w100vw" unit-id="adunit-ffa7bc1c73c7d46a"></ad>
@@ -283,7 +288,7 @@
     <ad class="bg-white mt-10px w100vw" unit-id="b10fe0e7c39b9ca9e7ce19660f6d0761" test-banner-type="one"></ad>
     <!--  #endif -->
     <!--  #ifdef APP-PLUS -->
-    <!--    <ad class="bg-white mb-5px" adpid="1890536227"></ad>-->
+    <ad class="bg-white mt-10px w100vw" adpid="1890536227"></ad>
     <!--  #endif -->
     <uni-popup ref="editPopup" type="center">
       <user-edit @close="closeUserEditPop"></user-edit>

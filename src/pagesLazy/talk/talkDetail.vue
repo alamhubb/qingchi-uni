@@ -32,12 +32,12 @@
 
       <!--头条平台显示的广告-->
       <!--  #ifdef MP-TOUTIAO -->
-      <ad class="bg-white mb-5px" type="banner video large"
+      <ad class="bg-white mt-10px w100vw" type="banner video large"
           unit-id="3snract0gqnc3fn16d"></ad>
       <!--  #endif -->
 
       <!--  #ifdef APP-PLUS -->
-      <ad class="bg-white mb-5px" adpid="1890536227"></ad>
+      <ad class="bg-white mt-10px w100vw" adpid="1890536227"></ad>
       <!--  #endif -->
     </view>
   </view>

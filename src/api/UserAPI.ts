@@ -62,4 +62,8 @@ export default class UserAPI {
   static queryShellAPI () {
     return http.post<ShellOrderVO[]>('shell/queryShells')
   }
+
+  static destroyAccountAPI () {
+    return http.post('user/destroyAccount')
+  }
 }

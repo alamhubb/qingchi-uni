@@ -1,6 +1,7 @@
 export default class Constants {
   static readonly loginSuccess = 'getUserInfo:ok'
-  static readonly payCancel = 'requestPayment:fail cancel'
+  static readonly wxPayCancel = 'requestPayment:fail cancel'
+  static readonly qqPayCancel = 'requestPayment:fail 用户取消支付'
 
   static readonly second = 1000
   static readonly minute: number = 60 * Constants.second

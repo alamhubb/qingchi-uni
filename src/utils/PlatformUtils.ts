@@ -15,6 +15,7 @@ import BalaBala from '@/utils/BalaBala'
 import MPUtil from '@/utils/MPUtil'
 import APPUtil from '@/utils/APPUtil'
 import AppInitAPI from '@/api/AppInitAPI'
+import JsonUtils from '@/utils/JsonUtils'
 
 // 统一处理各平台的订阅
 export default class PlatformUtils {
@@ -94,7 +95,8 @@ export default class PlatformUtils {
   private static async cashPay (res: UserPayResultVO): Promise<any> {
     return PlatformUtils.requestPayment(res)
       .catch((err) => {
-        if (err.errMsg === Constants.payCancel) {
+        // qq的取消支付没有走着里
+        if (err.errMsg === Constants.wxPayCancel || err.errMsg === Constants.qqPayCancel) {
           UniUtil.toast(HintMsg.payCancelMsg)
           throw err
         } else {

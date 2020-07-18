@@ -73,6 +73,7 @@ import ShellOrderVO from '@/model/ShellOrderVO'
 import UserAPI from '@/api/UserAPI'
 import PayType from '@/const/PayType'
 import ProviderType from '@/const/ProviderType'
+import { systemModule } from '@/plugins/store'
 
 const userStore = namespace('user')
 
@@ -106,7 +107,9 @@ export default class ShellVue extends Vue {
   }
 
   userPay () {
-    PlatformUtils.userPay(ProviderType.wx, PayType.shell, this.currentAmount)
+    //如果是app则默认微信支付，否则就是当前环境
+    const provider = systemModule.isApp ? ProviderType.wx : systemModule.provider
+    PlatformUtils.userPay(provider, PayType.shell, this.currentAmount)
   }
 }
 </script>

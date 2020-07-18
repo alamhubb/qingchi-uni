@@ -61,13 +61,26 @@ export default class UserStore {
 
   static loginOut () {
     return UniUtil.action('是否退出登录').then(() => {
-      TokenUtil.remove()
-      WebsocketUtil.websocketClose()
-      UserStore.setMineUser(null)
-      chatModule.getChatsAction()
-      //没必要重设地理位置吧
-      // DistrictUtil.重设地理位(DistrictUtil.initDistrict)
+      UserStore.clearUser()
       UniUtil.toast('用户退出')
+    })
+  }
+
+  static clearUser () {
+    TokenUtil.remove()
+    WebsocketUtil.websocketClose()
+    UserStore.setMineUser(null)
+    chatModule.getChatsAction()
+    //没必要重设地理位置吧
+    // DistrictUtil.重设地理位(DistrictUtil.initDistrict)
+  }
+
+  static destroyAccount () {
+    return UniUtil.action('是否注销账号，7天内不再登陆，账号将彻底清空无法使用').then(() => {
+      UserAPI.destroyAccountAPI().then(() => {
+        UserStore.clearUser()
+        UniUtil.toast('注销成功')
+      })
     })
   }
 }

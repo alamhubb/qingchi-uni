@@ -48,6 +48,14 @@
             </navigator>
           </q-row-item>
           <q-row-item>
+            <view class="row-col-center flex-auto" @click="destroyAccount">
+              <view class="row-col-center flex-auto">
+                注销账号
+              </view>
+              <q-icon icon="arrow-right" class="text-lg margin-right-sm"></q-icon>
+            </view>
+          </q-row-item>
+          <q-row-item>
             <view class="row-col-center flex-auto" @click="logout">
               <view class="row-col-center flex-auto">
                 退出登陆
@@ -139,7 +147,7 @@ const userStore = namespace('user')
 export default class MineVue extends Vue {
   @userStore.State('user') user: UserVO
   showMsgInput = false
-  showMoreList = false
+  showMoreList = true
   // 登录
   disabledLoginBtn = false
 
@@ -153,6 +161,13 @@ export default class MineVue extends Vue {
 
   onHide () {
     this.showMsgInput = false
+  }
+
+  destroyAccount () {
+    this.hideMoreList()
+    UserStore.destroyAccount().catch(() => {
+      this.showMoreListAction()
+    })
   }
 
   logout () {

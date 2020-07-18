@@ -96,7 +96,7 @@ export default class PlatformUtils {
     return PlatformUtils.requestPayment(res)
       .catch((err) => {
         // qq的取消支付没有走着里
-        if (err.errMsg === Constants.wxPayCancel || err.errMsg === Constants.qqPayCancel) {
+        if (err.errMsg === Constants.wxPayCancel || err.errMsg === Constants.qqPayCancel || err.errMsg === Constants.appWxPayCancel) {
           UniUtil.toast(HintMsg.payCancelMsg)
           throw err
         } else {

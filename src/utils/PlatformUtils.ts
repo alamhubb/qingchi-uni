@@ -15,7 +15,6 @@ import BalaBala from '@/utils/BalaBala'
 import MPUtil from '@/utils/MPUtil'
 import APPUtil from '@/utils/APPUtil'
 import AppInitAPI from '@/api/AppInitAPI'
-import JsonUtils from '@/utils/JsonUtils'
 
 // 统一处理各平台的订阅
 export default class PlatformUtils {

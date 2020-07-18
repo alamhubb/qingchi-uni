@@ -69,6 +69,10 @@
         </view>
       </q-popup>
 
+      <!--  #ifdef APP-PLUS -->
+      <!-- <ad class="bg-white mt-10px w100vw" adpid="1890536227"></ad>-->
+      <!--  #endif -->
+
       <talk-swipers v-if="configShowSwipers"></talk-swipers>
 
       <tabs-talk class="flex-auto" ref="tabsTalk" :scrollEnable="scrollEnable"

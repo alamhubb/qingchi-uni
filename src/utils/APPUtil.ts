@@ -2,6 +2,7 @@ import AppInitAPI from '@/api/AppInitAPI'
 import UniUtil from '@/utils/UniUtil'
 import AppUpdateType from '@/const/AppUpdateType'
 import { configModule } from '@/plugins/store'
+import AppConfig from '@/const/AppConfig'
 
 export default class APPUtil {
   static checkUpdate () {
@@ -27,5 +28,9 @@ export default class APPUtil {
         }
       })
     })
+  }
+
+  static createRewardedVideoAd () {
+    return UniUtil.createRewardedVideoAd(AppConfig.app_award_ad_id)
   }
 }

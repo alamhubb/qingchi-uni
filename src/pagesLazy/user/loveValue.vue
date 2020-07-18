@@ -58,7 +58,9 @@ import LoveValueAPI from '@/api/LoveValueAPI'
 import UniUtil from '@/utils/UniUtil'
 import UserStore from '@/plugins/store/UserStore'
 import QQUtils from '@/utils/QQUtils'
-import AppConfig from '@/const/AppConfig'
+import WxUtils from '@/utils/WxUtils'
+import APPUtil from '@/utils/APPUtil'
+import JsonUtils from '@/utils/JsonUtils'
 
 const appStore = namespace('app')
 const userStore = namespace('user')
@@ -84,17 +86,17 @@ export default class LoveValueVue extends Vue {
     })
 
     // #ifdef APP-PLUS
-    this.videoAd = UniUtil.createRewardedVideoAd(AppConfig.app_award_ad_id)
+    this.videoAd = APPUtil.createRewardedVideoAd()
     // #endif
     // #ifdef MP-WEIXIN
-    this.videoAd = UniUtil.createRewardedVideoAd(AppConfig.wx_award_ad_id)
+    this.videoAd = WxUtils.createRewardedVideoAd()
     // #endif
     // #ifdef MP-QQ
     this.videoAd = QQUtils.createRewardedVideoAd()
     // #endif
     this.videoAd.load()
-    this.videoAd.onError(() => {
-      UniUtil.hint('广告加载失败，请稍候重试')
+    this.videoAd.onError(err => {
+      UniUtil.hint('广告加载失败，请稍候重试，' + JsonUtils.toJson(err))
     })
     this.videoAd.onClose((res: any) => {
       LoveValueAPI.watchVideoAdsAPI(res.isEnded).then((res: any) => {

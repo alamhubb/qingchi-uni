@@ -11,10 +11,10 @@ export default class APPUtil {
       AppInitAPI.checkUpdateAPI(Number(version)).then((res) => {
         const updateType = res.data.updateType
         const updateUrl = res.data.updateUrl
-        console.log(updateType)
-        console.log(updateUrl)
+        const updateHint = res.data.updateHint
         if (AppUpdateType.install === updateType) {
-          UniUtil.action('应用需要更新，请点击更新，即前往应用商店更新', '更新').then(() => {
+          const hint = updateHint || '应用有新版本需要安装，点击安装即可更新'
+          UniUtil.action(hint, '安装').then(() => {
             plus.runtime.openURL(updateUrl)
           })
         } else if (AppUpdateType.hot === updateType) {

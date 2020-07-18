@@ -35,9 +35,17 @@ export default class UniUtil {
   }
 
   public static createRewardedVideoAd (adUnitId: string) {
-    return uni.createRewardedVideoAd({
-      adUnitId: adUnitId
-    })
+    if (systemModule.isMp) {
+      return uni.createRewardedVideoAd({
+        adUnitId: adUnitId
+      })
+    } else {
+      return uni.createRewardedVideoAd({
+        //eslint-disable-next-line
+        //@ts-ignore
+        adpid: adUnitId
+      })
+    }
   }
 
   static copyLink (webUrl: string) {

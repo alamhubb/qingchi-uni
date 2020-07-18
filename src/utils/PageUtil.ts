@@ -163,21 +163,9 @@ export default class PageUtil {
   }
 
   static toMessagePage (chat: ChatVO) {
-    PageUtil.navigateTo(PagePath.message)
+    //需要先清除，再跳转页面
     chatModule.setChatAction(chat)
-    // 先不显示数量
-    // 只有在这里计算是否取消提示未读消息，如果当前chat未读归0后，未读数量等于0 ，则取消红点
-    /* if (chatUnreadNum < 10) {
-        //大于9就变成小红点，显示的应该是匹配的chat的未读数量总和
-        //目前只能做到通过红点提醒用户有消息
-        uni.removeTabBarBadge({
-            index: 2,
-        })
-    } else {
-        uni.hideTabBarRedDot({
-            index: 2,
-        })
-    } */
+    PageUtil.navigateTo(PagePath.message)
   }
 
   static toFaceValuePage () {

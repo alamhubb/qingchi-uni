@@ -27,7 +27,12 @@
         </view>
       </view>
       <button class="bg-green-light text-white text-lg bd-none mt bg-active round" @click="userPay">
+        <!--  #ifdef MP -->
         充值
+        <!--  #endif -->
+        <!--  #ifndef MP -->
+        微信充值
+        <!--  #endif -->
       </button>
     </view>
     <q-row>

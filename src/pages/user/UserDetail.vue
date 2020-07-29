@@ -29,24 +29,27 @@
       <view class="q-box">
         <view class="q-box-row">
           <image
-              class="size65 bd-radius mr-sm"
+              class="avatar mr-sm"
               mode="aspectFill"
               :src="userProp.avatar"
           />
           <view class="flex-auto row-between">
             <view class="flex-col flex-auto">
-              <view class="text-lg" :class="{'text-red':userProp.vipFlag}">
+              <view v-if="userProp.vipFlag" class="text-red text-lg">
+                {{userProp.nickname}}
+              </view>
+              <view v-else class="text-lg">
                 {{userProp.nickname}}
               </view>
               <view>
-                <view class="cu-tag radius text-df"
-                      :class="[getGenderBgColor(userProp)]">
-                  {{userProp.age}}
-                  <q-icon class="row-col-start ml-2px" size="24"
-                          :icon="getGenderIcon(userProp)"/>
+                <view v-if="isMine" class="cu-tag bd-red radius sm mr-10px bg-white"
+                      @click.stop="toFollowVue">
+                  关注：{{userProp.followNum}}
                 </view>
-                <view v-if="userProp.vipFlag" class="cu-tag bg-red radius" @click="openVip">VIP</view>
-                <view v-else class="cu-tag bg-grey radius" @click="openVip">VIP</view>
+
+                <view class="cu-tag bd-orange radius sm mr-10px bg-white" @click.stop="toFollowVue">
+                  粉丝：{{userProp.fansNum}}
+                </view>
               </view>
             </view>
             <!--                不为自己且未关注-->
@@ -66,38 +69,15 @@
             </view>
           </view>
         </view>
-        <view class="q-box-row row-between-center">
-          <view class="flex-row">
-            <view v-if="isMine" class="px-lg line-height-1" @click.stop="toFollowVue">
-              <text class="text-xl text-bold text-black row-center">
-                <!--                {{userProp.followNum}}-->
-                29
-              </text>
-              <text class="text-sm text-gray">关注</text>
-            </view>
-
-            <view class="px-lg line-height-1" @click.stop="toFollowVue">
-              <text class="text-xl text-bold text-black row-center">
-                <!--                {{userProp.fansNum}}-->
-                159
-              </text>
-              <text class="text-sm text-gray">被关注</text>
-            </view>
+        <view class="q-box-row">
+          <view class="cu-tag radius text-df"
+                :class="[getGenderBgColor(userProp)]">
+            {{userProp.age}}
+            <q-icon class="row-col-start ml-2px" size="24"
+                    :icon="getGenderIcon(userProp)"/>
           </view>
-
-          <view class="flex-row">
-            <button class="cu-btn round bd-gray bg-white mr-sm">
-              私信
-            </button>
-            <button class="cu-btn round bd-blue px-12px bg-white">
-              关注
-            </button>
-            <!--              <button v-else class="cu-btn round bd-gray bg-white" @click.stop="addFollow">已关注</button>-->
-          </view>
-        </view>
-
-        <!--<view class="q-box-row">
-
+          <view v-if="userProp.vipFlag" class="cu-tag bg-red radius" @click="openVip">VIP</view>
+          <view v-else class="cu-tag bg-grey radius" @click="openVip">VIP</view>
           <view class="ml-5px cu-capsule radius" @click="hintJusticeInfo">
             <view class='cu-tag bg-green'>
               <q-icon size="24" icon="mdi-sword-cross"/>
@@ -122,7 +102,7 @@
               {{userProp.faceRatio}}
             </view>
           </view>
-        </view>-->
+        </view>
 
         <view class="q-box-row q-solid-bottom">
           <q-icon class="text-gray mr-xs" size="50" icon="map-fill"/>
@@ -357,7 +337,6 @@ import QRow from '@/components/q-row/q-row.vue'
 import MsgUtil from '@/utils/MsgUtil'
 import PayType from '@/const/PayType'
 import ProviderType from '@/const/ProviderType'
-import QIcon from '@/components/q-icon/q-icon.vue'
 
 const userStore = namespace('user')
 const appStore = namespace('app')
@@ -365,7 +344,7 @@ const configStore = namespace('config')
 const systemStore = namespace('system')
 
 @Component({
-  components: { QIcon, QRow, QRowItem, TalkOperate, UserEdit, TalkItem, TalkItemContent }
+  components: { QRow, QRowItem, TalkOperate, UserEdit, TalkItem, TalkItemContent }
 })
 export default class UserInfo extends Vue {
   $refs!: {

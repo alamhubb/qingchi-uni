@@ -34,7 +34,7 @@
           <view class="title">出生日期</view>
           <picker mode="date" :value="birthday" start="1900-01-01" :end="endDate" @change="dateChange">
             <view class="picker">
-              {{birthday}}
+              {{ birthday }}
             </view>
           </picker>
         </view>
@@ -110,6 +110,7 @@ import { namespace } from 'vuex-class'
 import UniUtil from '@/utils/UniUtil'
 import UserStore from '@/plugins/store/UserStore'
 import { parseDate } from '@/utils'
+import JsonUtils from '@/utils/JsonUtils'
 
 const userStore = namespace('user')
 
@@ -191,23 +192,25 @@ export default class UserEdit extends Vue {
       }
     }
     this.btnDisabled = true
-    this.closeUserEditPop()
     UniUtil.action('是否确定修改个人信息').then(() => {
-      this.user.nickname = this.nickname
-      this.user.gender = this.gender
-      this.user.birthday = this.birthday
-      this.user.location = this.location
-      this.user.contactAccount = this.contactAccount
-      this.user.wxAccount = this.wxAccount
-      this.user.qqAccount = this.qqAccount
-      this.user.wbAccount = this.wbAccount
-      UserAPI.editUserAPI(this.user).then((res: any) => {
+      const userCopy = JsonUtils.deepClone(this.user)
+      userCopy.nickname = this.nickname
+      userCopy.gender = this.gender
+      userCopy.birthday = this.birthday
+      userCopy.location = this.location
+      userCopy.contactAccount = this.contactAccount
+      userCopy.wxAccount = this.wxAccount
+      userCopy.qqAccount = this.qqAccount
+      userCopy.wbAccount = this.wbAccount
+      UserAPI.editUserAPI(userCopy).then((res: any) => {
         UserStore.setMineUser(res.data)
         UniUtil.toast('已修改')
+        this.closeUserEditPop()
       }).finally(() => {
         this.btnDisabled = false
       })
     }).catch(() => {
+      this.closeUserEditPop()
       this.btnDisabled = false
     })
   }

@@ -552,16 +552,16 @@ export default class UserInfo extends Vue {
         Object.assign(loginData, obj.detail)
         loginData.sessionEnable = true
         this.getPhoneNumberAfterHandler(loginData)
-            .then(() => {
+          .then(() => {
+            this.phoneBtnDisabled = false
+          })
+          .catch((error) => {
+            if (error.errorCode === ErrorCode.custom) {
+              this.getPhoneNumberByLogin(obj)
+            } else {
               this.phoneBtnDisabled = false
-            })
-            .catch((error) => {
-              if (error.errorCode === ErrorCode.custom) {
-                this.getPhoneNumberByLogin(obj)
-              } else {
-                this.phoneBtnDisabled = false
-              }
-            })
+            }
+          })
       }).catch(() => {
         this.getPhoneNumberByLogin(obj)
       })

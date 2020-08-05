@@ -1,6 +1,6 @@
 {
     "name" : "清池",
-    "appid" : "",
+    "appid" : "__UNI__9863127",
     "description" : "干净的00后恋爱交友app",
     "versionName" : "1.8.0",
     "versionCode" : 180,
@@ -11,7 +11,8 @@
             "Maps" : {},
             "OAuth" : {},
             "Payment" : {},
-            "Push" : {}
+            "Push" : {},
+            "Share" : {}
         },
         "privacy" : {
             "prompt" : "template",
@@ -80,27 +81,36 @@
                 "maps" : {
                     "amap" : {
                         "appkey_ios" : "",
-                        "appkey_android" : ""
+                        "appkey_android" : "2adcf282768826e25f8ad61c94ae46fb"
                     }
                 },
                 "oauth" : {
                     "qq" : {
-                        "appid" : ""
+                        "appid" : "101887726"
                     },
                     "weixin" : {
-                        "appid" : "",
-                        "appsecret" : "",
+                        "appid" : "wx682b729afd398217",
+                        "appsecret" : "99e7409f979259d8ae6453ee62151545",
                         "UniversalLinks" : ""
                     }
                 },
                 "payment" : {
                     "weixin" : {
-                        "appid" : "",
+                        "appid" : "wx682b729afd398217",
                         "UniversalLinks" : ""
                     }
                 },
                 "push" : {
                     "unipush" : {}
+                },
+                "share" : {
+                    "weixin" : {
+                        "appid" : "wx682b729afd398217",
+                        "UniversalLinks" : ""
+                    },
+                    "qq" : {
+                        "appid" : "101887726"
+                    }
                 }
             },
             "icons" : {
@@ -149,7 +159,7 @@
         /* 小程序特有相关 */
         "usingComponents" : true,
         //        腾讯地图FZDBZ-5XCLO-OCYW6-SRG4Y-ZFP7O-IJBSD
-        "appid" : "",
+        "appid" : "wx0bf5fe9ceeab514c",
         "setting" : {
             "urlCheck" : true
         },
@@ -174,21 +184,21 @@
     },
     "mp-baidu" : {
         "usingComponents" : true,
-        "appid" : "",
+        "appid" : "17880065",
         "uniStatistics" : {
             "enable" : true
         }
     },
     "mp-toutiao" : {
         "usingComponents" : true,
-        "appid" : "",
+        "appid" : "ttdfffa94240d52071",
         "uniStatistics" : {
             "enable" : true
         }
     },
     "mp-qq" : {
         "usingComponents" : true,
-        "appid" : "",
+        "appid" : "1109985787",
         "optimization" : {
             "subPackages" : true
         },

@@ -8,13 +8,13 @@
   },
   "pages": [
     {
-      "path": "pages/user/mine",
+      "path": "pages/talk/talk",
       "style": {
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/talk/talk",
+      "path": "pages/user/mine",
       "style": {
         "navigationStyle": "custom"
       }

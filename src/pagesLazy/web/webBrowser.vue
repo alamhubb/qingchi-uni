@@ -41,7 +41,7 @@ export default class WebBrowserVue extends Vue {
   }
 
   onLoad (params) {
-    this.webUrl = params.url
+    this.webUrl = decodeURIComponent(params.url)
     const title: string = params.title
     if (title) {
       this.title = title

@@ -29,24 +29,27 @@
       <view class="q-box">
         <view class="q-box-row">
           <image
-              class="size65 bd-radius mr-sm"
+              class="avatar mr-sm"
               mode="aspectFill"
               :src="userProp.avatar"
           />
           <view class="flex-auto row-between">
             <view class="flex-col flex-auto">
-              <view class="text-lg" :class="{'text-red':userProp.vipFlag}">
-                {{userProp.nickname}}
+              <view v-if="userProp.vipFlag" class="text-red text-lg">
+                {{ userProp.nickname }}
+              </view>
+              <view v-else class="text-lg">
+                {{ userProp.nickname }}
               </view>
               <view>
-                <view class="cu-tag radius text-df"
-                      :class="[getGenderBgColor(userProp)]">
-                  {{userProp.age}}
-                  <q-icon class="row-col-start ml-2px" size="24"
-                          :icon="getGenderIcon(userProp)"/>
+                <view v-if="isMine" class="cu-tag bd-red radius sm mr-10px bg-white"
+                      @click.stop="toFollowVue">
+                  关注：{{ userProp.followNum }}
                 </view>
-                <view v-if="userProp.vipFlag" class="cu-tag bg-red radius" @click="openVip">VIP</view>
-                <view v-else class="cu-tag bg-grey radius" @click="openVip">VIP</view>
+
+                <view class="cu-tag bd-orange radius sm mr-10px bg-white" @click.stop="toFollowVue">
+                  粉丝：{{ userProp.fansNum }}
+                </view>
               </view>
             </view>
             <!--                不为自己且未关注-->
@@ -54,7 +57,7 @@
               <button class="cu-btn round px-15px bg-white"
                       :class="'bd-'+getFollowStatusColor(followStatus)"
                       @click.stop="addFollow">
-                <text>{{followStatus}}</text>
+                <text>{{ followStatus }}</text>
               </button>
             </view>
             <view v-if="isMine">
@@ -66,44 +69,21 @@
             </view>
           </view>
         </view>
-        <view class="q-box-row row-between-center">
-          <view class="flex-row">
-            <view v-if="isMine" class="px-lg line-height-1" @click.stop="toFollowVue">
-              <text class="text-xl text-bold text-black row-center">
-                <!--                {{userProp.followNum}}-->
-                29
-              </text>
-              <text class="text-sm text-gray">关注</text>
-            </view>
-
-            <view class="px-lg line-height-1" @click.stop="toFollowVue">
-              <text class="text-xl text-bold text-black row-center">
-                <!--                {{userProp.fansNum}}-->
-                159
-              </text>
-              <text class="text-sm text-gray">被关注</text>
-            </view>
+        <view class="q-box-row">
+          <view class="cu-tag radius text-df"
+                :class="[getGenderBgColor(userProp)]">
+            {{ userProp.age }}
+            <q-icon class="row-col-start ml-2px" size="24"
+                    :icon="getGenderIcon(userProp)"/>
           </view>
-
-          <view class="flex-row">
-            <button class="cu-btn round bd-gray bg-white mr-sm">
-              私信
-            </button>
-            <button class="cu-btn round bd-blue px-12px bg-white">
-              关注
-            </button>
-            <!--              <button v-else class="cu-btn round bd-gray bg-white" @click.stop="addFollow">已关注</button>-->
-          </view>
-        </view>
-
-        <!--<view class="q-box-row">
-
+          <view v-if="userProp.vipFlag" class="cu-tag bg-red radius" @click="openVip">VIP</view>
+          <view v-else class="cu-tag bg-grey radius" @click="openVip">VIP</view>
           <view class="ml-5px cu-capsule radius" @click="hintJusticeInfo">
             <view class='cu-tag bg-green'>
               <q-icon size="24" icon="mdi-sword-cross"/>
             </view>
             <view class="cu-tag bg-white bd-green bd-r-radius">
-              {{userProp.justiceValue}}
+              {{ userProp.justiceValue }}
             </view>
           </view>
           <view class="ml-5px cu-capsule radius" @click="toLoveValuePage">
@@ -111,7 +91,7 @@
               <q-icon size="24" icon="heart-fill"/>
             </view>
             <view class="cu-tag bg-white bd-red bd-r-radius">
-              {{userProp.loveValue}}
+              {{ userProp.loveValue }}
             </view>
           </view>
           <view class="ml-5px cu-capsule radius" @click="toFaceValuePage">
@@ -119,21 +99,21 @@
               <q-icon size="26" icon="mdi-face"/>
             </view>
             <view class="cu-tag bg-white bd-orange bd-r-radius">
-              {{userProp.faceRatio}}
+              {{ userProp.faceRatio }}
             </view>
           </view>
-        </view>-->
+        </view>
 
         <view class="q-box-row q-solid-bottom">
           <q-icon class="text-gray mr-xs" size="50" icon="map-fill"/>
-          地区：{{userProp.location}}
+          地区：{{ userProp.location }}
         </view>
 
         <view v-if="isMine" class="q-box-row q-solid-bottom">
           <q-icon class="text-gray mr-xs" size="50" icon="mdi-cellphone-android"/>
           手机号(仅自己可见)：
           <view v-if="userProp.phoneNum">
-            {{userProp.phoneNum}}
+            {{ userProp.phoneNum }}
             <view class="ml-10px sm cu-tag bg-white bd-gray radius">
               已绑定
             </view>
@@ -203,7 +183,7 @@
           <view class="row-col-center">
             <q-icon class="text-gray mr-xs" size="50" icon="account"/>
             联系方式：
-            <text v-if="userProp.contactAccount">{{userProp.contactAccount}}</text>
+            <text v-if="userProp.contactAccount">{{ userProp.contactAccount }}</text>
             <text v-else>
               未填写
             </text>
@@ -237,7 +217,7 @@
         <view v-if="isMine" class="q-solid-top q-box-row row-between-center" @click="toUserShell">
           <view class="row-col-center">
             <q-icon class="text-green mr-xs" size="50" icon="mdi-bitcoin"/>
-            <text class="text-lgg">我的贝壳（{{mineUser.shell}}）</text>
+            <text class="text-lgg">我的贝壳（{{ mineUser.shell }}）</text>
           </view>
           <view v-if="!isIos" class="text-gray row-col-center pr-xs">
             <text class="text-lgg text-gray text-lgg">充值</text>
@@ -259,7 +239,7 @@
               </view>
               <view>
                 <label class="ml-10px" :for="report">
-                  <text>{{report}}</text>
+                  <text>{{ report }}</text>
                 </label>
               </view>
             </label>
@@ -357,7 +337,6 @@ import QRow from '@/components/q-row/q-row.vue'
 import MsgUtil from '@/utils/MsgUtil'
 import PayType from '@/const/PayType'
 import ProviderType from '@/const/ProviderType'
-import QIcon from '@/components/q-icon/q-icon.vue'
 
 const userStore = namespace('user')
 const appStore = namespace('app')
@@ -365,7 +344,7 @@ const configStore = namespace('config')
 const systemStore = namespace('system')
 
 @Component({
-  components: { QIcon, QRow, QRowItem, TalkOperate, UserEdit, TalkItem, TalkItemContent }
+  components: { QRow, QRowItem, TalkOperate, UserEdit, TalkItem, TalkItemContent }
 })
 export default class UserInfo extends Vue {
   $refs!: {
@@ -573,16 +552,16 @@ export default class UserInfo extends Vue {
         Object.assign(loginData, obj.detail)
         loginData.sessionEnable = true
         this.getPhoneNumberAfterHandler(loginData)
-          .then(() => {
-            this.phoneBtnDisabled = false
-          })
-          .catch((error) => {
-            if (error.errorCode === ErrorCode.custom) {
-              this.getPhoneNumberByLogin(obj)
-            } else {
+            .then(() => {
               this.phoneBtnDisabled = false
-            }
-          })
+            })
+            .catch((error) => {
+              if (error.errorCode === ErrorCode.custom) {
+                this.getPhoneNumberByLogin(obj)
+              } else {
+                this.phoneBtnDisabled = false
+              }
+            })
       }).catch(() => {
         this.getPhoneNumberByLogin(obj)
       })

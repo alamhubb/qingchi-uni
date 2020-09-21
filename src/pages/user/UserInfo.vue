@@ -29,77 +29,93 @@
       <view class="q-box">
         <view class="q-box-row">
           <image
-              class="avatar mr-sm"
+              class="size65 bd-radius mr-sm"
               mode="aspectFill"
               :src="userProp.avatar"
           />
           <view class="flex-auto row-between">
             <view class="flex-col flex-auto">
-              <view v-if="userProp.vipFlag" class="text-red text-lg">
-                {{ userProp.nickname }}
-              </view>
-              <view v-else class="text-lg">
+              <view class="text-lg" :class="{'text-red':userProp.vipFlag}">
                 {{ userProp.nickname }}
               </view>
               <view>
-                <view v-if="isMine" class="cu-tag bd-red radius sm mr-10px bg-white"
-                      @click.stop="toFollowVue">
-                  关注：{{ userProp.followNum }}
+                <view class="cu-tag radius text-df"
+                      :class="[getGenderBgColor(userProp)]">
+                  {{ userProp.age }}
+                  <q-icon class="row-col-start ml-2px" size="24"
+                          :icon="getGenderIcon(userProp)"/>
                 </view>
-
-                <view class="cu-tag bd-orange radius sm mr-10px bg-white" @click.stop="toFollowVue">
-                  粉丝：{{ userProp.fansNum }}
-                </view>
+                <view v-if="userProp.vipFlag" class="cu-tag bg-red radius" @click="openVip">VIP</view>
+                <view v-else class="cu-tag bg-grey radius" @click="openVip">VIP</view>
               </view>
             </view>
-            <!--                不为自己且未关注-->
-            <view v-if="!isMine" class="col-center">
-              <button class="cu-btn round px-15px bg-white"
-                      :class="'bd-'+getFollowStatusColor(followStatus)"
-                      @click.stop="addFollow">
-                <text>{{ followStatus }}</text>
-              </button>
+
+            <view class="row-col-center" v-if="isMine">
+              <q-icon size="40" icon="edit-pen" class="mr-xs" @click="moreAction"/>
             </view>
-            <view v-if="isMine">
-              <button class="cu-btn round bd-green px-12px bg-white"
-                      @click="moreAction">
-                <q-icon size="28" icon="edit-pen" class="mr-xs"/>
-                操作
-              </button>
+            <view v-else-if="userProp.beFollow" class="row-col-center">
+              <view class="bg-default text-sm px-xs text-gray">
+                关注了你
+              </view>
             </view>
           </view>
         </view>
-        <view class="q-box-row">
-          <view class="cu-tag radius text-df"
-                :class="[getGenderBgColor(userProp)]">
-            {{ userProp.age }}
-            <q-icon class="row-col-start ml-2px" size="24"
-                    :icon="getGenderIcon(userProp)"/>
+        <view class="q-box-row row-between-center">
+          <view class="flex-row flex-auto" :class="{'row-around':isMine}">
+            <view v-if="isMine" class="px-lg line-height-1" @click.stop="toFollowVue">
+              <text class="text-xl text-bold text-black row-center">
+                <!--                {{userProp.followNum}}-->
+                29
+              </text>
+              <text class="text-sm text-gray">关注</text>
+            </view>
+
+            <view class="px-lg line-height-1" @click.stop="toFollowVue">
+              <text class="text-xl text-bold text-black row-center">
+                <!--                {{userProp.fansNum}}-->
+                159
+              </text>
+              <text class="text-sm text-gray">关注者</text>
+            </view>
           </view>
-          <view v-if="userProp.vipFlag" class="cu-tag bg-red radius" @click="openVip">VIP</view>
-          <view v-else class="cu-tag bg-grey radius" @click="openVip">VIP</view>
+
+          <view v-if="!isMine" class="flex-row">
+            <!--                不为自己且未关注-->
+            <button class="cu-btn round bd-gray bg-white mr-sm" @click="toMessagePage">
+              私信
+              <text v-if="userProp.showBuyMsg" class="ml-2px">(5B)</text>
+            </button>
+            <button class="cu-btn round bd-blue px-12px bg-white" :class="'bd-'+getFollowStatusColor(followStatus)"
+                    @click.stop="addFollow">
+              {{ followStatus }}
+            </button>
+            <!--              <button v-else class="cu-btn round bd-gray bg-white" @click.stop="addFollow">已关注</button>-->
+          </view>
+        </view>
+
+        <view class="q-box-row q-solid-bottom">
           <view class="ml-5px cu-capsule radius" @click="hintJusticeInfo">
             <view class='cu-tag bg-green'>
               <q-icon size="24" icon="mdi-sword-cross"/>
             </view>
             <view class="cu-tag bg-white bd-green bd-r-radius">
-              {{ userProp.justiceValue }}
+              {{userProp.justiceValue}}
             </view>
           </view>
-          <view class="ml-5px cu-capsule radius" @click="toLoveValuePage">
+          <view class="ml cu-capsule radius" @click="toLoveValuePage">
             <view class='cu-tag bg-red'>
               <q-icon size="24" icon="heart-fill"/>
             </view>
             <view class="cu-tag bg-white bd-red bd-r-radius">
-              {{ userProp.loveValue }}
+              {{userProp.loveValue}}
             </view>
           </view>
-          <view class="ml-5px cu-capsule radius" @click="toFaceValuePage">
+          <view class="ml-lg cu-capsule radius" @click="toFaceValuePage">
             <view class='cu-tag bg-orange'>
               <q-icon size="26" icon="mdi-face"/>
             </view>
             <view class="cu-tag bg-white bd-orange bd-r-radius">
-              {{ userProp.faceRatio }}
+              {{userProp.faceRatio}}
             </view>
           </view>
         </view>
@@ -331,12 +347,15 @@ import TalkVO from '@/model/talk/TalkVO'
 import BalaBala from '@/utils/BalaBala'
 import ConfigMap from '@/const/ConfigMap'
 import PlatformUtils from '@/utils/PlatformUtils'
-import { systemModule } from '@/plugins/store'
+import { chatModule, systemModule } from '@/plugins/store'
 import QRowItem from '@/components/q-row-item/q-row-item.vue'
 import QRow from '@/components/q-row/q-row.vue'
 import MsgUtil from '@/utils/MsgUtil'
 import PayType from '@/const/PayType'
 import ProviderType from '@/const/ProviderType'
+import QIcon from '@/components/q-icon/q-icon.vue'
+import ChatVO from '@/model/chat/ChatVO'
+import MessageVO from '@/model/message/MessageVO'
 
 const userStore = namespace('user')
 const appStore = namespace('app')
@@ -344,7 +363,7 @@ const configStore = namespace('config')
 const systemStore = namespace('system')
 
 @Component({
-  components: { QRow, QRowItem, TalkOperate, UserEdit, TalkItem, TalkItemContent }
+  components: { QIcon, QRow, QRowItem, TalkOperate, UserEdit, TalkItem, TalkItemContent }
 })
 export default class UserInfo extends Vue {
   $refs!: {
@@ -371,6 +390,17 @@ export default class UserInfo extends Vue {
   @configStore.Getter(ConfigMap.reportHideCountKey) reportHideCount: number
 
   showUserContactBtnDisabled = false
+
+  toMessagePage () {
+    //除了是否关注，还有是否已经发起过对话，chatuservo里面要保存还能再发几条
+    //判断是否已经支付过了。3条，然后对方每次回复你都可以发三条，然后就需要再次支付，开启了支付
+    //mock chat
+    const chat = ChatVO.creatChat(this.userProp)
+    PageUtil.toMessagePage(chat)
+
+    //如果有chat读取，如果没有创建读取
+    // chatModule.setChatAction(chat)
+  }
 
   shellPayForUserContact () {
     if (!this.showUserContactBtnDisabled) {
@@ -551,17 +581,15 @@ export default class UserInfo extends Vue {
         const loginData: LoginDataVO = new LoginDataVO()
         Object.assign(loginData, obj.detail)
         loginData.sessionEnable = true
-        this.getPhoneNumberAfterHandler(loginData)
-          .then(() => {
+        this.getPhoneNumberAfterHandler(loginData).then(() => {
+          this.phoneBtnDisabled = false
+        }).catch((error) => {
+          if (error.errorCode === ErrorCode.custom) {
+            this.getPhoneNumberByLogin(obj)
+          } else {
             this.phoneBtnDisabled = false
-          })
-          .catch((error) => {
-            if (error.errorCode === ErrorCode.custom) {
-              this.getPhoneNumberByLogin(obj)
-            } else {
-              this.phoneBtnDisabled = false
-            }
-          })
+          }
+        })
       }).catch(() => {
         this.getPhoneNumberByLogin(obj)
       })
@@ -576,7 +604,9 @@ export default class UserInfo extends Vue {
 
   get isMine (): boolean {
     // 两个都有值，且两个都相等，才为自己
-    return this.userProp && this.mineUser && this.userProp.id === this.mineUser.id
+    // return this.userProp && this.mineUser && this.userProp.id === this.mineUser.id
+    return false
+    // return true
   }
 
   get talkIds () {

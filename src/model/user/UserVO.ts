@@ -57,4 +57,7 @@ export default class UserVO {
   experience: number = null
   //用户是否展示联系方式
   openContact: boolean = null
+  //是否允许发送消息
+  allowSendMsg: boolean = null
+  showBuyMsg: boolean = null
 }

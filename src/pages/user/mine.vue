@@ -6,10 +6,9 @@
           个人资料
         </view>
         <view class="mr">
-          <q-icon icon="list" size="56" @click="showMoreListAction"></q-icon>
+          <q-icon icon="setting" size="46" @click="showMoreListAction"></q-icon>
         </view>
       </q-navbar>
-
       <user-info :user="user"></user-info>
 
       <!-- #ifdef H5 -->
@@ -23,6 +22,14 @@
               清池 app
             </view>
           </q-row>
+          <q-row-item>
+            <navigator :url="messageSettingUrl" class="row-col-center flex-auto">
+              <view class="row-col-center flex-auto">
+                消息设置
+              </view>
+              <q-icon icon="arrow-right" class="text-lg margin-right-sm"></q-icon>
+            </navigator>
+          </q-row-item>
           <q-row-item>
             <navigator :url="suggestUrl" class="row-col-center flex-auto">
               <view class="row-col-center flex-auto">
@@ -138,6 +145,7 @@ import SkipUrlConst from '@/const/SkipUrlConst'
 import { systemModule } from '@/plugins/store'
 import Constants from '@/const/Constant'
 import QNavbar from '@/components/q-navbar/q-navbar.vue'
+import PagePath from '@/const/PagePath'
 
 const userStore = namespace('user')
 
@@ -193,6 +201,10 @@ export default class MineVue extends Vue {
     return SkipUrlConst.homeUrl()
   }
 
+  get messageSettingUrl (): string {
+    return PagePath.messageSetting
+  }
+
   get suggestUrl (): string {
     return SkipUrlConst.suggestUrl()
   }
@@ -244,3 +256,14 @@ export default class MineVue extends Vue {
   }
 }
 </script>
+<style lang="scss" scoped>
+.user-setting {
+  right: 18px;
+  /*  #ifdef  MP  */
+  top: 70px;
+  /*  #endif  */
+  /*  #ifndef  MP  */
+  top: 10px;
+  /*  #endif  */
+}
+</style>

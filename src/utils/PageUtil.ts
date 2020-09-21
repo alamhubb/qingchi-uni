@@ -177,4 +177,7 @@ export default class PageUtil {
   static toUserContactInfoPage () {
     PageUtil.navigateTo(PagePath.userContactInfo)
   }
+  static toMessageSetting () {
+    PageUtil.navigateTo(PagePath.messageSetting)
+  }
 }

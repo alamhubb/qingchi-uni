@@ -81,10 +81,10 @@
 
           <view v-if="!isMine" class="flex-row">
             <!--                不为自己且未关注-->
-            <button class="cu-btn round bd-gray bg-white mr-sm" @click="toMessagePage">
+            <!--<button class="cu-btn round bd-gray bg-white mr-sm" @click="toMessagePage">
               私信
               <text v-if="userProp.showBuyMsg" class="ml-2px">(5B)</text>
-            </button>
+            </button>-->
             <button class="cu-btn round bd-blue px-12px bg-white" :class="'bd-'+getFollowStatusColor(followStatus)"
                     @click.stop="addFollow">
               {{ followStatus }}
@@ -604,9 +604,7 @@ export default class UserInfo extends Vue {
 
   get isMine (): boolean {
     // 两个都有值，且两个都相等，才为自己
-    // return this.userProp && this.mineUser && this.userProp.id === this.mineUser.id
-    return false
-    // return true
+    return this.userProp && this.mineUser && this.userProp.id === this.mineUser.id
   }
 
   get talkIds () {

@@ -16,8 +16,8 @@ export default class TokenUtil {
   static get (): string {
     // 开发环境方便测试
     if (process.env.NODE_ENV === 'development') {
-      // return uni.getStorageSync(this.dev_token)
-      return 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNl81YWVkZTMwZDA3NDc0NTgwOThjZTAzYTVjMWY3MTc4OCJ9.XlQXd_4afra45_b_P6wsIgMxdi779xhfwM03oci8vOI'
+      return uni.getStorageSync(this.dev_token)
+      // return 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNl81YWVkZTMwZDA3NDc0NTgwOThjZTAzYTVjMWY3MTc4OCJ9.XlQXd_4afra45_b_P6wsIgMxdi779xhfwM03oci8vOI'
     } else {
       return uni.getStorageSync(this.token)
     }

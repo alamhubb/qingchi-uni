@@ -64,16 +64,14 @@
           <view class="flex-row flex-auto" :class="{'row-around':isMine}">
             <view v-if="isMine" class="px-lg line-height-1" @click.stop="toFollowVue">
               <text class="text-xl text-bold text-black row-center">
-                <!--                {{userProp.followNum}}-->
-                29
+                {{ userProp.followNum }}
               </text>
               <text class="text-sm text-gray">关注</text>
             </view>
 
             <view class="px-lg line-height-1" @click.stop="toFollowVue">
               <text class="text-xl text-bold text-black row-center">
-                <!--                {{userProp.fansNum}}-->
-                159
+                {{ userProp.fansNum }}
               </text>
               <text class="text-sm text-gray">关注者</text>
             </view>
@@ -99,7 +97,7 @@
               <q-icon size="24" icon="mdi-sword-cross"/>
             </view>
             <view class="cu-tag bg-white bd-green bd-r-radius">
-              {{userProp.justiceValue}}
+              {{ userProp.justiceValue }}
             </view>
           </view>
           <view class="ml cu-capsule radius" @click="toLoveValuePage">
@@ -107,7 +105,7 @@
               <q-icon size="24" icon="heart-fill"/>
             </view>
             <view class="cu-tag bg-white bd-red bd-r-radius">
-              {{userProp.loveValue}}
+              {{ userProp.loveValue }}
             </view>
           </view>
           <view class="ml-lg cu-capsule radius" @click="toFaceValuePage">
@@ -115,7 +113,7 @@
               <q-icon size="26" icon="mdi-face"/>
             </view>
             <view class="cu-tag bg-white bd-orange bd-r-radius">
-              {{userProp.faceRatio}}
+              {{ userProp.faceRatio }}
             </view>
           </view>
         </view>

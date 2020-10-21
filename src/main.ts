@@ -9,6 +9,9 @@ import Login from '@/pages/user/Login.vue'
 import uView from 'uview-ui'
 import UniUtil from './utils/UniUtil'
 import PageUtil from '@/utils/PageUtil'
+import gio from '@/sdk/gio-qq-minp.esm'
+
+gio('init', '8859f24f8924c01d', '1109985787', { version: '1.0', vue: Vue })
 
 Vue.use(uView)
 

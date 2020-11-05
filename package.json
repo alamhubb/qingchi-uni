@@ -65,9 +65,9 @@
     "uuid": "^7.0.3",
     "uview-ui": "^1.5.3",
     "vue": "^2.6.11",
-    "vue-class-component": "^6.3.2",
-    "vue-property-decorator": "^8.5.1",
     "vuex": "^3.4.0",
+    "vue-property-decorator": "^8.5.1",
+    "vue-class-component": "^6.3.2",
     "vuex-class": "^0.3.2",
     "vuex-class-component": "^2.3.3",
     "vuex-class-modules": "^1.1.2"

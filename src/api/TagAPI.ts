@@ -7,6 +7,7 @@ export default class TagAPI {
     return http.post('tag/addTag', tagAdd)
   }
 
+  //前端新增talk时，需要选择tag，前端搜索时使用
   static queryTagsAPI () {
     return http.post('tag/queryTags')
   }

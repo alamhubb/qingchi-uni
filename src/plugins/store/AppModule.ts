@@ -97,9 +97,11 @@ export default class AppModule extends VuexModule {
       if (district.adCode === DistrictUtil.initAdCode) {
         appModule.setDistrictAction(res.data.district)
       } else {
+        //不为初始，且未开启定位
         //只有未开启定位时，才使用后台返回的经纬度
         if (!appModule.openPosition) {
           if (res.data.district) {
+            //设置经纬度，这个逻辑就是无论如何都显示位置
             district.lat = res.data.district.lat
             district.lon = res.data.district.lon
           }

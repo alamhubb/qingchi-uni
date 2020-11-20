@@ -365,8 +365,13 @@ export default class LoginVue extends Vue {
       if (this.user) {
         UserAPI.bindPhoneNumAPI(this.phoneNum, this.authCode).then((res: any) => {
           UserStore.setMineUser(res.data)
+          let msg = '绑定成功'
+          //qq小程序下ios系统存在输入框冲突问题，使用了一个输入框，另一个就无法出现
+          if (systemModule.isIosAndMpQQ) {
+            msg += '，如遇无法弹出输入框，请重启应用'
+          }
           // 提示验证码发送成功
-          UniUtil.hint('绑定成功，如无法评论，请重启应用').finally(() => {
+          UniUtil.hint(msg).finally(() => {
             PageUtil.toMinePage()
           })
         }).finally(() => {
@@ -381,7 +386,12 @@ export default class LoginVue extends Vue {
 
         LoginAPI.platformLoginAPI(loginData).then(() => {
           // 提示验证码发送成功
-          UniUtil.hint('登录成功')
+          let msg = '登录成功'
+          //qq小程序下ios系统存在输入框冲突问题，使用了一个输入框，另一个就无法出现
+          if (systemModule.isIosAndMpQQ) {
+            msg += '，如遇无法弹出输入框，请重启应用'
+          }
+          UniUtil.hint(msg)
         }).finally(() => {
           this.bindBtnDisabled = false
         })

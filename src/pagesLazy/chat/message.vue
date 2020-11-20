@@ -18,7 +18,7 @@
             :class="[msg.type === systemMsgType?'row-center':'cu-item',msg.isMine?'self':'']">
         <block v-if="msg.type === systemMsgType">
           <view class="cu-info round">
-            {{msg.content}}
+            {{ msg.content }}
           </view>
         </block>
         <block v-else-if="msg.isMine">
@@ -26,7 +26,7 @@
             <view class="mr-30rpx h44rpx row-end-center">
               <text class="text-sm" :class="[msg.user.vipFlag?'text-red':'text-gray']"
                     @click="toUserDetailVue(msg.user.id)">
-                {{msg.user.nickname}}
+                {{ msg.user.nickname }}
               </text>
               <image v-if="msg.user.vipFlag" class="ml-6rpx mr-6rpx size30rpx mt-n10rpx"
                      src="/static/img/crown.png"
@@ -35,7 +35,7 @@
             <view class="row-end">
               <view class="main">
                 <view class="content bg-white" @longpress="openMessageMoreHandleDialog(msg)">
-                  <text>{{msg.content}}</text>
+                  <text>{{ msg.content }}</text>
                 </view>
               </view>
             </view>
@@ -44,7 +44,7 @@
                  :src="msg.user.avatar"
                  @click="toUserDetailVue(msg.user.id)"
           />
-          <view class="date">{{msg.createTime | formatTime}}</view>
+          <view class="date">{{ msg.createTime | formatTime }}</view>
         </block>
         <block v-else>
           <image class="cu-avatar radius"
@@ -55,7 +55,7 @@
             <view class="ml-40rpx h44rpx row-col-center">
               <text class="text-sm" :class="[msg.user.vipFlag?'text-red':'text-gray']"
                     @click="toUserDetailVue(msg.user.id)">
-                {{msg.user.nickname}}
+                {{ msg.user.nickname }}
               </text>
               <image v-if="msg.user.vipFlag" class="ml-6rpx size30rpx mt-n10rpx"
                      src="/static/img/crown.png"
@@ -63,11 +63,11 @@
             </view>
             <view class="main">
               <view class="content bg-white" @longpress="openMessageMoreHandleDialog(msg)">
-                <text>{{msg.content}}</text>
+                <text>{{ msg.content }}</text>
               </view>
             </view>
           </view>
-          <view class="date">{{msg.createTime | formatTime}}</view>
+          <view class="date">{{ msg.createTime | formatTime }}</view>
         </block>
       </view>
     </scroll-view>
@@ -84,6 +84,7 @@
                :cursor-spacing="8"
                :focus="inputFocus"
                @blur="inputBlur"
+               @focus="inputFocusEvent"
                @confirm="sendMsg"
                :hold-keyboard="true"
                :confirm-hold="true"
@@ -156,6 +157,7 @@ import PageUtil from '@/utils/PageUtil'
 import BalaBala from '@/utils/BalaBala'
 import { chatModule, systemModule } from '@/plugins/store'
 import UserType from '@/const/UserType'
+import MsgUtil from '@/utils/MsgUtil'
 
 const chatStore = namespace('chat')
 const userStore = namespace('user')
@@ -240,6 +242,10 @@ export default class MessageVue extends Vue {
     this.emojiModelHeight = this.windowHeight - (this.keyboardHeight + 56) *!/
     this.inputFocus = true
   } */
+
+  inputFocusEvent () {
+    MsgUtil.cantPopupPromptToast()
+  }
 
   inputBlur () {
     if (this.inputFocus) {

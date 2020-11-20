@@ -39,6 +39,10 @@ export default class SystemModule extends VuexModule {
   titleHeight = 0
   appVersion = 0
 
+  get isIosAndMpQQ () {
+    return this.isIos && this.isMpQQ
+  }
+
   @Action
   appInit () {
     // 执行获取系统信息的函数

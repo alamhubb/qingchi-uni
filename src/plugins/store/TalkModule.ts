@@ -1,5 +1,5 @@
 import { VuexModule, Module, Action } from 'vuex-class-modules'
-import { userModule } from './index'
+import { systemModule, userModule } from './index'
 import CommentAddVO from '@/model/comment/CommentAddVO'
 import CommentVO from '@/model/comment/CommentVO'
 import TalkAPI from '@/api/TalkAPI'
@@ -9,6 +9,7 @@ import UniUtil from '@/utils/UniUtil'
 import TalkTabVO from '@/model/talk/TalkTabVO'
 import TalkVueUtil from '@/utils/TalkVueUtil'
 import TalkFilterUtil from '@/utils/TalkFilterUtil'
+import MsgUtil from '@/utils/MsgUtil'
 
 @Module({ generateMutationSetters: true })
 export default class TalkModule extends VuexModule {
@@ -102,6 +103,7 @@ export default class TalkModule extends VuexModule {
 
   @Action
   inputContentFocusEvent () {
+    MsgUtil.cantPopupPromptToast()
     // 需要有延迟，要不然无法成功切换
     UniUtil.delayTime(200).then(() => {
       this.inputContentFocus = true

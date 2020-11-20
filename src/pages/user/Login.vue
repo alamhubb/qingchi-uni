@@ -6,7 +6,9 @@
       或者就是为app时,app没用户登陆时要显示
       -->
       <view class="h460rpx row-center">
+        <!--        手机号界面-->
         <view v-if="showPhoneView">
+          <!--          如果没登录-->
           <view v-if="!user" class="u-type-warning-light-bg row-col-center mx px-sm py-xs mb-lg">
             <q-icon size="50" icon="volume-fill" class="u-type-warning"></q-icon>
             <view class="ml text-bold">
@@ -15,14 +17,27 @@
             </view>
           </view>
           <view v-else class="mt-lg"></view>
-          <view class="cu-form-group divider">
-            <view class="title">手机号</view>
+          <view class="cu-form-group">
+<!--            <view class="title">手机号</view>-->
             <!--   自动获取焦点的话app平台会有问题，打开我的页面时会弹出键盘   :focus="true"-->
-            <input type="number" name="input" :focus="phoneNumFocus" :maxlength="11" v-model.trim="phoneNum"
+            <!--<input v-if="!user.phoneNum" type="number" name="input" :focus="phoneNumFocus" :maxlength="11"
+                   v-model.trim="phoneNum"
                    @confirm="authCodeInputFocus"
                    @blur="phoneNumInputBlur" @focus="phoneNumInputFocus"
-                   :confirm-hold="true"
-            />
+            />-->
+            <!--                   :confirm-hold="true"-->
+            <u-field
+                label="手机号"
+                type="number"
+                :focus="phoneNumFocus" :maxlength="11"
+                v-model.trim="phoneNum"
+                trim
+                required
+                @confirm="authCodeInputFocus"
+                @blur="phoneNumInputBlur" @focus="phoneNumInputFocus"
+                placeholder="请填写手机号"
+            >
+            </u-field>
             <q-icon v-if="phoneNum" class="text-gray mr-lg" icon="close-circle" size="40"
                     @touchend.native.prevent="phoneNumClear"></q-icon>
             <view class="cu-capsule radius">
@@ -39,16 +54,31 @@
               *请输入正确的手机号
             </text>
           </view>
-          <view class="cu-form-group divider">
-            <view class="title">验证码</view>
-            <input type="number" name="input" :focus="authCodeFocus" :maxlength="4" v-model.trim="authCode"
+          <view class="cu-form-group">
+<!--            <view class="title">验证码</view>-->
+            <!--<input v-if="!user.phoneNum" type="number" name="input" :focus="authCodeFocus" :maxlength="4" v-model.trim="authCode"
                    @focus="authCodeInputFocus"
-                   @blur="authCodeInputBlur"/>
+                   @blur="authCodeInputBlur"/>-->
+
+            <u-field
+                label="验证码"
+                type="number"
+                v-model.trim="authCode"
+                :focus="authCodeFocus"
+                :maxlength="4"
+                trim
+                required
+                @focus="authCodeInputFocus"
+                @blur="authCodeInputBlur"
+                placeholder="请填写验证码"
+            >
+            </u-field>
+
             <q-icon v-if="authCode" class="text-gray mr-lg" icon="close-circle" size="40"
                     @touchend.native.prevent="authCodeClear"></q-icon>
             <view @click="sendCodeClick">
               <button class='cu-btn bg-green w30vw' :disabled="sendAuthCodeBtnDisabled">
-                {{countDown? authCodeInterval+1 - countDown:'发送验证码'}}
+                {{ countDown ? authCodeInterval + 1 - countDown : '发送验证码' }}
               </button>
             </view>
           </view>
@@ -58,6 +88,8 @@
             </text>
           </view>
         </view>
+
+        <!--        登陆界面，展示logo-->
         <view v-else>
           <image class="radius flex-none size180"
                  src="/static/img/logo.png"
@@ -82,6 +114,7 @@
         </view>
 
         <view>
+          <!--          已登录，绑定手机号-->
           <view v-if="user" class="mt-sm cu-bar bg-white row-around px">
             <button class="cu-btn bd-gray radius w35vw bg-white" @click="cancelBind">暂不绑定</button>
             <view @click="bindPhoneNum">
@@ -91,6 +124,7 @@
             </view>
           </view>
 
+          <!--          未登录，使用手机号登陆-->
           <view v-else>
             <view v-if="!phoneNumFocus && !authCodeFocus" class="mt-xs col-row-center">
               <!-- 只要不为QQ小程序平台都可以使用微信登陆-->
@@ -133,7 +167,7 @@
         </navigator>
 
         <view @click="copyServiceNum" class="text-bold u-type-info q-solids-bottom">
-          客服微信、QQ：{{qqService}}
+          客服微信、QQ：{{ qqService }}
           <q-icon icon="attach" size="30" class="ml-xs"></q-icon>
         </view>
       </view>
@@ -327,6 +361,7 @@ export default class LoginVue extends Vue {
           UserStore.setMineUser(res.data)
           // 提示验证码发送成功
           UniUtil.hint('绑定成功').finally(() => {
+            this.$destroy()
             PageUtil.toMinePage()
           })
         }).finally(() => {

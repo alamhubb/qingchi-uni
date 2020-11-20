@@ -1,8 +1,8 @@
 <template>
   <view v-show="inputContentFocus"
-        class="cu-bar input fixed-footer elevation-4"
+        class="cu-bar input fixed-footer elevation-4 flex-row"
   >
-    <input
+    <!--<input
         v-model.trim="content"
         :adjust-position="true"
         class="solid-bottom"
@@ -12,11 +12,25 @@
         :cursor-spacing="8"
         :placeholder="msgInputPlaceholder"
         @blur="inputContentBlur"
-    />
+    />-->
+    <u-field
+        trim
+        v-model="content"
+        :adjust-position="true"
+        class="solid-bottom flex-auto"
+        confirm-type="send"
+        :focus="inputContentFocus"
+        maxlength="300"
+        label-width="0"
+        :cursor-spacing="8"
+        :placeholder="msgInputPlaceholder"
+        @blur="inputContentBlur"
+        :clearable="false"
+    ></u-field>
     <!--<view class="action">
         <text class="cuIcon-emojifill text-grey"></text>
     </view>-->
-    <button class="cu-btn bg-cyan" @click="sendComment" :disabled="!content">发送</button>
+    <button class="cu-btn bg-cyan flex-none" @click="sendComment" :disabled="!content">发送</button>
   </view>
 </template>
 

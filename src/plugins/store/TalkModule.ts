@@ -62,14 +62,15 @@ export default class TalkModule extends VuexModule {
 
   @Action
   setTalk (talk) {
-    if (userModule.user) {
+    const user = userModule.user
+    if (user && user.phoneNum) {
       this.talk = talk
       this.comment = null
       this.replyComment = null
       this.currentContent = talk.content
       this.inputContentFocusEvent()
     } else {
-      BalaBala.unLoginMessage()
+      BalaBala.unBindPhoneNum()
     }
   }
 

@@ -2,7 +2,7 @@
   <view>
     <!--  #ifndef MP -->
     <u-navbar>
-      <view class="row-between w100r">
+      <view class="row-between w100r flex-auto">
         <view class="ml-xl text-bold text-lg">
           {{title}}
         </view>

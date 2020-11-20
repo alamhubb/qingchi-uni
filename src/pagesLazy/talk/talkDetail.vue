@@ -3,14 +3,14 @@
     <msg-input v-if="showMsgInput">
     </msg-input>
     <u-navbar :is-back="false">
-      <view class="flex-row w100r px">
-        <view class="col-center bg-active" @click="goBack">
+      <view class="flex-row w100vw px flex-auto">
+        <view class="col-center bg-active flex-none" @click="goBack">
           <q-icon icon="arrow-left" size="42"></q-icon>
         </view>
-        <view class="col-center bg-active ml-lg" @click="goHome">
+        <view class="col-center bg-active ml-lg flex-none" @click="goHome">
           <q-icon icon="home" size="46"></q-icon>
         </view>
-        <view class="ml-lg text-bold text-lg">
+        <view class="ml-lg text-bold text-lg flex-none">
           动态详情
         </view>
       </view>

@@ -17,27 +17,29 @@
             </view>
           </view>
           <view v-else class="mt-lg"></view>
-          <view class="cu-form-group">
-<!--            <view class="title">手机号</view>-->
-            <!--   自动获取焦点的话app平台会有问题，打开我的页面时会弹出键盘   :focus="true"-->
-            <!--<input v-if="!user.phoneNum" type="number" name="input" :focus="phoneNumFocus" :maxlength="11"
-                   v-model.trim="phoneNum"
-                   @confirm="authCodeInputFocus"
-                   @blur="phoneNumInputBlur" @focus="phoneNumInputFocus"
-            />-->
-            <!--                   :confirm-hold="true"-->
-            <u-field
+          <view class="cu-form-group divider">
+            <!--<u-field
                 label="手机号"
                 type="number"
                 :focus="phoneNumFocus" :maxlength="11"
                 v-model.trim="phoneNum"
                 trim
                 required
+                :clearable="false"
                 @confirm="authCodeInputFocus"
                 @blur="phoneNumInputBlur" @focus="phoneNumInputFocus"
                 placeholder="请填写手机号"
             >
-            </u-field>
+            </u-field>-->
+            <view class="title">手机号</view>
+            <!--   自动获取焦点的话app平台会有问题，打开我的页面时会弹出键盘   :focus="true"-->
+            <input type="number" name="input" :focus="phoneNumFocus" :maxlength="11"
+                   v-model.trim="phoneNum"
+                   @confirm="authCodeInputFocus"
+                   @blur="phoneNumInputBlur" @focus="phoneNumInputFocus"
+                   :confirm-hold="true"
+                   placeholder="请填写手机号"
+            />
             <q-icon v-if="phoneNum" class="text-gray mr-lg" icon="close-circle" size="40"
                     @touchend.native.prevent="phoneNumClear"></q-icon>
             <view class="cu-capsule radius">
@@ -54,15 +56,11 @@
               *请输入正确的手机号
             </text>
           </view>
-          <view class="cu-form-group">
-<!--            <view class="title">验证码</view>-->
-            <!--<input v-if="!user.phoneNum" type="number" name="input" :focus="authCodeFocus" :maxlength="4" v-model.trim="authCode"
-                   @focus="authCodeInputFocus"
-                   @blur="authCodeInputBlur"/>-->
-
-            <u-field
+          <view class="cu-form-group divider">
+            <!--<u-field
                 label="验证码"
                 type="number"
+                :clearable="false"
                 v-model.trim="authCode"
                 :focus="authCodeFocus"
                 :maxlength="4"
@@ -72,8 +70,14 @@
                 @blur="authCodeInputBlur"
                 placeholder="请填写验证码"
             >
-            </u-field>
-
+            </u-field>-->
+            <view class="title">验证码</view>
+            <input type="number" name="input" :focus="authCodeFocus" :maxlength="4"
+                   v-model.trim="authCode"
+                   @focus="authCodeInputFocus"
+                   @blur="authCodeInputBlur"
+                   placeholder="请填写验证码"
+            />
             <q-icon v-if="authCode" class="text-gray mr-lg" icon="close-circle" size="40"
                     @touchend.native.prevent="authCodeClear"></q-icon>
             <view @click="sendCodeClick">
@@ -290,6 +294,8 @@ export default class LoginVue extends Vue {
       return UniUtil.toast('验证码发送频繁，请等待')
     }
 
+    this.authCodeClear()
+
     this.countDown++
     const Timer = setInterval(() => {
       if (this.countDown === this.authCodeInterval) {
@@ -360,8 +366,7 @@ export default class LoginVue extends Vue {
         UserAPI.bindPhoneNumAPI(this.phoneNum, this.authCode).then((res: any) => {
           UserStore.setMineUser(res.data)
           // 提示验证码发送成功
-          UniUtil.hint('绑定成功').finally(() => {
-            this.$destroy()
+          UniUtil.hint('绑定成功，如无法评论，请重启应用').finally(() => {
             PageUtil.toMinePage()
           })
         }).finally(() => {

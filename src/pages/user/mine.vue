@@ -94,9 +94,10 @@
       </msg-input>
     </view>
     <view v-else class="h100r col-all-center bg-white">
-      <u-navbar :is-back="false">
-        <view class="flex-row w100r">
-          <view class="ml-xl text-bold text-lg">
+      <!--      title="欢迎登陆清池app"-->
+      <u-navbar :is-back="false" title-bold>
+        <view class="flex-row w100vw flex-auto">
+          <view class="ml-xl text-bold text-lg w100r">
             欢迎登陆清池app
           </view>
         </view>

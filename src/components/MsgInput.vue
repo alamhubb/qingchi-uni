@@ -2,7 +2,7 @@
   <view v-show="inputContentFocus"
         class="cu-bar input fixed-footer elevation-4 flex-row"
   >
-    <!--<input
+    <input
         v-model.trim="content"
         :adjust-position="true"
         class="solid-bottom"
@@ -12,8 +12,8 @@
         :cursor-spacing="8"
         :placeholder="msgInputPlaceholder"
         @blur="inputContentBlur"
-    />-->
-    <u-field
+    />
+    <!--<u-field
         trim
         v-model="content"
         :adjust-position="true"
@@ -26,7 +26,7 @@
         :placeholder="msgInputPlaceholder"
         @blur="inputContentBlur"
         :clearable="false"
-    ></u-field>
+    ></u-field>-->
     <!--<view class="action">
         <text class="cuIcon-emojifill text-grey"></text>
     </view>-->

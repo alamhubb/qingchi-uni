@@ -1,6 +1,6 @@
 {
   "name": "qingchi",
-  "version": "1.7.5",
+  "version": "1.8.6",
   "private": true,
   "scripts": {
     "serve": "npm run dev:h5",

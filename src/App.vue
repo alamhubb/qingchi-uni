@@ -5,6 +5,7 @@ import { systemModule } from '@/plugins/store'
 export default Vue.extend({
   mpType: 'app',
   onLaunch () {
+    //页面启动，启动函数
     systemModule.appInit()
   }
 })

@@ -19,6 +19,7 @@ export default class AppInitQueryVO {
 
   constructor (tabObj: TalkTabVO, district: DistrictVO) {
     //如果为初始才传ad
+    //如果用户开着定位
     if (appModule.openPosition) {
       this.openPosition = appModule.openPosition
       DistrictUtil.getCurPositionBySDK().then((res: DistrictVO) => {

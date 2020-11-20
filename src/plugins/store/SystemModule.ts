@@ -43,6 +43,7 @@ export default class SystemModule extends VuexModule {
   appInit () {
     // 执行获取系统信息的函数
     this.getSystemInfo()
+    //校验更新
     PlatformUtils.checkUpdate()
     WebsocketUtil.websocketConnect(false)
     // 初始化数据看一下这些请求是否可以合并 登陆之后也要链接websocket

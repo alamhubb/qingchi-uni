@@ -78,11 +78,12 @@ export default class AppModule extends VuexModule {
   initGlobalDataLoadAPI () {
     // 静态类，方法，只要使用这个方法，参数能自动传进来
     // 查询所有地区相关
+    // 获取当前的tab，上次历史
     const talkTabIndex = TalkVueUtil.getCurTalkTabIndex()
     const tabObj = talkModule.talkTabs[talkTabIndex]
     tabObj.loadMore = LoadMoreType.loading
     const district = appModule.district
-
+    //初始查询信息，从store中获取上次的记录，或者初始化
     const initQueryVO = new AppInitQueryVO(tabObj, district)
 
     AppInitAPI.queryAppInitDataLoadAPI(initQueryVO).then((res: ResultVO<AppInitDataVO>) => {

@@ -48,7 +48,7 @@ export default class AppModule extends VuexModule {
   @Action
   setDistrictAction (district: DistrictVO) {
     //只要开启过定位就不再关闭
-    //如果空值则默认中国
+    //如果空值则默认中国，后台定位不到有时候会返回空，11.21此逻辑已修改，无论如何后台不会返回空
     if (!district || !district.adCode) {
       // 远程获取，获取不到返回中国
       // storeAge存储
@@ -82,6 +82,7 @@ export default class AppModule extends VuexModule {
     const talkTabIndex = TalkVueUtil.getCurTalkTabIndex()
     const tabObj = talkModule.talkTabs[talkTabIndex]
     tabObj.loadMore = LoadMoreType.loading
+    //获取用户上次的位置记录
     const district = appModule.district
     //初始查询信息，从store中获取上次的记录，或者初始化
     const initQueryVO = new AppInitQueryVO(tabObj, district)
@@ -93,18 +94,16 @@ export default class AppModule extends VuexModule {
       this.homeSwipers = res.data.homeSwipers
       // 应用配置
       configModule.appConfig = res.data.appConfig
-      configModule.showSwipers = this.appConfig.showSwipers
-      //初始第一次查询才赋值
+      configModule.showSwipers = configModule.appConfig.showSwipers
+      //初始第一次查询才赋值，
+      // 初始查询时，前台没权限获取位置无法完成同城功能，需要后台根据ip获取位置，然后获取城市，返回给前台，供前台完成同城功能
       if (district.adCode === DistrictUtil.initAdCode) {
         appModule.setDistrictAction(res.data.district)
-      } else {
+      } else if (!appModule.openPosition && res.data.district && res.data.district.lat) {
         //只有未开启定位时，才使用后台返回的经纬度
-        if (!appModule.openPosition) {
-          if (res.data.district) {
-            district.lat = res.data.district.lat
-            district.lon = res.data.district.lon
-          }
-        }
+        //不为第一次，且用户未开启定位
+        district.lat = res.data.district.lat
+        district.lon = res.data.district.lon
       }
     }).finally(() => {
       tabObj.loadMore = LoadMoreType.more

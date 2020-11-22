@@ -61,6 +61,8 @@ export default class QPicker extends Vue {
   @Model('input') readonly value!: any
   @Prop() readonly dataList: any []
 
+  //这个组件有点问题，值改变的时候没有滚动到对应的位置
+
   mounted () {
     this.pageInit()
   }

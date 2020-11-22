@@ -17,6 +17,6 @@ export default class TagAPI {
   }
 
   static queryUserRecentlyDistrictsAPI () {
-    return http.post('district/queryUserRecentlyDistricts')
+    return http.post('district/queryUserRecentlyTags')
   }
 }

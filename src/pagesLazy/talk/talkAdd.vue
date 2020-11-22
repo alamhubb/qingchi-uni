@@ -12,6 +12,7 @@
     <view v-if="showTagAdd">
       <tag-add @change="addTagCheckTag" @close="closeTagAddVue"/>
     </view>
+
     <view v-show="!showSearch&&!showTagSearch&&!showTagAdd">
       <view class="uni-textarea">
         <textarea class="h140px" :maxlength="200" placeholder="想说啥就说啥，不用再顾虑别人的看法了，放飞自己，享受自由吧"

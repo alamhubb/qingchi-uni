@@ -255,6 +255,7 @@ export default class TabsTalkVue extends Vue {
     this.autoChooseUsePositionQueryTalks(true)
   }
 
+  //如果用户开了定位，就获取经纬度去查询，如果用户没开启定位，就不使用经纬度，没必要每次都获取经纬度。
   autoChooseUsePositionQueryTalks (firstLoad?: boolean) {
     if (appModule.openPosition) {
       this.requestUsePositionQueryTalks(firstLoad)

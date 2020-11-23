@@ -78,13 +78,11 @@ export default class AppModule extends VuexModule {
   initGlobalDataLoadAPI () {
     // 静态类，方法，只要使用这个方法，参数能自动传进来
     // 查询所有地区相关
-    // 获取当前的tab，上次历史
     const talkTabIndex = TalkVueUtil.getCurTalkTabIndex()
     const tabObj = talkModule.talkTabs[talkTabIndex]
     tabObj.loadMore = LoadMoreType.loading
-    //获取用户上次的位置记录
     const district = appModule.district
-    //初始查询信息，从store中获取上次的记录，或者初始化
+
     const initQueryVO = new AppInitQueryVO(tabObj, district)
 
     AppInitAPI.queryAppInitDataLoadAPI(initQueryVO).then((res: ResultVO<AppInitDataVO>) => {
@@ -94,16 +92,18 @@ export default class AppModule extends VuexModule {
       this.homeSwipers = res.data.homeSwipers
       // 应用配置
       configModule.appConfig = res.data.appConfig
-      configModule.showSwipers = configModule.appConfig.showSwipers
-      //初始第一次查询才赋值，
-      // 初始查询时，前台没权限获取位置无法完成同城功能，需要后台根据ip获取位置，然后获取城市，返回给前台，供前台完成同城功能
+      configModule.showSwipers = this.appConfig.showSwipers
+      //初始第一次查询才赋值
       if (district.adCode === DistrictUtil.initAdCode) {
         appModule.setDistrictAction(res.data.district)
-      } else if (!appModule.openPosition && res.data.district && res.data.district.lat) {
+      } else {
         //只有未开启定位时，才使用后台返回的经纬度
-        //不为第一次，且用户未开启定位
-        district.lat = res.data.district.lat
-        district.lon = res.data.district.lon
+        if (!appModule.openPosition) {
+          if (res.data.district) {
+            district.lat = res.data.district.lat
+            district.lon = res.data.district.lon
+          }
+        }
       }
     }).finally(() => {
       tabObj.loadMore = LoadMoreType.more

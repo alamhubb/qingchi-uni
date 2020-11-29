@@ -8,6 +8,11 @@
         <q-icon icon="close-circle-fill" size="36" @click="closeShowMsgHint"></q-icon>
       </view>
     </view>
+
+    <view v-if="chat.status === waitOpenStatus">
+      会话未开启，为避免用户被频繁恶意骚扰，只能给关注您的用户和给您发过消息的用户直接发送消息，给其他用户发送消息，需要支付10贝壳开启对话
+    </view>
+
     <scroll-view scroll-y="true" class="cu-chat h100r"
                  @scrolltoupper="upper"
                  :show-scrollbar="true"
@@ -158,6 +163,7 @@ import BalaBala from '@/utils/BalaBala'
 import { chatModule, systemModule } from '@/plugins/store'
 import UserType from '@/const/UserType'
 import MsgUtil from '@/utils/MsgUtil'
+import CommonStatus from '@/const/CommonStatus'
 
 const chatStore = namespace('chat')
 const userStore = namespace('user')
@@ -194,6 +200,7 @@ export default class MessageVue extends Vue {
   reportContentType: string = ReportContentType.message
   systemMsgType: string = MessageType.system
   showMsgHint: boolean = uni.getStorageSync(Constants.showMsgHintKey) !== 'false'
+  waitOpenStatus = CommonStatus.waitOpen
 
   onUnload () {
     chatModule.scrollTop = 0

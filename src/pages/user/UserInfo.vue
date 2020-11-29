@@ -79,10 +79,10 @@
 
           <view v-if="!isMine" class="flex-row">
             <!--                不为自己且未关注-->
-            <!--<button class="cu-btn round bd-gray bg-white mr-sm" @click="toMessagePage">
+            <button class="cu-btn round bd-gray bg-white mr-sm" @click="toMessagePage">
               私信
               <text v-if="userProp.showBuyMsg" class="ml-2px">(5B)</text>
-            </button>-->
+            </button>
             <button class="cu-btn round bd-blue px-12px bg-white" :class="'bd-'+getFollowStatusColor(followStatus)"
                     @click.stop="addFollow">
               {{ followStatus }}
@@ -354,6 +354,7 @@ import ProviderType from '@/const/ProviderType'
 import QIcon from '@/components/q-icon/q-icon.vue'
 import ChatVO from '@/model/chat/ChatVO'
 import MessageVO from '@/model/message/MessageVO'
+import ChatAPI from '@/api/ChatAPI'
 
 const userStore = namespace('user')
 const appStore = namespace('app')
@@ -394,6 +395,9 @@ export default class UserInfo extends Vue {
     //判断是否已经支付过了。3条，然后对方每次回复你都可以发三条，然后就需要再次支付，开启了支付
     //mock chat
     const chat = ChatVO.creatChat(this.userProp)
+    ChatAPI.getChatAPI(this.userProp).then(res => {
+      chatModule.setChatAction(res.data)
+    })
     PageUtil.toMessagePage(chat)
 
     //如果有chat读取，如果没有创建读取

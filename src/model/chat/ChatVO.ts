@@ -1,11 +1,13 @@
 import MessageVO from '@/model/message/MessageVO'
 import UserVO from '@/model/user/UserVO'
 import ChatType from '@/const/ChatType'
+import CommonStatus from '@/const/CommonStatus'
 
 export default class ChatVO {
   public id: number
   public nickname: string
   public type: string
+  public status: string
   public messages: MessageVO[]
   public avatar: string
   public unreadNum: number
@@ -20,6 +22,7 @@ export default class ChatVO {
       this.id = chat.id
       this.nickname = chat.nickname
       this.type = chat.type
+      this.status = chat.status
       this.messages = chat.messages
       this.avatar = chat.avatar
       this.topLevel = chat.topLevel
@@ -41,6 +44,11 @@ export default class ChatVO {
     chat.updateTime = new Date()
     chat.lastContent = ''
     chat.vipFlag = user.vipFlag
+    if (user.showBuyMsg) {
+      chat.status = CommonStatus.waitOpen
+    } else {
+      chat.status = CommonStatus.normal
+    }
     return chat
   }
 }

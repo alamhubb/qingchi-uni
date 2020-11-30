@@ -9,9 +9,6 @@
       </view>
     </view>
 
-    <view v-if="chat.status === waitOpenStatus">
-      会话未开启，为避免用户被频繁恶意骚扰，只能给关注您的用户和给您发过消息的用户直接发送消息，给其他用户发送消息，需要支付10贝壳开启对话
-    </view>
 
     <scroll-view scroll-y="true" class="cu-chat h100r"
                  @scrolltoupper="upper"
@@ -19,62 +16,80 @@
                  :scroll-into-view='topId'
                  :scroll-top="scrollTop"
     >
-      <view v-for="msg in messages" :id="'m'+msg.id" :key="msg.id"
-            :class="[msg.type === systemMsgType?'row-center':'cu-item',msg.isMine?'self':'']">
-        <block v-if="msg.type === systemMsgType">
-          <view class="cu-info round">
-            {{ msg.content }}
+      <view v-if="chat.status === waitOpenStatus" class="w100r h100r col-row-center">
+        <view class="uni-tip  mt-80px">
+          <view class="uni-tip-content text-bold">
+            会话未开启，为避免用户被频繁恶意骚扰，只能给关注您的用户和给您发过消息的用户直接发送消息，给其他用户发送消息，需要支付10贝壳开启对话
           </view>
-        </block>
-        <block v-else-if="msg.isMine">
-          <view class="flex-col w100r">
-            <view class="mr-30rpx h44rpx row-end-center">
-              <text class="text-sm" :class="[msg.user.vipFlag?'text-red':'text-gray']"
-                    @click="toUserDetailVue(msg.user.id)">
-                {{ msg.user.nickname }}
-              </text>
-              <image v-if="msg.user.vipFlag" class="ml-6rpx mr-6rpx size30rpx mt-n10rpx"
-                     src="/static/img/crown.png"
-                     @click="toVipVue"></image>
+          <view class="uni-tip-group-button">
+            <button class="uni-tip-button w40r" type="default" :plain="true">
+              返回
+            </button>
+            <button class="uni-tip-button w40r" type="primary" @click="addReport">
+              开启对话
+            </button>
+          </view>
+        </view>
+      </view>
+
+      <template v-else>
+        <view v-for="msg in messages" :id="'m'+msg.id" :key="msg.id"
+              :class="[msg.type === systemMsgType?'row-center':'cu-item',msg.isMine?'self':'']">
+          <block v-if="msg.type === systemMsgType">
+            <view class="cu-info round">
+              {{ msg.content }}
             </view>
-            <view class="row-end">
+          </block>
+          <block v-else-if="msg.isMine">
+            <view class="flex-col w100r">
+              <view class="mr-30rpx h44rpx row-end-center">
+                <text class="text-sm" :class="[msg.user.vipFlag?'text-red':'text-gray']"
+                      @click="toUserDetailVue(msg.user.id)">
+                  {{ msg.user.nickname }}
+                </text>
+                <image v-if="msg.user.vipFlag" class="ml-6rpx mr-6rpx size30rpx mt-n10rpx"
+                       src="/static/img/crown.png"
+                       @click="toVipVue"></image>
+              </view>
+              <view class="row-end">
+                <view class="main">
+                  <view class="content bg-white" @longpress="openMessageMoreHandleDialog(msg)">
+                    <text>{{ msg.content }}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+            <image class="cu-avatar radius"
+                   :src="msg.user.avatar"
+                   @click="toUserDetailVue(msg.user.id)"
+            />
+            <view class="date">{{ msg.createTime | formatTime }}</view>
+          </block>
+          <block v-else>
+            <image class="cu-avatar radius"
+                   :src="msg.user.avatar"
+                   @click="toUserDetailVue(msg.user.id)"
+            />
+            <view class="flex-col w100r">
+              <view class="ml-40rpx h44rpx row-col-center">
+                <text class="text-sm" :class="[msg.user.vipFlag?'text-red':'text-gray']"
+                      @click="toUserDetailVue(msg.user.id)">
+                  {{ msg.user.nickname }}
+                </text>
+                <image v-if="msg.user.vipFlag" class="ml-6rpx size30rpx mt-n10rpx"
+                       src="/static/img/crown.png"
+                       @click="toVipVue"></image>
+              </view>
               <view class="main">
                 <view class="content bg-white" @longpress="openMessageMoreHandleDialog(msg)">
                   <text>{{ msg.content }}</text>
                 </view>
               </view>
             </view>
-          </view>
-          <image class="cu-avatar radius"
-                 :src="msg.user.avatar"
-                 @click="toUserDetailVue(msg.user.id)"
-          />
-          <view class="date">{{ msg.createTime | formatTime }}</view>
-        </block>
-        <block v-else>
-          <image class="cu-avatar radius"
-                 :src="msg.user.avatar"
-                 @click="toUserDetailVue(msg.user.id)"
-          />
-          <view class="flex-col w100r">
-            <view class="ml-40rpx h44rpx row-col-center">
-              <text class="text-sm" :class="[msg.user.vipFlag?'text-red':'text-gray']"
-                    @click="toUserDetailVue(msg.user.id)">
-                {{ msg.user.nickname }}
-              </text>
-              <image v-if="msg.user.vipFlag" class="ml-6rpx size30rpx mt-n10rpx"
-                     src="/static/img/crown.png"
-                     @click="toVipVue"></image>
-            </view>
-            <view class="main">
-              <view class="content bg-white" @longpress="openMessageMoreHandleDialog(msg)">
-                <text>{{ msg.content }}</text>
-              </view>
-            </view>
-          </view>
-          <view class="date">{{ msg.createTime | formatTime }}</view>
-        </block>
-      </view>
+            <view class="date">{{ msg.createTime | formatTime }}</view>
+          </block>
+        </view>
+      </template>
     </scroll-view>
 
     <view class="fixed-footer">
@@ -164,6 +179,10 @@ import { chatModule, systemModule } from '@/plugins/store'
 import UserType from '@/const/UserType'
 import MsgUtil from '@/utils/MsgUtil'
 import CommonStatus from '@/const/CommonStatus'
+import UserAPI from '@/api/UserAPI'
+import ProviderType from '@/const/ProviderType'
+import PlatformUtils from '@/utils/PlatformUtils'
+import PayType from '@/const/PayType'
 
 const chatStore = namespace('chat')
 const userStore = namespace('user')
@@ -379,6 +398,44 @@ export default class MessageVue extends Vue {
   openReportDialog () {
     this.closeMessageMoreDialog()
     this.$refs.reportDialog.openReport()
+  }
+
+
+  payShellOpenChatBtnDisabled = false
+
+  //开启聊天支付
+  shellPayForUserContact () {
+    if (!this.payShellOpenChatBtnDisabled) {
+      this.payShellOpenChatBtnDisabled = true
+      const userShell = this.user.shell
+      if (userShell >= 10) {
+        UniUtil.action('是否消耗10个贝壳开启与 ' + this.chat.nickname + ' 的对话').then(() => {
+          UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
+            this.userProp.contactAccount = res.data
+            this.userProp.showUserContact = true
+            this.mineUser.shell = userShell - 10
+          })
+        }).finally(() => {
+          this.showUserContactBtnDisabled = false
+        })
+      } else {
+        UniUtil.action('您没有贝壳了，是否直接使用现金支付').then(() => {
+          const provider = systemModule.isApp ? ProviderType.wx : systemModule.provider
+          PlatformUtils.pay(provider, PayType.shell, 1).then(() => {
+            UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
+              this.userProp.contactAccount = res.data
+              this.userProp.showUserContact = true
+            }).catch(() => {
+              MsgUtil.sysErrMsg()
+            })
+          })
+        }).finally(() => {
+          this.showUserContactBtnDisabled = false
+        })
+      }
+    } else {
+      UniUtil.toast('获取中，请稍等')
+    }
   }
 }
 </script>

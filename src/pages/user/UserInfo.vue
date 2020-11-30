@@ -353,7 +353,6 @@ import PayType from '@/const/PayType'
 import ProviderType from '@/const/ProviderType'
 import QIcon from '@/components/q-icon/q-icon.vue'
 import ChatVO from '@/model/chat/ChatVO'
-import MessageVO from '@/model/message/MessageVO'
 import ChatAPI from '@/api/ChatAPI'
 
 const userStore = namespace('user')

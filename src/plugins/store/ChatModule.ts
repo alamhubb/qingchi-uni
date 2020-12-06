@@ -14,11 +14,38 @@ import PlatformUtils from '@/utils/PlatformUtils'
 
 @Module({ generateMutationSetters: true })
 export default class ChatModule extends VuexModule {
-  chat: ChatVO = null
+  chatId: number = null
   chats: ChatVO[] = []
-  messages: MessageVO[] = []
   scrollTop: number = ScrollUtil.pageBottom
   chatsUnreadNumTotal = 0
+
+  get chatIndex (): number {
+    return this.chats.findIndex(item => item.id === this.chatId)
+  }
+
+  get chat (): ChatVO {
+    return this.chats[this.chatIndex]
+  }
+
+  get messages (): MessageVO[] {
+    return this.chat.messages
+  }
+
+  setChat (chatId: number, chat: ChatVO) {
+    this.chatId = chatId
+    const chatIndex = this.chats.findIndex(item => item.id === this.chatId)
+    if (chatIndex > -1) {
+      this.chats[chatIndex] = chat
+    }
+  }
+
+  @Action
+  setChatAction (chat: ChatVO) {
+    this.readChatAction(chat)
+    this.setChat
+    this.setMessagesAction(chat.messages)
+    this.scrollToBottomAction()
+  }
 
   // 三个地方使用，初始查询，推送消息，阅读清空消息
   @Action
@@ -42,10 +69,6 @@ export default class ChatModule extends VuexModule {
     }
   }
 
-  @Action
-  pushChatAction (newChat: ChatVO) {
-    this.chats.unshift(newChat)
-  }
 
   @Action
   scrollToBottomAction () {
@@ -54,13 +77,57 @@ export default class ChatModule extends VuexModule {
     })
   }
 
+
+  //后台推送了一条消息，你不知道前台是否有这条消息，后台更不可能知道前台是否删除了这条消息
+  //就直接push进去就行了。然后方法内部判断，是否有，有的话替换，msg push，没有的话直接unshift
+  //有三种可能
+  //一，在展示当前chat，2没在，但是列表中有，3列表中没有
+  //如果是正在聊的，需要改为，已读，先不做已读未读
   @Action
-  setMessagesAction (messages: MessageVO[]) {
-    this.messages = messages
-    this.scrollToBottomAction()
+  pushChatAndMessagesAction (newChat: ChatVO) {
+    let chat: ChatVO
+    // 如果正在这个chat聊天
+    // if (PageUtil.getCurrentPageURI() === PagePath.message && this.chatId === newChat.id) {
+
+    if (this.chatId === newChat.id) {
+      this.chats.splice(this.chatIndex, 1, newChat)
+      // 则直接往msg增加消息
+      // 前台将消息改为已读
+      for (const message of newChat.messages) {
+        message.isRead = true
+      }
+      this.messages.push(...newChat.messages)
+      this.scrollToBottomAction()
+      // 后台改为已读
+      ChatAPI.readChat(newChat.id, newChat.messages.map(item => item.id))
+      // 向后台发送消息，将收到的消息改为已读
+      // 如果当前就是这个聊天
+    } else {
+      const newChatIndex = this.chats.findIndex(item => item.id === newChat.id)
+      if (newChatIndex > -1) {
+        this.chats.splice(newChatIndex, 1, newChat)
+      }else {
+        this.chats.unshift(newChat)
+      }
+      //不需要吧，后台chat应该计算好当前未读数量
+      /*// 如果已登录
+      if (UserStore.hasUser() && chat.type !== ChatType.system_group) {
+        chat.unreadNum = newChat.unreadNum
+      } else {
+        chat.unreadNum = chat.unreadNum + 1
+      }*/
+
+      // 不是正在这个chat聊天，但是chats列表中包含这个chat
+      // 如果列表中已经包含次chat
+      // 则找到chat，赋值,加入新message
+      // 在列表中将这个chat放到最前面
+      // 找到需要添加内容的chat
+    }
+    //计算未读数量
+    this.computedChatsUnreadNumTotalAction()
   }
 
-  // 本地添加msg
+  //在聊天界面的时候，自己发送msg 本地添加msg
   @Action
   pushMessageAction ({ chatId, msg }) {
     this.messages.push(msg)
@@ -74,42 +141,15 @@ export default class ChatModule extends VuexModule {
     MessageAPI.sendMsgAPI(chatId, msg.content).then((res: any) => {
       // 后台返回后再替换
       chat.updateTime = res.data.createTime
-      this.replaceMessageAction({ index: index, message: res.data })
+      this.messages.splice(index, 1, res.data)
     }).catch(() => {
       // 这里应该变为发送失败
     })
     PlatformUtils.requestSubscribeChat()
   }
 
-  @Action
-  replaceMessageAction ({ index, message }) {
-    this.messages.splice(index, 1, message)
-  }
 
-  @Action
-  pushMessagesAction (msgs: MessageVO[]) {
-    this.messages.push(...msgs)
-    this.scrollToBottomAction()
-  }
-
-  @Action
-  deleteMsgAction (msgId: number) {
-    this.messages.splice(this.messages.findIndex(msg => msg.id === msgId), 1)
-  }
-
-  @Action
-  deleteChatAction (chatId: number) {
-    this.chats.splice(this.chats.findIndex(chat => chat.id === chatId), 1)
-  }
-
-  @Action
-  setChatAction (chat: ChatVO) {
-    this.readChatAction(chat)
-    this.chat = chat
-    this.setMessagesAction(chat.messages)
-  }
-
-  // 前台和后台都将chat和msg改为已读
+  // 前台和后台都将chat和msg改为已读,更新chat的时间
   @Action
   readChatAction (chat: ChatVO) {
     // 不为自己的 且未读的
@@ -129,6 +169,8 @@ export default class ChatModule extends VuexModule {
     }
   }
 
+
+  //获取chats
   @Action
   getChatsAction () {
     return ChatAPI.getChatsAPI().then((res: ResultVO<ChatVO[]>) => {
@@ -142,53 +184,26 @@ export default class ChatModule extends VuexModule {
     this.computedChatsUnreadNumTotalAction()
   }
 
+
+  //前台删除，需要增加后台删除逻辑
   @Action
-  pushChatAndMessagesAction (newChat: ChatVO) {
-    const storeChat = this.chat
-    let chat: ChatVO
-    // 如果正在这个chat聊天
-    if (PageUtil.getCurrentPageURI() === PagePath.message && storeChat && storeChat.id === newChat.id) {
-      chat = storeChat
-      // 则直接往msg增加消息
-      // 前台将消息改为已读
-      const messages: MessageVO[] = newChat.messages
-      for (const message of messages) {
-        message.isRead = true
-      }
-      this.pushMessagesAction(messages)
-      // 后台改为已读
-      ChatAPI.readChat(chat.id, messages.map(item => item.id))
-      // 向后台发送消息，将收到的消息改为已读
-      // 如果当前就是这个聊天
-    } else {
-      // 不是正在这个chat聊天，但是chats列表中包含这个chat
-      // 如果列表中已经包含次chat
-      // 则找到chat，赋值,加入新message
-      // 在列表中将这个chat放到最前面
-      const storeChats = this.chats
-      // 找到需要添加内容的chat
-      chat = storeChats.find((chatItem: ChatVO) => chatItem.id === newChat.id)
-      if (chat) {
-        // 如果已经存在和此人的聊天记录了
-        chat.messages.push(...newChat.messages)
-        // 如果已登录
-        if (UserStore.hasUser() && chat.type !== ChatType.system_group) {
-          chat.unreadNum = newChat.unreadNum
-        } else {
-          chat.unreadNum = chat.unreadNum + 1
-        }
-      }
-    }
-    if (chat) {
-      // 其他内容也要干，对方换了头像啥的应该可以看出来才行
-      chat.lastContent = newChat.lastContent
-      chat.updateTime = newChat.updateTime
-      chat.avatar = newChat.avatar
-      chat.nickname = newChat.nickname
-      chat.vipFlag = newChat.vipFlag
-    } else {
-      this.pushChatAction(newChat)
-    }
-    this.computedChatsUnreadNumTotalAction()
+  deleteMsgAction (msgId: number) {
+    this.messages.splice(this.messages.findIndex(msg => msg.id === msgId), 1)
+  }
+
+  @Action
+  deleteChatAction (chatId: number) {
+    this.chats.splice(this.chats.findIndex(chat => chat.id === chatId), 1)
   }
 }
+
+/*  @Action
+  pushMessagesAction (msgs: MessageVO[]) {
+
+  }*/
+/*
+  @Action
+  pushChatAction (newChat: ChatVO) {
+    this.chats.unshift(newChat)
+  }*/
+

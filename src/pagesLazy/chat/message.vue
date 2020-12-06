@@ -16,16 +16,22 @@
                  :scroll-into-view='topId'
                  :scroll-top="scrollTop"
     >
-      <view v-if="chat.status === waitOpenStatus" class="w100r h100r col-row-center">
+      <view v-if="chat.needPayOpen" class="w100r h100r col-row-center">
         <view class="uni-tip  mt-80px">
           <view class="uni-tip-content text-bold">
-            会话未开启，为避免用户被频繁恶意骚扰，只能给关注您的用户和给您发过消息的用户直接发送消息，给其他用户发送消息，需要支付10贝壳开启对话
+            <template v-if="chat.needPayOpen">
+              会话未开启，为避免用户被频繁恶意骚扰，只能给关注您的用户和给您发过消息的用户直接发送消息，给其他用户发送消息，需要支付10贝壳开启对话
+            </template>
+            <template v-else>
+              {{ chat.status === waitOpenStatus ? '会话未开启' : '会话已开启' }}
+            </template>
           </view>
-          <view class="uni-tip-group-button">
+
+          <view v-if="chat.needPayOpen || chat.status === waitOpenStatus" class="uni-tip-group-button">
             <button class="uni-tip-button w40r" type="default" :plain="true">
               返回
             </button>
-            <button class="uni-tip-button w40r" type="primary" @click="addReport">
+            <button class="uni-tip-button w40r" type="primary" @click="openChat">
               开启对话
             </button>
           </view>
@@ -400,42 +406,50 @@ export default class MessageVue extends Vue {
     this.$refs.reportDialog.openReport()
   }
 
+  //正在开启Chat
+  isOpeningChatDisableBtn = false
 
-  payShellOpenChatBtnDisabled = false
-
-  //开启聊天支付
-  shellPayForUserContact () {
-    if (!this.payShellOpenChatBtnDisabled) {
-      this.payShellOpenChatBtnDisabled = true
-      const userShell = this.user.shell
-      if (userShell >= 10) {
-        UniUtil.action('是否消耗10个贝壳开启与 ' + this.chat.nickname + ' 的对话').then(() => {
-          UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
-            this.userProp.contactAccount = res.data
-            this.userProp.showUserContact = true
-            this.mineUser.shell = userShell - 10
-          })
-        }).finally(() => {
-          this.showUserContactBtnDisabled = false
-        })
-      } else {
-        UniUtil.action('您没有贝壳了，是否直接使用现金支付').then(() => {
-          const provider = systemModule.isApp ? ProviderType.wx : systemModule.provider
-          PlatformUtils.pay(provider, PayType.shell, 1).then(() => {
+  openChat () {
+    if (!this.isOpeningChatDisableBtn) {
+      this.isOpeningChatDisableBtn = true
+      if (this.chat.needPayOpen) {
+        const userShell = this.user.shell
+        if (userShell >= 10) {
+          UniUtil.action('是否消耗10个贝壳开启与 ' + this.chat.nickname + ' 的对话').then(() => {
             UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
               this.userProp.contactAccount = res.data
               this.userProp.showUserContact = true
-            }).catch(() => {
-              MsgUtil.sysErrMsg()
+              this.mineUser.shell = userShell - 10
             })
+          }).finally(() => {
+            this.showUserContactBtnDisabled = false
           })
-        }).finally(() => {
-          this.showUserContactBtnDisabled = false
-        })
+        } else {
+          UniUtil.action('您没有贝壳了，是否直接使用现金支付').then(() => {
+            const provider = systemModule.isApp ? ProviderType.wx : systemModule.provider
+            PlatformUtils.pay(provider, PayType.shell, 1).then(() => {
+              UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
+                this.userProp.contactAccount = res.data
+                this.userProp.showUserContact = true
+              }).catch(() => {
+                MsgUtil.sysErrMsg()
+              })
+            })
+          }).finally(() => {
+            this.showUserContactBtnDisabled = false
+          })
+        }
+      } else {
+
       }
     } else {
-      UniUtil.toast('获取中，请稍等')
+      UniUtil.toast('会话开启中，请稍等')
     }
+  }
+
+  //开启聊天支付
+  shellPayForUserContact () {
+
   }
 }
 </script>

@@ -16,6 +16,7 @@ export default class ChatVO {
   public topFlag: boolean
   public lastContent: string
   public vipFlag: boolean
+  public needPayOpen: boolean
 
   constructor (chat?: ChatVO) {
     if (chat) {
@@ -44,11 +45,8 @@ export default class ChatVO {
     chat.updateTime = new Date()
     chat.lastContent = ''
     chat.vipFlag = user.vipFlag
-    if (user.showBuyMsg) {
-      chat.status = CommonStatus.waitOpen
-    } else {
-      chat.status = CommonStatus.normal
-    }
+    chat.status = CommonStatus.waitOpen
+    chat.needPayOpen = user.showBuyMsg
     return chat
   }
 }

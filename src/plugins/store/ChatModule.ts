@@ -31,6 +31,11 @@ export default class ChatModule extends VuexModule {
     return this.chat.messages
   }
 
+  //从列表中进入，从个人详情页进入
+
+  //从详情进入，查看列表中是否有与此人的chat？如何查看，
+  //列表中进入，需要调用后台，更新时间。
+
   setChat (chatId: number, chat: ChatVO) {
     this.chatId = chatId
     const chatIndex = this.chats.findIndex(item => item.id === this.chatId)

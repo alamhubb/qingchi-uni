@@ -23,7 +23,7 @@
               会话未开启，为避免用户被频繁恶意骚扰，只能给关注您的用户和给您发过消息的用户直接发送消息，给其他用户发送消息，需要支付10贝壳开启对话
             </template>
             <template v-else>
-              {{ chat.status === waitOpenStatus ? '会话未开启' : '会话已开启' }}
+              {{ chat.status === waitOpenStatus ? '对方关注了您，可免费开启会话' : '会话已开启' }}
             </template>
           </view>
 
@@ -203,8 +203,8 @@ export default class MessageVue extends Vue {
     deleteReasonDialog: any;
   }
 
-  @chatStore.State('messages') readonly messages: MessageVO []
-  @chatStore.State('chat') readonly chat: ChatVO
+  @chatStore.Getter('messages') readonly messages: MessageVO []
+  @chatStore.Getter('chat') readonly chat: ChatVO
   @chatStore.State('scrollTop') readonly scrollTop: number
   @userStore.State('user') user: UserVO
   screenHeight: number = systemModule.screenHeight
@@ -416,36 +416,50 @@ export default class MessageVue extends Vue {
         const userShell = this.user.shell
         if (userShell >= 10) {
           UniUtil.action('是否消耗10个贝壳开启与 ' + this.chat.nickname + ' 的对话').then(() => {
-            UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
+            /*UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
               this.userProp.contactAccount = res.data
               this.userProp.showUserContact = true
               this.mineUser.shell = userShell - 10
-            })
+            })*/
           }).finally(() => {
-            this.showUserContactBtnDisabled = false
+            this.isOpeningChatDisableBtn = false
           })
         } else {
-          UniUtil.action('您没有贝壳了，是否直接使用现金支付').then(() => {
+          UniUtil.action('您没有贝壳了，是否直接使用现金支付开启开启与 ' + this.chat.nickname + ' 的对话').then(() => {
             const provider = systemModule.isApp ? ProviderType.wx : systemModule.provider
             PlatformUtils.pay(provider, PayType.shell, 1).then(() => {
-              UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
+              /*UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
                 this.userProp.contactAccount = res.data
                 this.userProp.showUserContact = true
               }).catch(() => {
                 MsgUtil.sysErrMsg()
-              })
+              })*/
             })
           }).finally(() => {
-            this.showUserContactBtnDisabled = false
+            this.isOpeningChatDisableBtn = false
           })
         }
       } else {
-
+        UniUtil.action('是否确认开启与 ' + this.chat.nickname + ' 的对话').then(() => {
+          const provider = systemModule.isApp ? ProviderType.wx : systemModule.provider
+          PlatformUtils.pay(provider, PayType.shell, 1).then(() => {
+            /*UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
+              this.userProp.contactAccount = res.data
+              this.userProp.showUserContact = true
+            }).catch(() => {
+              MsgUtil.sysErrMsg()
+            })*/
+          })
+        }).finally(() => {
+          this.isOpeningChatDisableBtn = false
+        })
       }
     } else {
       UniUtil.toast('会话开启中，请稍等')
     }
   }
+
+  confirm
 
   //开启聊天支付
   shellPayForUserContact () {

@@ -149,7 +149,8 @@ export default class ChatVue extends Vue {
     }
 
     toMessagePage (chat: ChatVO) {
-      PageUtil.toMessagePage(chat)
+      //需要先清除，再跳转页面
+      chatModule.setChatIdToMessagePage(chat.id)
     }
 }
 </script>

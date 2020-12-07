@@ -22,4 +22,8 @@ export default class ChatAPI {
     const chat: ChatRemoveVO = new ChatRemoveVO(chatId)
     return http.post('chat/removeChat', chat)
   }
+
+  static openChat (chatId: number, needPayOpen = false) {
+    http.post('chat/openChat', { id: chatId, needPayOpen })
+  }
 }

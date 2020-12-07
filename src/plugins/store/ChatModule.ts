@@ -6,11 +6,11 @@ import MessageVO from '@/model/message/MessageVO'
 import ChatType from '@/const/ChatType'
 import ChatAPI from '@/api/ChatAPI'
 import PageUtil from '@/utils/PageUtil'
-import PagePath from '@/const/PagePath'
 import MessageAPI from '@/api/MessageAPI'
 import UniUtil from '@/utils/UniUtil'
 import ScrollUtil from '@/utils/ScrollUtil'
 import PlatformUtils from '@/utils/PlatformUtils'
+import UserVO from '@/model/user/UserVO'
 
 @Module({ generateMutationSetters: true })
 export default class ChatModule extends VuexModule {
@@ -36,20 +36,46 @@ export default class ChatModule extends VuexModule {
   //从详情进入，查看列表中是否有与此人的chat？如何查看，
   //列表中进入，需要调用后台，更新时间。
 
-  setChat (chatId: number, chat: ChatVO) {
+  //从列表中进入
+  setChatIdToMessagePage (chatId: number) {
+    this.setChatId(chatId)
+    this.readChatAction(this.chat)
+    this.scrollToMessagePageBottom()
+    PageUtil.toMessagePage()
+  }
+
+  setChatId (chatId: number) {
     this.chatId = chatId
-    const chatIndex = this.chats.findIndex(item => item.id === this.chatId)
-    if (chatIndex > -1) {
-      this.chats[chatIndex] = chat
-    }
   }
 
   @Action
-  setChatAction (chat: ChatVO) {
-    this.readChatAction(chat)
-    this.setChat
-    this.setMessagesAction(chat.messages)
-    this.scrollToBottomAction()
+  userDetailToMessagePage (user: UserVO) {
+    //第一步，先看列表中是否已有与此用户的聊天列表
+    let chat = this.chats.find(item => item.receiveUserId === user.id)
+    //如果已有,则直接跳转过去
+    if (!chat) {
+      //首先查询是否有名字相同的chat
+      //这样则需要chat名称不能相同，
+      //创建mock chat
+      chat = ChatVO.creatChat(user)
+      this.chats.unshift(chat)
+      //后台创建真实chat
+      ChatAPI.getChatAPI(user).then(res => {
+        const resultChat: ChatVO = res.data
+        //修改mock chatId
+        chat.id = resultChat.id
+        //修改当前chat的id
+        this.setChatId(resultChat.id)
+        //替换当前chat
+        this.replaceChat(resultChat)
+      })
+    }
+    this.setChatIdToMessagePage(chat.id)
+  }
+
+  replaceChat (chat: ChatVO) {
+    this.chats.splice(this.chatIndex, 1, chat)
+    this.scrollToMessagePageBottom()
   }
 
   // 三个地方使用，初始查询，推送消息，阅读清空消息
@@ -75,8 +101,7 @@ export default class ChatModule extends VuexModule {
   }
 
 
-  @Action
-  scrollToBottomAction () {
+  scrollToMessagePageBottom () {
     UniUtil.delayTime(100).then(() => {
       this.scrollTop = this.messages.length * 500
     })
@@ -90,19 +115,16 @@ export default class ChatModule extends VuexModule {
   //如果是正在聊的，需要改为，已读，先不做已读未读
   @Action
   pushChatAndMessagesAction (newChat: ChatVO) {
-    let chat: ChatVO
     // 如果正在这个chat聊天
     // if (PageUtil.getCurrentPageURI() === PagePath.message && this.chatId === newChat.id) {
-
     if (this.chatId === newChat.id) {
-      this.chats.splice(this.chatIndex, 1, newChat)
       // 则直接往msg增加消息
       // 前台将消息改为已读
       for (const message of newChat.messages) {
         message.isRead = true
       }
       this.messages.push(...newChat.messages)
-      this.scrollToBottomAction()
+      this.replaceChat(newChat)
       // 后台改为已读
       ChatAPI.readChat(newChat.id, newChat.messages.map(item => item.id))
       // 向后台发送消息，将收到的消息改为已读
@@ -111,7 +133,7 @@ export default class ChatModule extends VuexModule {
       const newChatIndex = this.chats.findIndex(item => item.id === newChat.id)
       if (newChatIndex > -1) {
         this.chats.splice(newChatIndex, 1, newChat)
-      }else {
+      } else {
         this.chats.unshift(newChat)
       }
       //不需要吧，后台chat应该计算好当前未读数量
@@ -136,7 +158,7 @@ export default class ChatModule extends VuexModule {
   @Action
   pushMessageAction ({ chatId, msg }) {
     this.messages.push(msg)
-    this.scrollToBottomAction()
+    this.scrollToMessagePageBottom()
     const index: number = this.messages.length - 1
     const chat: ChatVO = this.chat
     chat.updateTime = new Date()

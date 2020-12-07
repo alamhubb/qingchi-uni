@@ -393,12 +393,7 @@ export default class UserInfo extends Vue {
     //除了是否关注，还有是否已经发起过对话，chatuservo里面要保存还能再发几条
     //判断是否已经支付过了。3条，然后对方每次回复你都可以发三条，然后就需要再次支付，开启了支付
     //mock chat
-    const chat = ChatVO.creatChat(this.userProp)
-    ChatAPI.getChatAPI(this.userProp).then(res => {
-      chatModule.setChatAction(res.data)
-    })
-    PageUtil.toMessagePage(chat)
-
+    chatModule.userDetailToMessagePage(this.userProp)
     //如果有chat读取，如果没有创建读取
     // chatModule.setChatAction(chat)
   }

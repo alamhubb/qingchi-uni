@@ -11,6 +11,7 @@ import UniUtil from '@/utils/UniUtil'
 import ScrollUtil from '@/utils/ScrollUtil'
 import PlatformUtils from '@/utils/PlatformUtils'
 import UserVO from '@/model/user/UserVO'
+import { chatModule } from '@/plugins/store/index'
 
 @Module({ generateMutationSetters: true })
 export default class ChatModule extends VuexModule {
@@ -73,10 +74,18 @@ export default class ChatModule extends VuexModule {
     this.setChatIdToMessagePage(chat.id)
   }
 
+  @Action
+  openChatAction () {
+    return ChatAPI.openChat(this.chat.id, this.chat.needPayOpen).then((res) => {
+      chatModule.replaceChat(res.data)
+    })
+  }
+
   replaceChat (chat: ChatVO) {
     this.chats.splice(this.chatIndex, 1, chat)
     this.scrollToMessagePageBottom()
   }
+
 
   // 三个地方使用，初始查询，推送消息，阅读清空消息
   @Action
@@ -201,12 +210,11 @@ export default class ChatModule extends VuexModule {
   @Action
   getChatsAction () {
     return ChatAPI.getChatsAPI().then((res: ResultVO<ChatVO[]>) => {
-      this.setChatsAction(res.data)
+      this.setChats(res.data)
     })
   }
 
-  @Action
-  setChatsAction (chats: ChatVO[]) {
+  setChats (chats: ChatVO[]) {
     this.chats = chats
     this.computedChatsUnreadNumTotalAction()
   }

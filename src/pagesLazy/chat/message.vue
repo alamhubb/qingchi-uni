@@ -16,15 +16,15 @@
                  :scroll-into-view='topId'
                  :scroll-top="scrollTop"
     >
-      <view v-if="chat.needPayOpen" class="w100r h100r col-row-center">
+      <view class="w100r h100r col-row-center">
         <view class="uni-tip  mt-80px">
           <view class="uni-tip-content text-bold">
             <template v-if="chat.needPayOpen">
               会话未开启，为避免用户被频繁恶意骚扰，只能给关注您的用户和给您发过消息的用户直接发送消息，给其他用户发送消息，需要支付10贝壳开启对话
             </template>
-            <template v-else>
+            <div v-else class="row-center">
               {{ chat.status === waitOpenStatus ? '对方关注了您，可免费开启会话' : '会话已开启' }}
-            </template>
+            </div>
           </view>
 
           <view v-if="chat.needPayOpen || chat.status === waitOpenStatus" class="uni-tip-group-button">
@@ -38,7 +38,7 @@
         </view>
       </view>
 
-      <template v-else>
+      <template>
         <view v-for="msg in messages" :id="'m'+msg.id" :key="msg.id"
               :class="[msg.type === systemMsgType?'row-center':'cu-item',msg.isMine?'self':'']">
           <block v-if="msg.type === systemMsgType">
@@ -111,7 +111,7 @@
                :focus="inputFocus"
                @blur="inputBlur"
                @focus="inputFocusEvent"
-               @confirm="sendMsg"
+               @confirm="sendMsgPre"
                :hold-keyboard="true"
                :confirm-hold="true"
                confirm-type="send"
@@ -119,7 +119,7 @@
         <!--<view class="action" @click="showEmojiClick">
             <text class="cuIcon-emojifill text-grey"></text>
         </view>-->
-        <button class="cu-btn bg-green shadow" @touchend.prevent="sendMsg">发送</button>
+        <button class="cu-btn bg-green shadow" @touchend.prevent="sendMsgPre">发送</button>
       </view>
       <!--      <view v-show="showEmoji" class="w100vw bg-blue" :style="{height:keyboardHeight+'px'}"></view>-->
     </view>
@@ -189,6 +189,7 @@ import UserAPI from '@/api/UserAPI'
 import ProviderType from '@/const/ProviderType'
 import PlatformUtils from '@/utils/PlatformUtils'
 import PayType from '@/const/PayType'
+import ChatAPI from '@/api/ChatAPI'
 
 const chatStore = namespace('chat')
 const userStore = namespace('user')
@@ -287,6 +288,18 @@ export default class MessageVue extends Vue {
     // #endif
     /*
     this.showEmoji = false */
+  }
+
+  sendMsgPre () {
+    if (this.chat.status === CommonStatus.waitOpen) {
+      this.openChatPromise().then(() => {
+        this.sendMsg()
+      }).finally(() => {
+        this.isOpeningChatDisableBtn = false
+      })
+    } else {
+      this.sendMsg()
+    }
   }
 
   sendMsg () {
@@ -409,57 +422,44 @@ export default class MessageVue extends Vue {
   //正在开启Chat
   isOpeningChatDisableBtn = false
 
-  openChat () {
+  async openChatPromise () {
     if (!this.isOpeningChatDisableBtn) {
       this.isOpeningChatDisableBtn = true
-      if (this.chat.needPayOpen) {
-        const userShell = this.user.shell
-        if (userShell >= 10) {
-          UniUtil.action('是否消耗10个贝壳开启与 ' + this.chat.nickname + ' 的对话').then(() => {
-            /*UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
-              this.userProp.contactAccount = res.data
-              this.userProp.showUserContact = true
-              this.mineUser.shell = userShell - 10
-            })*/
-          }).finally(() => {
-            this.isOpeningChatDisableBtn = false
-          })
-        } else {
-          UniUtil.action('您没有贝壳了，是否直接使用现金支付开启开启与 ' + this.chat.nickname + ' 的对话').then(() => {
+      try {
+        if (this.chat.needPayOpen) {
+          const userShell = this.user.shell
+          if (userShell >= 10) {
+            await this.openChatAndPrompt('会话未开启，是否消耗10个贝壳开启与 ' + this.chat.nickname + ' 的对话')
+          } else {
+            await UniUtil.action('会话未开启，您没有贝壳了，是否直接使用现金支付开启开启与 ' + this.chat.nickname + ' 的对话')
             const provider = systemModule.isApp ? ProviderType.wx : systemModule.provider
-            PlatformUtils.pay(provider, PayType.shell, 1).then(() => {
-              /*UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
-                this.userProp.contactAccount = res.data
-                this.userProp.showUserContact = true
-              }).catch(() => {
-                MsgUtil.sysErrMsg()
-              })*/
-            })
-          }).finally(() => {
-            this.isOpeningChatDisableBtn = false
-          })
+            await PlatformUtils.pay(provider, PayType.shell, 1)
+            await chatModule.openChatAction()
+          }
+        } else {
+          await this.openChatAndPrompt('是否确认开启与 ' + this.chat.nickname + ' 的对话')
         }
-      } else {
-        UniUtil.action('是否确认开启与 ' + this.chat.nickname + ' 的对话').then(() => {
-          const provider = systemModule.isApp ? ProviderType.wx : systemModule.provider
-          PlatformUtils.pay(provider, PayType.shell, 1).then(() => {
-            /*UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
-              this.userProp.contactAccount = res.data
-              this.userProp.showUserContact = true
-            }).catch(() => {
-              MsgUtil.sysErrMsg()
-            })*/
-          })
-        }).finally(() => {
-          this.isOpeningChatDisableBtn = false
-        })
+        return
+      } catch (e) {
+        throw null
       }
     } else {
-      UniUtil.toast('会话开启中，请稍等')
+      await UniUtil.toast('会话开启中，请稍等')
     }
+    throw null
   }
 
-  confirm
+  openChat () {
+    this.openChatPromise().finally(() => {
+      this.isOpeningChatDisableBtn = false
+    })
+  }
+
+  openChatAndPrompt (hintMsg: string) {
+    return UniUtil.action(hintMsg).then(() => {
+      return chatModule.openChatAction()
+    })
+  }
 
   //开启聊天支付
   shellPayForUserContact () {

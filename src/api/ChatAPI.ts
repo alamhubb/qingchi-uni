@@ -24,6 +24,6 @@ export default class ChatAPI {
   }
 
   static openChat (chatId: number, needPayOpen = false) {
-    http.post('chat/openChat', { id: chatId, needPayOpen })
+    return http.post<ChatVO>('chat/openChat', { id: chatId, needPayOpen })
   }
 }

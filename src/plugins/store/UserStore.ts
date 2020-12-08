@@ -49,7 +49,7 @@ export default class UserStore {
       platformModule.wx_reportResultTemplateId = res.data.wx_reportResultTemplateId
       platformModule.wx_violationTemplateId = res.data.wx_violationTemplateId
     }
-    chatModule.setChatsAction(res.data.chats)
+    chatModule.setChats(res.data.chats)
   }
 
   static loginAfter (res: ResultVO<any>) {

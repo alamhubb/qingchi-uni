@@ -16,15 +16,16 @@
                  :scroll-into-view='topId'
                  :scroll-top="scrollTop"
     >
-      <view class="w100r h100r col-row-center">
+
+      <view v-if="chat.status === waitOpenStatus" class="w100r h100r col-row-center">
         <view class="uni-tip  mt-80px">
           <view class="uni-tip-content text-bold">
             <template v-if="chat.needPayOpen">
               会话未开启，为避免用户被频繁恶意骚扰，只能给关注您的用户和给您发过消息的用户直接发送消息，给其他用户发送消息，需要支付10贝壳开启对话
             </template>
-            <div v-else class="row-center">
-              {{ chat.status === waitOpenStatus ? '对方关注了您，可免费开启会话' : '会话已开启' }}
-            </div>
+            <view v-else class="row-center">
+              对方关注了您，可免费开启会话
+            </view>
           </view>
 
           <view v-if="chat.needPayOpen || chat.status === waitOpenStatus" class="uni-tip-group-button">
@@ -35,6 +36,11 @@
               开启对话
             </button>
           </view>
+        </view>
+      </view>
+      <view v-else class="w100r mt-70px row-center">
+        <view class="py-xs px bg-white bd-radius">
+          会话已开启
         </view>
       </view>
 
@@ -424,29 +430,39 @@ export default class MessageVue extends Vue {
 
   async openChatPromise () {
     if (!this.isOpeningChatDisableBtn) {
+      console.log(1)
       this.isOpeningChatDisableBtn = true
       try {
+        console.log(2)
         if (this.chat.needPayOpen) {
+          console.log(3)
+          console.log(this.user)
+          console.log(this.user.shell)
           const userShell = this.user.shell
           if (userShell >= 10) {
+            console.log(4)
             await this.openChatAndPrompt('会话未开启，是否消耗10个贝壳开启与 ' + this.chat.nickname + ' 的对话')
+            console.log(5)
           } else {
+            console.log(6)
             await UniUtil.action('会话未开启，您没有贝壳了，是否直接使用现金支付开启开启与 ' + this.chat.nickname + ' 的对话')
             const provider = systemModule.isApp ? ProviderType.wx : systemModule.provider
+            console.log(7)
             await PlatformUtils.pay(provider, PayType.shell, 1)
             await chatModule.openChatAction()
+            console.log(8)
           }
         } else {
           await this.openChatAndPrompt('是否确认开启与 ' + this.chat.nickname + ' 的对话')
         }
         return
       } catch (e) {
-        throw null
+        throw Error(e)
       }
     } else {
       await UniUtil.toast('会话开启中，请稍等')
     }
-    throw null
+    throw Error(123)
   }
 
   openChat () {
@@ -456,6 +472,7 @@ export default class MessageVue extends Vue {
   }
 
   openChatAndPrompt (hintMsg: string) {
+    console.log(777)
     return UniUtil.action(hintMsg).then(() => {
       return chatModule.openChatAction()
     })

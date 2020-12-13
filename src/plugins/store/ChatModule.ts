@@ -50,16 +50,18 @@ export default class ChatModule extends VuexModule {
   }
 
   @Action
-  userDetailToMessagePage (user: UserVO) {
+  userDetailToMessagePage (userChat: ChatVO) {
     //第一步，先看列表中是否已有与此用户的聊天列表
-    let chat = this.chats.find(item => item.receiveUserId === user.id)
+    const chat = this.chats.find(item => item.id === userChat.id)
     //如果已有,则直接跳转过去
     if (!chat) {
       //首先查询是否有名字相同的chat
       //这样则需要chat名称不能相同，
       //创建mock chat
-      chat = ChatVO.creatChat(user)
-      this.chats.unshift(chat)
+      // chat = ChatVO.creatChat(user)
+      this.chats.unshift(userChat)
+      /*//修改当前chat的id
+      this.setChatId(chat.id)
       //后台创建真实chat
       ChatAPI.getChatAPI(user).then(res => {
         const resultChat: ChatVO = res.data
@@ -69,9 +71,9 @@ export default class ChatModule extends VuexModule {
         this.setChatId(resultChat.id)
         //替换当前chat
         this.replaceChat(resultChat)
-      })
+      })*/
     }
-    this.setChatIdToMessagePage(chat.id)
+    this.setChatIdToMessagePage(userChat.id)
   }
 
   @Action

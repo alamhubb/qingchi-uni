@@ -49,7 +49,7 @@ export default class ChatVO {
     chat.lastContent = ''
     chat.vipFlag = user.vipFlag
     chat.status = CommonStatus.waitOpen
-    chat.needPayOpen = user.showBuyMsg
+    // chat.needPayOpen = user.showBuyMsg
     return chat
   }
 }

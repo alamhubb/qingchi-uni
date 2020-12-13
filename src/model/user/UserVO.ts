@@ -1,5 +1,6 @@
 import DistrictVO from '@/model/DistrictVO'
 import ImgFileVO from '@/model/ImgFileVO'
+import ChatVO from '@/model/chat/ChatVO'
 
 export default class UserVO {
   id: number = null
@@ -59,5 +60,6 @@ export default class UserVO {
   openContact: boolean = null
   //是否允许发送消息
   allowSendMsg: boolean = null
-  showBuyMsg: boolean = null
+  // showBuyMsg: boolean = null
+  chat: ChatVO = null
 }

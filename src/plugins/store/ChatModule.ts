@@ -12,6 +12,7 @@ import ScrollUtil from '@/utils/ScrollUtil'
 import PlatformUtils from '@/utils/PlatformUtils'
 import UserVO from '@/model/user/UserVO'
 import { chatModule } from '@/plugins/store/index'
+import JsonUtils from '@/utils/JsonUtils'
 
 @Module({ generateMutationSetters: true })
 export default class ChatModule extends VuexModule {
@@ -20,15 +21,14 @@ export default class ChatModule extends VuexModule {
   scrollTop: number = ScrollUtil.pageBottom
   chatsUnreadNumTotal = 0
 
-  get chatIndex (): number {
-    return this.chats.findIndex(item => item.id === this.chatId)
-  }
-
   get chat (): ChatVO {
-    return this.chats[this.chatIndex]
+    return this.chats[0]
   }
 
   get messages (): MessageVO[] {
+    if (this.chat.messages.length){
+      JsonUtils.log(this.chat)
+    }
     return this.chat.messages
   }
 
@@ -84,7 +84,7 @@ export default class ChatModule extends VuexModule {
   }
 
   replaceChat (chat: ChatVO) {
-    this.chats.splice(this.chatIndex, 1, chat)
+    this.chats.splice(0, 1, chat)
     this.scrollToMessagePageBottom()
   }
 
@@ -126,6 +126,7 @@ export default class ChatModule extends VuexModule {
   //如果是正在聊的，需要改为，已读，先不做已读未读
   @Action
   pushChatAndMessagesAction (newChat: ChatVO) {
+    console.log('出发了pushchat')
     // 如果正在这个chat聊天
     // if (PageUtil.getCurrentPageURI() === PagePath.message && this.chatId === newChat.id) {
     if (this.chatId === newChat.id) {
@@ -167,22 +168,28 @@ export default class ChatModule extends VuexModule {
 
   //在聊天界面的时候，自己发送msg 本地添加msg
   @Action
-  pushMessageAction ({ chatId, msg }) {
+  pushMessageAction (msg: MessageVO) {
     this.messages.push(msg)
+    console.log(JSON.stringify(msg))
     this.scrollToMessagePageBottom()
     const index: number = this.messages.length - 1
-    const chat: ChatVO = this.chat
-    chat.updateTime = new Date()
-    chat.lastContent = msg.content
+    console.log(index)
+    this.chat.updateTime = new Date()
+    this.chat.lastContent = msg.content
     // 滚屏到最后面
     // 不能监控变化滚动，有时候是往前面插入
-    MessageAPI.sendMsgAPI(chatId, msg.content).then((res: any) => {
-      // 后台返回后再替换
-      chat.updateTime = res.data.createTime
-      this.messages.splice(index, 1, res.data)
-    }).catch(() => {
-      // 这里应该变为发送失败
+    MessageAPI.sendMsgAPI(this.chat.id, msg.content).then((res: any) => {
+      console.log(JSON.stringify(msg))
+      console.log(JSON.stringify(this.chat))
     })
+    // 后台返回后再替换
+    // chat.updateTime = res.data.createTime
+    // console.log(this.messages.length)
+    // this.messages.splice(index, 1)
+    // console.log(this.messages.length)
+    /*.catch(() => {
+      // 这里应该变为发送失败
+    })*/
     PlatformUtils.requestSubscribeChat()
   }
 

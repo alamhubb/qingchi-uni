@@ -44,64 +44,65 @@
         </view>
       </view>
 
-      <template>
-        <view v-for="msg in messages" :id="'m'+msg.id" :key="msg.id"
-              :class="[msg.type === systemMsgType?'row-center':'cu-item',msg.isMine?'self':'']">
-          <block v-if="msg.type === systemMsgType">
-            <view class="cu-info round">
-              {{ msg.content }}
+      <view v-for="msg in messages" :id="'m'+msg.id" :key="msg.id"
+            :class="[msg.type === systemMsgType?'row-center':'cu-item',msg.isMine?'self':'']">
+        <block v-if="msg.type === systemMsgType">
+          <view class="cu-info round">
+            {{ msg.content }}
+          </view>
+        </block>
+        <block v-else-if="msg.isMine">
+          <view class="flex-col w100r">
+            <view class="mr-30rpx h44rpx row-end-center">
+              <text class="text-sm" :class="[msg.user.vipFlag?'text-red':'text-gray']"
+                    @click="toUserDetailVue(msg.user.id)">
+                {{ msg.user.nickname }}
+              </text>
+              <image v-if="msg.user.vipFlag" class="ml-6rpx mr-6rpx size30rpx mt-n10rpx"
+                     src="/static/img/crown.png"
+                     @click="toVipVue"></image>
             </view>
-          </block>
-          <block v-else-if="msg.isMine">
-            <view class="flex-col w100r">
-              <view class="mr-30rpx h44rpx row-end-center">
-                <text class="text-sm" :class="[msg.user.vipFlag?'text-red':'text-gray']"
-                      @click="toUserDetailVue(msg.user.id)">
-                  {{ msg.user.nickname }}
-                </text>
-                <image v-if="msg.user.vipFlag" class="ml-6rpx mr-6rpx size30rpx mt-n10rpx"
-                       src="/static/img/crown.png"
-                       @click="toVipVue"></image>
-              </view>
-              <view class="row-end">
-                <view class="main">
-                  <view class="content bg-white" @longpress="openMessageMoreHandleDialog(msg)">
-                    <text>{{ msg.content }}</text>
-                  </view>
-                </view>
-              </view>
-            </view>
-            <image class="cu-avatar radius"
-                   :src="msg.user.avatar"
-                   @click="toUserDetailVue(msg.user.id)"
-            />
-            <view class="date">{{ msg.createTime | formatTime }}</view>
-          </block>
-          <block v-else>
-            <image class="cu-avatar radius"
-                   :src="msg.user.avatar"
-                   @click="toUserDetailVue(msg.user.id)"
-            />
-            <view class="flex-col w100r">
-              <view class="ml-40rpx h44rpx row-col-center">
-                <text class="text-sm" :class="[msg.user.vipFlag?'text-red':'text-gray']"
-                      @click="toUserDetailVue(msg.user.id)">
-                  {{ msg.user.nickname }}
-                </text>
-                <image v-if="msg.user.vipFlag" class="ml-6rpx size30rpx mt-n10rpx"
-                       src="/static/img/crown.png"
-                       @click="toVipVue"></image>
-              </view>
+            <view class="row-end">
               <view class="main">
                 <view class="content bg-white" @longpress="openMessageMoreHandleDialog(msg)">
                   <text>{{ msg.content }}</text>
                 </view>
               </view>
             </view>
-            <view class="date">{{ msg.createTime | formatTime }}</view>
-          </block>
-        </view>
-      </template>
+          </view>
+          <image class="cu-avatar radius"
+                 :src="msg.user.avatar"
+                 @click="toUserDetailVue(msg.user.id)"
+          />
+          <view class="date">{{ msg.createTime | formatTime }}</view>
+        </block>
+        <block v-else>
+          <image class="cu-avatar radius"
+                 :src="msg.user.avatar"
+                 @click="toUserDetailVue(msg.user.id)"
+          />
+          <view class="flex-col w100r">
+            <view class="ml-40rpx h44rpx row-col-center">
+              <text class="text-sm" :class="[msg.user.vipFlag?'text-red':'text-gray']"
+                    @click="toUserDetailVue(msg.user.id)">
+                {{ msg.user.nickname }}
+              </text>
+              <image v-if="msg.user.vipFlag" class="ml-6rpx size30rpx mt-n10rpx"
+                     src="/static/img/crown.png"
+                     @click="toVipVue"></image>
+            </view>
+            <view class="main">
+              <view class="content bg-white" @longpress="openMessageMoreHandleDialog(msg)">
+                <text>{{ msg.content }}</text>
+              </view>
+            </view>
+          </view>
+          <view class="date">{{ msg.createTime | formatTime }}</view>
+        </block>
+        {{msg.isMine}}
+        {{msg.createTime}}
+      </view>
+        {{chat.id}}
     </scroll-view>
 
     <view class="fixed-footer">
@@ -117,7 +118,7 @@
                :focus="inputFocus"
                @blur="inputBlur"
                @focus="inputFocusEvent"
-               @confirm="sendMsgPre"
+               @confirm="sendMsgClick"
                :hold-keyboard="true"
                :confirm-hold="true"
                confirm-type="send"
@@ -125,7 +126,7 @@
         <!--<view class="action" @click="showEmojiClick">
             <text class="cuIcon-emojifill text-grey"></text>
         </view>-->
-        <button class="cu-btn bg-green shadow" @touchend.prevent="sendMsgPre">发送</button>
+        <button class="cu-btn bg-green shadow" @touchend.prevent="sendMsgClick">发送</button>
       </view>
       <!--      <view v-show="showEmoji" class="w100vw bg-blue" :style="{height:keyboardHeight+'px'}"></view>-->
     </view>
@@ -296,7 +297,7 @@ export default class MessageVue extends Vue {
     this.showEmoji = false */
   }
 
-  sendMsgPre () {
+  sendMsgClick () {
     if (this.chat.status === CommonStatus.waitOpen) {
       this.openChatPromise().then(() => {
         this.sendMsg()
@@ -324,7 +325,7 @@ export default class MessageVue extends Vue {
       if (this.user && this.user.phoneNum) {
         const msg: MessageVO = new MessageVO(this.user, this.msgContent)
         this.msgContent = ''
-        chatModule.pushMessageAction({ chatId: this.chat.id, msg: msg })
+        chatModule.pushMessageAction(msg)
       } else {
         BalaBala.unBindPhoneNum()
       }
@@ -393,9 +394,11 @@ export default class MessageVue extends Vue {
 
   queryMessages () {
     MessageAPI.queryMessagesAPI(this.msgIds).then((res: any) => {
-      const lastFirstMsgId: string = 'm' + this.messages[0].id
-      this.messages.unshift(...res.data)
-      this.topId = lastFirstMsgId
+      if (this.messages.length) {
+        const lastFirstMsgId: string = 'm' + this.messages[0].id
+        this.messages.unshift(...res.data)
+        this.topId = lastFirstMsgId
+      }
       // 如果还有大于等于30个就还可以加载
       if (res.data && res.data.length >= this.lazyLoadNum) {
         this.loadMore = LoadMoreType.more

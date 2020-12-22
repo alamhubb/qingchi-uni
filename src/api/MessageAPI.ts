@@ -9,8 +9,8 @@ export default class MessageAPI {
     return http.post('message/sendMsg', msgAdd)
   }
 
-  static queryMessagesAPI (msgIds: number []) {
-    return http.post('message/queryMessages', new MessageQueryVO(msgIds))
+  static queryMessagesAPI (chatId: number, msgIds: number []) {
+    return http.post('message/queryMessages', new MessageQueryVO(chatId, msgIds))
   }
 
   static deleteMsgAPI (msgId: number, deleteReason: string, violation: boolean) {

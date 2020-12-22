@@ -99,10 +99,7 @@
           </view>
           <view class="date">{{ msg.createTime | formatTime }}</view>
         </block>
-        {{msg.isMine}}
-        {{msg.createTime}}
       </view>
-        {{chat.id}}
     </scroll-view>
 
     <view class="fixed-footer">
@@ -393,7 +390,7 @@ export default class MessageVue extends Vue {
   }
 
   queryMessages () {
-    MessageAPI.queryMessagesAPI(this.msgIds).then((res: any) => {
+    MessageAPI.queryMessagesAPI(this.chat.id, this.msgIds).then((res: any) => {
       if (this.messages.length) {
         const lastFirstMsgId: string = 'm' + this.messages[0].id
         this.messages.unshift(...res.data)

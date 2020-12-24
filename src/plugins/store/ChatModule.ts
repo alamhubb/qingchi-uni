@@ -135,7 +135,9 @@ export default class ChatModule extends VuexModule {
       for (const message of newChat.messages) {
         message.isRead = true
       }
+      //将新消息放到当前msg中
       this.messages.push(...newChat.messages)
+      newChat.messages = this.messages
       this.replaceChat(newChat)
       // 后台改为已读
       ChatAPI.readChat(newChat.id, newChat.messages.map(item => item.id))

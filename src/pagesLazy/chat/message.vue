@@ -38,7 +38,7 @@
           </view>
         </view>
       </view>
-      <view v-else class="w100r mt-70px row-center">
+      <view v-else class="w100r pt-70px row-center">
         <view class="py-xs px bg-white bd-radius">
           会话已开启
         </view>

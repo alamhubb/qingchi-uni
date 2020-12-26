@@ -65,7 +65,7 @@ const chatStore = namespace('chat')
 
   @Component
 export default class ChatVue extends Vue {
-    @chatStore.State('chats') readonly chats: ChatVO []
+    @chatStore.Getter('chats') readonly chats: ChatVO []
     readonly systemChats: string[] = ChatType.systemChats
     chatId = 0
     showChatHint: boolean = uni.getStorageSync(Constants.showChatHintKey) !== 'false'

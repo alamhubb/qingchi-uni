@@ -1,5 +1,5 @@
 <template>
-  <view class="pb-100rpx h100r bg-default">
+  <view class="pb-100rpx bg-default">
     <view v-if="showMsgHint" class="fixed-105 row-col-center bg-orange">
       <view class="flex-auto card-text-row">
         长按消息可进行举报，欢迎大家积极举报不良内容获取正义值
@@ -10,13 +10,14 @@
     </view>
 
 
-    <scroll-view scroll-y="true" class="cu-chat h100r"
+    <scroll-view ref="scrollView" scroll-y="true" class="cu-chat h100r"
                  @scrolltoupper="upper"
+                 @scroll="scroll"
                  :show-scrollbar="true"
                  :scroll-into-view='topId'
                  :scroll-top="scrollTop"
     >
-
+      <!--    <view class="cu-chat">-->
       <view v-if="chat.status === waitOpenStatus" class="w100r h100r col-row-center">
         <view class="uni-tip  mt-80px">
           <view class="uni-tip-content text-bold">
@@ -38,10 +39,12 @@
           </view>
         </view>
       </view>
-      <view v-else class="w100r pt-70px row-center">
-        <view class="py-xs px bg-white bd-radius">
-          会话已开启
-        </view>
+      <view v-else class="w100r row-center" :class="showMsgHint?'pt-70px':'pt-10px'">
+        <!--        <view v-if="chat.loadMore === noMore" class="py-xs px bg-white bd-radius mt-sm">
+                  会话已开启
+                </view>-->
+        <uni-load-more id="loadMore" :status="chat.loadMore"></uni-load-more>
+        {{ scrollTop }}
       </view>
 
       <view v-for="msg in messages" :id="'m'+msg.id" :key="msg.id"
@@ -100,6 +103,7 @@
           <view class="date">{{ msg.createTime | formatTime }}</view>
         </block>
       </view>
+      <!--    </view>-->
     </scroll-view>
 
     <view class="fixed-footer">
@@ -185,7 +189,7 @@ import ReportDialog from '@/pagesLazy/ReportDialog.vue'
 import MessageType from '@/const/MessageType'
 import PageUtil from '@/utils/PageUtil'
 import BalaBala from '@/utils/BalaBala'
-import { chatModule, systemModule } from '@/plugins/store'
+import { chatModule, systemModule, talkModule } from '@/plugins/store'
 import UserType from '@/const/UserType'
 import MsgUtil from '@/utils/MsgUtil'
 import CommonStatus from '@/const/CommonStatus'
@@ -194,6 +198,9 @@ import ProviderType from '@/const/ProviderType'
 import PlatformUtils from '@/utils/PlatformUtils'
 import PayType from '@/const/PayType'
 import ChatAPI from '@/api/ChatAPI'
+import CommonUtil from '@/utils/CommonUtil'
+import PlatformType from '@/const/PlatformType'
+import GetSystemInfoResult = UniApp.GetSystemInfoResult
 
 const chatStore = namespace('chat')
 const userStore = namespace('user')
@@ -206,6 +213,7 @@ export default class MessageVue extends Vue {
     reportDialog: any;
     messageMoreHandleDialog: any;
     deleteReasonDialog: any;
+    scrollView: any;
   }
 
   @chatStore.Getter('messages') readonly messages: MessageVO []
@@ -216,7 +224,7 @@ export default class MessageVue extends Vue {
   windowHeight: number = systemModule.windowHeight
   msgContent = ''
   inputFocus = false
-  loadMore: string = LoadMoreType.more
+  noMore: string = LoadMoreType.noMore
   lazyLoadNum = 30
   topId = ''
   deleteReason: string = null
@@ -232,6 +240,11 @@ export default class MessageVue extends Vue {
   showMsgHint: boolean = uni.getStorageSync(Constants.showMsgHintKey) !== 'false'
   waitOpenStatus = CommonStatus.waitOpen
 
+  lastScrollTop = 0
+  upperThreshold = 300
+
+  // upperThreshold = 700
+
   onUnload () {
     chatModule.scrollTop = 0
   }
@@ -241,10 +254,32 @@ export default class MessageVue extends Vue {
     this.$refs.messageMoreHandleDialog.open()
   }
 
-  upper () {
-    if (this.loadMore !== LoadMoreType.noMore) {
+  /*onPageScroll (e) {
+    this.debounceScroll(e.scrollTop)
+    uni.pageScrollTo()
+  }*/
+
+  scroll (e) {
+    console.log(e)
+  }
+
+  debounceScroll = CommonUtil.debounce(this.scrollHandler, 500)
+
+  scrollHandler (scrollTop) {
+    console.log(scrollTop)
+    if (scrollTop < this.upperThreshold) {
+      this.queryMessages()
+    }
+    //修改上次位置为当前位置
+    this.lastScrollTop = scrollTop
+  }
+
+  upper (obj) {
+    console.log(obj)
+    //只有为more才允许加载
+    if (this.chat.loadMore === LoadMoreType.more) {
       // 执行正在加载动画
-      this.loadMore = LoadMoreType.loading
+      this.chat.loadMore = LoadMoreType.loading
       this.queryMessages()
     }
   }
@@ -373,7 +408,7 @@ export default class MessageVue extends Vue {
     /**
      * 这里有坑，如果使用加载更多，则加载更多msg后滚动会出现问题，滚动不到之前的那条，待修复的问题
      */
-    return this.loadMore !== LoadMoreType.more
+    return this.chat.loadMore !== LoadMoreType.more
   }
 
   get msgIds () {
@@ -390,18 +425,22 @@ export default class MessageVue extends Vue {
   }
 
   queryMessages () {
-    MessageAPI.queryMessagesAPI(this.chat.id, this.msgIds).then((res: any) => {
+    MessageAPI.queryMessagesAPI(this.chat.id, this.msgIds).then((res) => {
       if (this.messages.length) {
-        const lastFirstMsgId: string = 'm' + this.messages[0].id
-        this.messages.unshift(...res.data)
-        this.topId = lastFirstMsgId
-      }
-      // 如果还有大于等于30个就还可以加载
-      if (res.data && res.data.length >= this.lazyLoadNum) {
-        this.loadMore = LoadMoreType.more
-      } else {
-        // 否则没有了
-        this.loadMore = LoadMoreType.noMore
+        console.log(this.$refs.scrollView)
+        const lastFirstMsgId: string = 'm' + res.data[res.data.length - 1].id
+        this.$nextTick(() => {
+          const systemInfo: GetSystemInfoResult = uni.getSystemInfoSync()
+          console.log(systemInfo.windowHeight)
+          // this.topId = lastFirstMsgId
+          // 如果还有大于等于30个就还可以加载
+          if (res.data && res.data.length >= this.lazyLoadNum) {
+            this.chat.loadMore = LoadMoreType.more
+          } else {
+            // 否则没有了
+            this.chat.loadMore = LoadMoreType.noMore
+          }
+        })
       }
     })
   }

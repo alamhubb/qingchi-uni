@@ -2,6 +2,7 @@ import http from '@/plugins/http'
 import MessageAddVO from '@/model/message/MessageAddVO'
 import MessageQueryVO from '@/model/message/MessageQueryVO'
 import MsgDelete from '@/model/message/MsgDeleteVO'
+import MessageVO from '@/model/message/MessageVO'
 
 export default class MessageAPI {
   static sendMsgAPI (chatId: number, content: string) {
@@ -10,7 +11,7 @@ export default class MessageAPI {
   }
 
   static queryMessagesAPI (chatId: number, msgIds: number []) {
-    return http.post('message/queryMessages', new MessageQueryVO(chatId, msgIds))
+    return http.post<MessageVO[]>('message/queryMessages', new MessageQueryVO(chatId, msgIds))
   }
 
   static deleteMsgAPI (msgId: number, deleteReason: string, violation: boolean) {

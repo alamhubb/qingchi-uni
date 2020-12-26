@@ -18,6 +18,7 @@ export default class ChatVO {
   public vipFlag: boolean = null
   public needPayOpen: boolean = null
   public receiveUserId: number = null
+  public loadMore: string = null
 
   constructor (chat?: ChatVO) {
     if (chat) {
@@ -34,9 +35,10 @@ export default class ChatVO {
       this.lastContent = chat.lastContent
       this.vipFlag = chat.vipFlag
       this.receiveUserId = chat.receiveUserId
+      this.loadMore = chat.loadMore
     }
   }
-
+/*
   static creatChat (user: UserVO): ChatVO {
     const chat = new ChatVO()
     chat.receiveUserId = user.id
@@ -51,5 +53,5 @@ export default class ChatVO {
     chat.status = CommonStatus.waitOpen
     // chat.needPayOpen = user.showBuyMsg
     return chat
-  }
+  }*/
 }

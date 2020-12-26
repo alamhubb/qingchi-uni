@@ -1,4 +1,5 @@
 export default class CommonUtil {
+  //节流
   static throttle (f, wait) {
     let timer
     return (...args) => {
@@ -8,6 +9,17 @@ export default class CommonUtil {
       timer = setTimeout(() => {
         f(...args)
         timer = null
+      }, wait)
+    }
+  }
+
+  //防抖
+  static debounce (f, wait) {
+    let timer
+    return (...args) => {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        f(...args)
       }, wait)
     }
   }

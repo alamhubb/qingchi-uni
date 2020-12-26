@@ -17,17 +17,41 @@ import JsonUtils from '@/utils/JsonUtils'
 @Module({ generateMutationSetters: true })
 export default class ChatModule extends VuexModule {
   chatId: number = null
-  chats: ChatVO[] = []
+  queryChats: ChatVO[] = []
   scrollTop: number = ScrollUtil.pageBottom
   chatsUnreadNumTotal = 0
 
+  get chats (): ChatVO[] {
+    //a和b比较，返回结果1，则倒序，后者在前面
+    return this.queryChats.sort((chat, chatAfter) => {
+      //如果置顶优先级比较高，则排前面
+      if (chatAfter.topLevel > chat.topLevel) {
+        return 1
+      } else if (chatAfter.topFlag != chatAfter.topFlag) {
+        //是否置顶，如果一个置顶，一个不置顶，则置顶的排前面
+        if (chatAfter.topFlag) {
+          return 1
+        } else {
+          return -1
+        }
+      } else {
+        //对比时间
+        if (chatAfter.updateTime > chatAfter.updateTime) {
+          return 1
+        } else {
+          return -1
+        }
+      }
+    })
+  }
+
   get chat (): ChatVO {
-    return this.chats[0]
+    return this.queryChats[0]
   }
 
   get messages (): MessageVO[] {
-    if (this.chat.messages.length){
-      JsonUtils.log(this.chat)
+    if (this.chat.messages.length) {
+      // JsonUtils.log(this.chat)
     }
     return this.chat.messages
   }
@@ -52,14 +76,14 @@ export default class ChatModule extends VuexModule {
   @Action
   userDetailToMessagePage (userChat: ChatVO) {
     //第一步，先看列表中是否已有与此用户的聊天列表
-    const chat = this.chats.find(item => item.id === userChat.id)
+    const chat = this.queryChats.find(item => item.id === userChat.id)
     //如果已有,则直接跳转过去
     if (!chat) {
       //首先查询是否有名字相同的chat
       //这样则需要chat名称不能相同，
       //创建mock chat
       // chat = ChatVO.creatChat(user)
-      this.chats.unshift(userChat)
+      this.queryChats.unshift(userChat)
       /*//修改当前chat的id
       this.setChatId(chat.id)
       //后台创建真实chat
@@ -84,7 +108,7 @@ export default class ChatModule extends VuexModule {
   }
 
   replaceChat (chat: ChatVO) {
-    this.chats.splice(0, 1, chat)
+    this.queryChats.splice(0, 1, chat)
     this.scrollToMessagePageBottom()
   }
 
@@ -93,7 +117,7 @@ export default class ChatModule extends VuexModule {
   @Action
   computedChatsUnreadNumTotalAction () {
     // 应该在这里计算是否显示红点
-    this.chatsUnreadNumTotal = this.chats.reduce((total, chat) => {
+    this.chatsUnreadNumTotal = this.queryChats.reduce((total, chat) => {
       total = total + chat.unreadNum
       return total
     }, 0)
@@ -113,9 +137,10 @@ export default class ChatModule extends VuexModule {
 
 
   scrollToMessagePageBottom () {
-    UniUtil.delayTime(100).then(() => {
+    UniUtil.delayTime(1000).then(() => {
       this.scrollTop = this.messages.length * 500
     })
+    // ScrollUtil.scrollTo(this.messages.length * 500)
   }
 
 
@@ -126,7 +151,7 @@ export default class ChatModule extends VuexModule {
   //如果是正在聊的，需要改为，已读，先不做已读未读
   @Action
   pushChatAndMessagesAction (newChat: ChatVO) {
-    console.log('出发了pushchat')
+    // console.log('出发了pushchat')
     // 如果正在这个chat聊天
     // if (PageUtil.getCurrentPageURI() === PagePath.message && this.chatId === newChat.id) {
     if (this.chatId === newChat.id) {
@@ -144,11 +169,11 @@ export default class ChatModule extends VuexModule {
       // 向后台发送消息，将收到的消息改为已读
       // 如果当前就是这个聊天
     } else {
-      const newChatIndex = this.chats.findIndex(item => item.id === newChat.id)
+      const newChatIndex = this.queryChats.findIndex(item => item.id === newChat.id)
       if (newChatIndex > -1) {
-        this.chats.splice(newChatIndex, 1, newChat)
+        this.queryChats.splice(newChatIndex, 1, newChat)
       } else {
-        this.chats.unshift(newChat)
+        this.queryChats.unshift(newChat)
       }
       //不需要吧，后台chat应该计算好当前未读数量
       /*// 如果已登录
@@ -172,17 +197,17 @@ export default class ChatModule extends VuexModule {
   @Action
   pushMessageAction (msg: MessageVO) {
     this.messages.push(msg)
-    console.log(JSON.stringify(msg))
+    // console.log(JSON.stringify(msg))
     this.scrollToMessagePageBottom()
     const index: number = this.messages.length - 1
-    console.log(index)
+    // console.log(index)
     this.chat.updateTime = new Date()
     this.chat.lastContent = msg.content
     // 滚屏到最后面
     // 不能监控变化滚动，有时候是往前面插入
     MessageAPI.sendMsgAPI(this.chat.id, msg.content).then((res: any) => {
-      console.log(JSON.stringify(msg))
-      console.log(JSON.stringify(this.chat))
+      // console.log(JSON.stringify(msg))
+      // console.log(JSON.stringify(this.chat))
     })
     // 后台返回后再替换
     // chat.updateTime = res.data.createTime
@@ -226,7 +251,7 @@ export default class ChatModule extends VuexModule {
   }
 
   setChats (chats: ChatVO[]) {
-    this.chats = chats
+    this.queryChats = chats
     this.computedChatsUnreadNumTotalAction()
   }
 
@@ -239,7 +264,7 @@ export default class ChatModule extends VuexModule {
 
   @Action
   deleteChatAction (chatId: number) {
-    this.chats.splice(this.chats.findIndex(chat => chat.id === chatId), 1)
+    this.queryChats.splice(this.queryChats.findIndex(chat => chat.id === chatId), 1)
   }
 }
 

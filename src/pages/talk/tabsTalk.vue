@@ -467,13 +467,16 @@ export default class TabsTalkVue extends Vue {
     }
   }
 
-  throttleScroll = CommonUtil.throttle(this.scrollhanlder, 300)
+  throttleScroll = CommonUtil.throttle(this.scrollHandler, 300)
 
-  scrollhanlder () {
+  scrollHandler () {
+    //如果向下滚动超过50隐藏
     if (this.curScrollTop > (this.lastScrollTop + 50)) {
       uni.hideTabBar()
+      //如果向上滚动超过20显示
     } else if (this.curScrollTop < (this.lastScrollTop - 20)) {
       uni.showTabBar()
+      //如果小于100或等于0，显示
     } else if (this.curScrollTop < 100 || this.curScrollTop === 0) {
       uni.showTabBar()
     }

@@ -5,9 +5,9 @@ import MsgDelete from '@/model/message/MsgDeleteVO'
 import MessageVO from '@/model/message/MessageVO'
 
 export default class MessageAPI {
-  static sendMsgAPI (chatId: number, content: string) {
+  static sendMsgAPI<T> (chatId: number, content: string) {
     const msgAdd: MessageAddVO = new MessageAddVO(chatId, null, content)
-    return http.post('message/sendMsg', msgAdd)
+    return http.post <T>('message/sendMsg', msgAdd)
   }
 
   static queryMessagesAPI (chatId: number, msgIds: number []) {

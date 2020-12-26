@@ -18,7 +18,7 @@ import JsonUtils from '@/utils/JsonUtils'
 export default class ChatModule extends VuexModule {
   chatId: number = null
   queryChats: ChatVO[] = []
-  scrollTop: number = ScrollUtil.pageBottom
+  scrollTop: number = 0
   chatsUnreadNumTotal = 0
 
   get chats (): ChatVO[] {
@@ -27,7 +27,7 @@ export default class ChatModule extends VuexModule {
       //如果置顶优先级比较高，则排前面
       if (chatAfter.topLevel > chat.topLevel) {
         return 1
-      } else if (chatAfter.topFlag != chatAfter.topFlag) {
+      } else if (chatAfter.topFlag != chat.topFlag) {
         //是否置顶，如果一个置顶，一个不置顶，则置顶的排前面
         if (chatAfter.topFlag) {
           return 1
@@ -36,7 +36,7 @@ export default class ChatModule extends VuexModule {
         }
       } else {
         //对比时间
-        if (chatAfter.updateTime > chatAfter.updateTime) {
+        if (chatAfter.updateTime > chat.updateTime) {
           return 1
         } else {
           return -1
@@ -45,8 +45,15 @@ export default class ChatModule extends VuexModule {
     })
   }
 
+
+  //因为存在排序，所以index并不是更新了update就是第一个，不总是为0，并不总是第一个,
   get chat (): ChatVO {
-    return this.queryChats[0]
+    return this.chats[this.chatIndex]
+    // return this.chats[0this.chatIndex.]
+  }
+
+  get chatIndex (): number {
+    return this.chats.findIndex(item => item.id === this.chatId)
   }
 
   get messages (): MessageVO[] {
@@ -65,8 +72,8 @@ export default class ChatModule extends VuexModule {
   setChatIdToMessagePage (chatId: number) {
     this.setChatId(chatId)
     this.readChatAction(this.chat)
-    this.scrollToMessagePageBottom()
     PageUtil.toMessagePage()
+    this.scrollToMessagePageBottom()
   }
 
   setChatId (chatId: number) {
@@ -108,7 +115,7 @@ export default class ChatModule extends VuexModule {
   }
 
   replaceChat (chat: ChatVO) {
-    this.queryChats.splice(0, 1, chat)
+    this.queryChats.splice(this.chatIndex, 1, chat)
     this.scrollToMessagePageBottom()
   }
 
@@ -137,8 +144,9 @@ export default class ChatModule extends VuexModule {
 
 
   scrollToMessagePageBottom () {
-    UniUtil.delayTime(1000).then(() => {
+    UniUtil.delayTime(100).then(() => {
       this.scrollTop = this.messages.length * 500
+      // this.scrollTop = -1000
     })
     // ScrollUtil.scrollTo(this.messages.length * 500)
   }
@@ -197,6 +205,7 @@ export default class ChatModule extends VuexModule {
   @Action
   pushMessageAction (msg: MessageVO) {
     this.messages.push(msg)
+    // JsonUtils.log(this.messages)
     // console.log(JSON.stringify(msg))
     this.scrollToMessagePageBottom()
     const index: number = this.messages.length - 1
@@ -205,18 +214,13 @@ export default class ChatModule extends VuexModule {
     this.chat.lastContent = msg.content
     // 滚屏到最后面
     // 不能监控变化滚动，有时候是往前面插入
-    MessageAPI.sendMsgAPI(this.chat.id, msg.content).then((res: any) => {
-      // console.log(JSON.stringify(msg))
-      // console.log(JSON.stringify(this.chat))
-    })
-    // 后台返回后再替换
-    // chat.updateTime = res.data.createTime
-    // console.log(this.messages.length)
-    // this.messages.splice(index, 1)
-    // console.log(this.messages.length)
-    /*.catch(() => {
+    MessageAPI.sendMsgAPI<MessageVO>(this.chat.id, msg.content).then((res) => {
+      // 后台返回后再替换
+      this.chat.updateTime = res.data.createTime
+      this.messages.splice(index, 1, res.data)
+    }).catch(() => {
       // 这里应该变为发送失败
-    })*/
+    })
     PlatformUtils.requestSubscribeChat()
   }
 
@@ -224,6 +228,7 @@ export default class ChatModule extends VuexModule {
   // 前台和后台都将chat和msg改为已读,更新chat的时间
   @Action
   readChatAction (chat: ChatVO) {
+    chat.updateTime = new Date()
     // 不为自己的 且未读的
     const messages: MessageVO[] = chat.messages.filter(item => !item.isMine && !item.isRead)
     let msgIds: number[]

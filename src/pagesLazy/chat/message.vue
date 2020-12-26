@@ -1,20 +1,19 @@
 <template>
-  <view class="pb-100rpx bg-default">
+  <view class="pb-100rpx h100r bg-default">
     <view v-if="showMsgHint" class="fixed-105 row-col-center bg-orange">
       <view class="flex-auto card-text-row">
         长按消息可进行举报，欢迎大家积极举报不良内容获取正义值
       </view>
-      <view class="flex-none mr-10px">
+      <view id="testicon" class="flex-none mr-10px">
         <q-icon icon="close-circle-fill" size="36" @click="closeShowMsgHint"></q-icon>
       </view>
     </view>
 
 
-    <scroll-view ref="scrollView" scroll-y="true" class="cu-chat h100r"
+    <scroll-view id="scrollView" ref="scrollView" scroll-y="true" class="cu-chat h100r"
                  @scrolltoupper="upper"
-                 @scroll="scroll"
+                 :upper-threshold="upperThreshold"
                  :show-scrollbar="true"
-                 :scroll-into-view='topId'
                  :scroll-top="scrollTop"
     >
       <!--    <view class="cu-chat">-->
@@ -39,12 +38,11 @@
           </view>
         </view>
       </view>
-      <view v-else class="w100r row-center" :class="showMsgHint?'pt-70px':'pt-10px'">
-        <!--        <view v-if="chat.loadMore === noMore" class="py-xs px bg-white bd-radius mt-sm">
-                  会话已开启
-                </view>-->
-        <uni-load-more id="loadMore" :status="chat.loadMore"></uni-load-more>
-        {{ scrollTop }}
+      <view id="loadMore" v-else class="w100r row-center" :class="showMsgHint?'pt-70px':'pt-10px'">
+        <view v-if="chat.loadMore === noMore || messages.length===0" class="py-xs px bg-white bd-radius mt-sm">
+          会话已开启
+        </view>
+        <uni-load-more v-else :status="chat.loadMore"></uni-load-more>
       </view>
 
       <view v-for="msg in messages" :id="'m'+msg.id" :key="msg.id"
@@ -106,7 +104,7 @@
       <!--    </view>-->
     </scroll-view>
 
-    <view class="fixed-footer">
+    <view id="testicon" class="fixed-footer">
       <view class="cu-bar footer input">
         <!--<view class="action">
             <text class="cuIcon-sound text-grey"></text>
@@ -173,7 +171,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import TalkItem from '@/pages/talk/TalkItem.vue'
 import ChatVO from '@/model/chat/ChatVO'
 import MessageVO from '@/model/message/MessageVO'
@@ -189,18 +187,16 @@ import ReportDialog from '@/pagesLazy/ReportDialog.vue'
 import MessageType from '@/const/MessageType'
 import PageUtil from '@/utils/PageUtil'
 import BalaBala from '@/utils/BalaBala'
-import { chatModule, systemModule, talkModule } from '@/plugins/store'
+import { chatModule, systemModule } from '@/plugins/store'
 import UserType from '@/const/UserType'
 import MsgUtil from '@/utils/MsgUtil'
 import CommonStatus from '@/const/CommonStatus'
-import UserAPI from '@/api/UserAPI'
 import ProviderType from '@/const/ProviderType'
 import PlatformUtils from '@/utils/PlatformUtils'
 import PayType from '@/const/PayType'
-import ChatAPI from '@/api/ChatAPI'
 import CommonUtil from '@/utils/CommonUtil'
-import PlatformType from '@/const/PlatformType'
-import GetSystemInfoResult = UniApp.GetSystemInfoResult
+import NodesRef = UniApp.NodesRef
+import SelectorQuery = UniApp.SelectorQuery
 
 const chatStore = namespace('chat')
 const userStore = namespace('user')
@@ -239,11 +235,7 @@ export default class MessageVue extends Vue {
   systemMsgType: string = MessageType.system
   showMsgHint: boolean = uni.getStorageSync(Constants.showMsgHintKey) !== 'false'
   waitOpenStatus = CommonStatus.waitOpen
-
-  lastScrollTop = 0
   upperThreshold = 300
-
-  // upperThreshold = 700
 
   onUnload () {
     chatModule.scrollTop = 0
@@ -254,28 +246,7 @@ export default class MessageVue extends Vue {
     this.$refs.messageMoreHandleDialog.open()
   }
 
-  /*onPageScroll (e) {
-    this.debounceScroll(e.scrollTop)
-    uni.pageScrollTo()
-  }*/
-
-  scroll (e) {
-    console.log(e)
-  }
-
-  debounceScroll = CommonUtil.debounce(this.scrollHandler, 500)
-
-  scrollHandler (scrollTop) {
-    console.log(scrollTop)
-    if (scrollTop < this.upperThreshold) {
-      this.queryMessages()
-    }
-    //修改上次位置为当前位置
-    this.lastScrollTop = scrollTop
-  }
-
-  upper (obj) {
-    console.log(obj)
+  upper () {
     //只有为more才允许加载
     if (this.chat.loadMore === LoadMoreType.more) {
       // 执行正在加载动画
@@ -426,22 +397,56 @@ export default class MessageVue extends Vue {
 
   queryMessages () {
     MessageAPI.queryMessagesAPI(this.chat.id, this.msgIds).then((res) => {
-      if (this.messages.length) {
-        console.log(this.$refs.scrollView)
-        const lastFirstMsgId: string = 'm' + res.data[res.data.length - 1].id
-        this.$nextTick(() => {
-          const systemInfo: GetSystemInfoResult = uni.getSystemInfoSync()
-          console.log(systemInfo.windowHeight)
-          // this.topId = lastFirstMsgId
-          // 如果还有大于等于30个就还可以加载
-          if (res.data && res.data.length >= this.lazyLoadNum) {
-            this.chat.loadMore = LoadMoreType.more
-          } else {
-            // 否则没有了
-            this.chat.loadMore = LoadMoreType.noMore
-          }
-        })
-      }
+      const resMessages: MessageVO[] = res.data
+      //获取拼接消息之前，顶部消息的位置
+      const preFirstMsgId: string = '#m' + this.messages[0].id
+      const query: SelectorQuery = uni.createSelectorQuery().in(this)
+      // const nodeBox: NodesRef = query.select('.scrollView')
+      const nodeBox: NodesRef = query.select(preFirstMsgId)
+      nodeBox.boundingClientRect((preNodeRes) => {
+        const preTop = preNodeRes.top
+        // this.topId = lastFirstMsgId
+        // 如果还有大于等于30个就还可以加载
+        if (resMessages && resMessages.length >= this.lazyLoadNum) {
+          this.chat.loadMore = LoadMoreType.more
+        } else {
+          // 否则没有了
+          this.chat.loadMore = LoadMoreType.noMore
+        }
+        if (resMessages.length) {
+          this.messages.unshift(...resMessages)
+          //获取添加后的之前顶部位置，然后滚动到此位置
+          this.$nextTick(() => {
+            const query: SelectorQuery = uni.createSelectorQuery().in(this)
+            // const nodeBox: NodesRef = query.select('.scrollView')
+            const nodeBox: NodesRef = query.select(preFirstMsgId)
+            nodeBox.boundingClientRect((lastNodeRes) => {
+              chatModule.scrollTop = lastNodeRes.top - preTop
+            }).exec()
+          })
+        }
+      }).exec()
+      /*setTimeout(() => {
+              const query: SelectorQuery = uni.createSelectorQuery().in(this)
+              // const nodeBox: NodesRef = query.select('.scrollView')
+              const nodeBox: NodesRef = query.select(preFirstMsgId)
+              nodeBox.boundingClientRect((lastNodeRes) => {
+                if (res) {
+                  console.log(lastNodeRes)
+                  console.log(preTop)
+                  chatModule.scrollTop = lastNodeRes.top - preTop
+                  console.log(chatModule.scrollTop)
+                }
+              }).exec()
+              // this.topId = lastFirstMsgId
+              // 如果还有大于等于30个就还可以加载
+              if (res.data && res.data.length >= this.lazyLoadNum) {
+                this.chat.loadMore = LoadMoreType.more
+              } else {
+                // 否则没有了
+                this.chat.loadMore = LoadMoreType.noMore
+              }
+            }, 100)*/
     })
   }
 

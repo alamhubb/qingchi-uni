@@ -9,7 +9,7 @@ export default class MessageVO {
   public user: UserVO
   public readNum: number
   public content: string
-  public createTime: Date
+  public createTime: number
   public readStatus: string
   public type: string
   public contentType: string
@@ -24,7 +24,7 @@ export default class MessageVO {
     this.readStatus = CommonStatus.sending
     this.isMine = true
     this.isRead = true
-    this.createTime = new Date()
+    this.createTime = new Date().getTime()
     this.type = MessageType.simple
     this.contentType = MessageContentType.text
   }

@@ -15,7 +15,7 @@ export default class ChatAPI {
 
   static readChat (chatId: number, messageIds: number[]) {
     const chatRead: ChatReadVO = new ChatReadVO(chatId, messageIds)
-    // http.post('chat/readChat', chatRead)
+    return http.post('chat/readChat', chatRead)
   }
 
   static removeChat (chatId: number) {

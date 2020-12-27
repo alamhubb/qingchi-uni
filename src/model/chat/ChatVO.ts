@@ -11,7 +11,7 @@ export default class ChatVO {
   public messages: MessageVO[] = []
   public avatar: string = null
   public unreadNum: number = null
-  public updateTime: Date = null
+  public updateTime: number = null
   public topLevel: number = null
   public topFlag: boolean = null
   public lastContent: string = null
@@ -20,7 +20,7 @@ export default class ChatVO {
   public receiveUserId: number = null
   public loadMore: string = null
 
-  constructor (chat?: ChatVO) {
+ /* constructor (chat?: ChatVO) {
     if (chat) {
       this.id = chat.id
       this.nickname = chat.nickname
@@ -31,13 +31,13 @@ export default class ChatVO {
       this.topLevel = chat.topLevel
       this.topFlag = chat.topFlag
       this.unreadNum = chat.unreadNum
-      this.updateTime = new Date(chat.updateTime)
+      this.updateTime = chat.updateTime
       this.lastContent = chat.lastContent
       this.vipFlag = chat.vipFlag
       this.receiveUserId = chat.receiveUserId
       this.loadMore = chat.loadMore
     }
-  }
+  }*/
 /*
   static creatChat (user: UserVO): ChatVO {
     const chat = new ChatVO()

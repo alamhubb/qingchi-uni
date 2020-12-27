@@ -4,13 +4,13 @@
       <view class="flex-auto card-text-row">
         长按消息可进行举报，欢迎大家积极举报不良内容获取正义值
       </view>
-      <view id="testicon" class="flex-none mr-10px">
+      <view class="flex-none mr-10px">
         <q-icon icon="close-circle-fill" size="36" @click="closeShowMsgHint"></q-icon>
       </view>
     </view>
 
 
-    <scroll-view id="scrollView" ref="scrollView" scroll-y="true" class="cu-chat h100r"
+    <scroll-view scroll-y="true" class="cu-chat h100r"
                  @scrolltoupper="upper"
                  :upper-threshold="upperThreshold"
                  :show-scrollbar="true"
@@ -21,15 +21,15 @@
         <view class="uni-tip  mt-80px">
           <view class="uni-tip-content text-bold">
             <template v-if="chat.needPayOpen">
-              会话未开启，为避免用户被频繁恶意骚扰，只能给关注您的用户和给您发过消息的用户直接发送消息，给其他用户发送消息，需要支付10贝壳开启对话
+              会话未开启，为避免用户被频繁恶意骚扰，只能给关注您的和给您发过消息的用户直接发送消息，给其他用户发送消息，需要支付10贝壳开启对话
             </template>
             <view v-else class="row-center">
-              对方关注了您，可免费开启会话
+              对方关注了您，发送消息即可开启对话
             </view>
           </view>
 
-          <view v-if="chat.needPayOpen || chat.status === waitOpenStatus" class="uni-tip-group-button">
-            <button class="uni-tip-button w40r" type="default" :plain="true">
+          <view v-if="chat.needPayOpen" class="uni-tip-group-button">
+            <button class="uni-tip-button w40r" type="default" :plain="true" @click="goBack">
               返回
             </button>
             <button class="uni-tip-button w40r" type="primary" @click="openChat">
@@ -38,7 +38,7 @@
           </view>
         </view>
       </view>
-      <view id="loadMore" v-else class="w100r row-center" :class="showMsgHint?'pt-70px':'pt-10px'">
+      <view v-else class="w100r row-center" :class="showMsgHint?'pt-70px':'pt-10px'">
         <view v-if="chat.loadMore === noMore || messages.length===0" class="py-xs px bg-white bd-radius mt-sm">
           会话已开启
         </view>
@@ -104,7 +104,7 @@
       <!--    </view>-->
     </scroll-view>
 
-    <view id="testicon" class="fixed-footer">
+    <view class="fixed-footer">
       <view class="cu-bar footer input">
         <!--<view class="action">
             <text class="cuIcon-sound text-grey"></text>
@@ -209,7 +209,6 @@ export default class MessageVue extends Vue {
     reportDialog: any;
     messageMoreHandleDialog: any;
     deleteReasonDialog: any;
-    scrollView: any;
   }
 
   @chatStore.Getter('messages') readonly messages: MessageVO []
@@ -301,18 +300,6 @@ export default class MessageVue extends Vue {
   }
 
   sendMsgClick () {
-    if (this.chat.status === CommonStatus.waitOpen) {
-      this.openChatPromise().then(() => {
-        this.sendMsg()
-      }).finally(() => {
-        this.isOpeningChatDisableBtn = false
-      })
-    } else {
-      this.sendMsg()
-    }
-  }
-
-  sendMsg () {
     // 微信支持 hold-keyboard
     // app和h5支持 @touchend.prevent
     // 只有qq需要特殊处理
@@ -326,15 +313,25 @@ export default class MessageVue extends Vue {
     if (this.msgContent) {
       // 点击发送后立即push
       if (this.user && this.user.phoneNum) {
-        const msg: MessageVO = new MessageVO(this.user, this.msgContent)
-        this.msgContent = ''
-        chatModule.pushMessageAction(msg)
+        if (this.chat.status === CommonStatus.waitOpen) {
+          this.openChatPromise().finally(() => {
+            this.isOpeningChatDisableBtn = false
+          })
+        } else {
+          this.sendMsg()
+        }
       } else {
         BalaBala.unBindPhoneNum()
       }
     } else {
       UniUtil.toast('不能发送空白内容')
     }
+  }
+
+  sendMsg () {
+    const msg: MessageVO = new MessageVO(this.user, this.msgContent)
+    this.msgContent = ''
+    chatModule.pushMessageAction(msg)
   }
 
   confirmDeleteTalk (msg: MessageVO) {
@@ -493,7 +490,7 @@ export default class MessageVue extends Vue {
             const provider = systemModule.isApp ? ProviderType.wx : systemModule.provider
             console.log(7)
             await PlatformUtils.pay(provider, PayType.shell, 1)
-            await chatModule.openChatAction()
+            await chatModule.openChatAction(this.msgContent)
             console.log(8)
           }
         } else {
@@ -506,7 +503,7 @@ export default class MessageVue extends Vue {
     } else {
       await UniUtil.toast('会话开启中，请稍等')
     }
-    throw Error(123)
+    throw Error()
   }
 
   openChat () {
@@ -518,13 +515,17 @@ export default class MessageVue extends Vue {
   openChatAndPrompt (hintMsg: string) {
     console.log(777)
     return UniUtil.action(hintMsg).then(() => {
-      return chatModule.openChatAction()
+      return chatModule.openChatAction(this.msgContent)
     })
   }
 
   //开启聊天支付
   shellPayForUserContact () {
 
+  }
+
+  goBack () {
+    PageUtil.goBack()
   }
 }
 </script>

@@ -55,7 +55,7 @@
             </view>
             <view v-else-if="userProp.beFollow" class="row-col-center">
               <view class="bg-default text-sm px-xs text-gray">
-                对方关注了你
+                对方关注了您
               </view>
             </view>
           </view>

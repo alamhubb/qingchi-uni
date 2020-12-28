@@ -112,9 +112,13 @@ export default class ChatModule extends VuexModule {
   }
 
   openChatAction (content) {
+    const needPayOpen = this.chat.needPayOpen
     return ChatAPI.openChatAPI(this.chat.id, this.chat.needPayOpen, content).then((res) => {
       chatModule.replaceChat(this.chatIndex, res.data)
       chatModule.scrollToMessagePageBottom()
+      if (needPayOpen) {
+        userModule.user.shell -= 10
+      }
     })
   }
 

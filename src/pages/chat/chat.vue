@@ -117,7 +117,7 @@ export default class ChatVue extends Vue {
 
   showBottomMenuClick (chatId: number) {
     this.chatId = chatId
-    UniUtil.actionSheet(['关闭会话', '删除会话']).then((index: number) => {
+    UniUtil.actionSheet(['关闭会话', '列表中删除']).then((index: number) => {
       if (index === 0) {
         this.closeChat()
       } else if (index === 1) {

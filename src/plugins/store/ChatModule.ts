@@ -136,8 +136,6 @@ export default class ChatModule extends VuexModule {
 
 
   replaceChat (chatIndex, chat: ChatVO) {
-    console.log(this.chatIndex)
-    console.log(chat.messages)
     this.chats.splice(chatIndex, 1, chat)
   }
 

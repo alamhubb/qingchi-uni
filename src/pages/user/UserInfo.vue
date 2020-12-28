@@ -79,9 +79,11 @@
 
           <view v-if="!isMine" class="flex-row">
             <!--                不为自己且未关注-->
-            <button class="cu-btn round bd-gray bg-white mr-sm" @click="toMessagePage">
+            <!--            不为ios，或者不为付费，则显示-->
+            <button v-if="!isIos||!userProp.chat.needPayOpen" class="cu-btn round bd-gray bg-white mr-sm"
+                    @click="toMessagePage">
               私信
-              <text v-if="userProp.showBuyMsg" class="ml-2px">(5B)</text>
+              <!-- <text v-if="userProp.chat.needPayOpen" class="ml-2px">(10B)</text>-->
             </button>
             <button class="cu-btn round bd-blue px-12px bg-white" :class="'bd-'+getFollowStatusColor(followStatus)"
                     @click.stop="addFollow">

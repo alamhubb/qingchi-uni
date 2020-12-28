@@ -58,7 +58,6 @@ export default class WebsocketUtil {
           }
         })
       }, 30000)
-      console.log(WebsocketUtil.timer)
     })
 
     uni.onSocketError(() => {
@@ -71,16 +70,13 @@ export default class WebsocketUtil {
     })
 
     uni.onSocketClose((e) => {
-      console.log(e)
-      console.log('触发了关闭')
+      console.log('触发了关闭:' + e)
       UniUtil.delayTime(WebsocketUtil.failedReconnectTime).then(() => {
         WebsocketUtil.websocketConnect(true)
       })
     })
 
     uni.onSocketMessage((res: any) => {
-      console.log(res)
-      console.log(res.data)
       const notify: NotifyVO = JsonUtils.jsonParse(res.data)
       // todo 直接将这个评论添加到talk中
       if (notify.type === NotifyType.comment) {

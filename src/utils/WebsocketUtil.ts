@@ -38,8 +38,6 @@ export default class WebsocketUtil {
       console.log('打开')
 
       if (reload || WebsocketUtil.timer) {
-        console.log('清空了timer：'+this.timer)
-        console.log('清空了timer：'+WebsocketUtil.timer)
         clearInterval(WebsocketUtil.timer)
       }
 

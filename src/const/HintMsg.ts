@@ -1,4 +1,6 @@
 export default class HintMsg {
+  static readonly payOpenDefaultMsg: string = '我开起了和您的会话'
+
   static readonly iosDisablePayMsg: string = '由于ios相关规则限制，ios系统被禁止支持此类付费功能'
   static readonly notMpDisablePayMsg: string = '非小程序平台暂不支持此类支付功能'
 

@@ -114,9 +114,11 @@ export default class ChatModule extends VuexModule {
   openChatAction (content) {
     return ChatAPI.openChatAPI(this.chat.id, this.chat.needPayOpen, content).then((res) => {
       chatModule.replaceChat(this.chatIndex, res.data)
+      chatModule.scrollToMessagePageBottom()
     })
   }
 
+  //来消息后，替换已有chat
   pushMsgReplaceChat (chatIndex, chat: ChatVO) {
     const oldChat = this.chats[chatIndex]
     let messages: MessageVO[] = oldChat.messages
@@ -271,7 +273,8 @@ export default class ChatModule extends VuexModule {
     // msgIds =
     //如果登陆了，才调用后台
     // 如果登录了
-    if (UserStore.hasUser()) {
+    //目前 官方群聊没记录已读状态，读取也不管用
+    if (UserStore.hasUser() && chat.type !== ChatType.system_group) {
       ChatAPI.readChatAPI(chat.id, msgIds)
     }
     for (const message of messages) {

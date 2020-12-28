@@ -36,8 +36,11 @@
           <view>
             <view class="text-gray text-sm flex">
               <view class="text-cut text-sm">
-                <template v-if="chat.status === waitOpen">
+                <template v-if="chat.status === waitOpenStatus">
                   会话待开启
+                </template>
+                <template v-else-if="chat.status === closeStatus">
+                  会话已关闭
                 </template>
                 <template v-else-if="chat.messages.length">
                   {{ chat.messages[chat.messages.length - 1].content }}
@@ -84,7 +87,8 @@ export default class ChatVue extends Vue {
 
   readonly systemChats: string[] = ChatType.systemChats
   chatId = 0
-  readonly waitOpen: string = CommonStatus.waitOpen
+  readonly waitOpenStatus: string = CommonStatus.waitOpen
+  readonly closeStatus: string = CommonStatus.close
   showChatHint: boolean = uni.getStorageSync(Constants.showChatHintKey) !== 'false'
 
   closeUploadImgHint () {
@@ -113,20 +117,32 @@ export default class ChatVue extends Vue {
 
   showBottomMenuClick (chatId: number) {
     this.chatId = chatId
-    UniUtil.actionSheet(['解除匹配']).then((index: number) => {
+    UniUtil.actionSheet(['关闭会话', '删除会话']).then((index: number) => {
       if (index === 0) {
-        this.relieveMatched()
+        this.closeChat()
+      } else if (index === 1) {
+        this.frontDeleteChat()
       }
     }).catch(() => {
       this.chatId = null
     })
   }
 
-  relieveMatched () {
-    UniUtil.action('是否确定删除聊天').then(() => {
-      ChatAPI.removeChat(this.chatId).then(() => {
+  closeChat () {
+    UniUtil.action('是否确定关闭会话，对方将无法再给您发送消息').then(() => {
+      ChatAPI.closeChatAPI(this.chatId).then(() => {
         chatModule.deleteChatAction(this.chatId)
-        UniUtil.toast('已删除')
+        UniUtil.toast('已关闭')
+      }).finally(() => {
+        this.chatId = null
+      })
+    })
+  }
+
+  frontDeleteChat () {
+    UniUtil.action('是否确定从列表中删除会话，可从私信处再次找回').then(() => {
+      ChatAPI.frontDeleteChatAPI(this.chatId).then(() => {
+        chatModule.deleteChatAction(this.chatId)
       }).finally(() => {
         this.chatId = null
       })

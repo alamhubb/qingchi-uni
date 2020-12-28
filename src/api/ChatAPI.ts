@@ -18,9 +18,14 @@ export default class ChatAPI {
     return http.post('chat/readChat', chatRead)
   }
 
-  static removeChat (chatId: number) {
+  static frontDeleteChatAPI (chatId: number) {
     const chat: ChatRemoveVO = new ChatRemoveVO(chatId)
-    return http.post('chat/removeChat', chat)
+    return http.post('chat/frontDeleteChat', chat)
+  }
+
+  static closeChatAPI (chatId: number) {
+    const chat: ChatRemoveVO = new ChatRemoveVO(chatId)
+    return http.post('chat/closeChat', chat)
   }
 
   static openChatAPI (chatId: number, needPayOpen = false, content) {

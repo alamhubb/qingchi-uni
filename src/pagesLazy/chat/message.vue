@@ -17,12 +17,15 @@
                  :scroll-top="scrollTop"
     >
       <!--    <view class="cu-chat">-->
-      <view v-if="chat.status === waitOpenStatus" class="w100r h100r col-row-center">
+      <view v-if="chat.status === waitOpenStatus||chat.status === closeStatus" class="w100r h100r col-row-center">
         <view class="uni-tip  mt-80px">
           <view class="uni-tip-content text-bold">
             <template v-if="chat.needPayOpen">
               会话未开启，为避免用户被频繁恶意骚扰，只能给关注您的和给您发过消息的用户直接发送消息，给其他用户发送消息，需要支付10贝壳开启对话
             </template>
+            <view v-else-if="chat.status === closeStatus" class="row-center">
+              您已关闭会话，发送消息即可再次开启对话
+            </view>
             <view v-else class="row-center">
               对方关注了您，发送消息即可开启对话
             </view>
@@ -32,7 +35,7 @@
             <button class="uni-tip-button w40r" type="default" :plain="true" @click="goBack">
               返回
             </button>
-            <button class="uni-tip-button w40r" type="primary" @click="openChat">
+            <button class="uni-tip-button w40r" type="primary" @click="payOpenChat">
               开启对话
             </button>
           </view>
@@ -197,6 +200,7 @@ import PayType from '@/const/PayType'
 import CommonUtil from '@/utils/CommonUtil'
 import NodesRef = UniApp.NodesRef
 import SelectorQuery = UniApp.SelectorQuery
+import HintMsg from '@/const/HintMsg'
 
 const chatStore = namespace('chat')
 const userStore = namespace('user')
@@ -233,7 +237,8 @@ export default class MessageVue extends Vue {
   reportContentType: string = ReportContentType.message
   systemMsgType: string = MessageType.system
   showMsgHint: boolean = uni.getStorageSync(Constants.showMsgHintKey) !== 'false'
-  waitOpenStatus = CommonStatus.waitOpen
+  readonly waitOpenStatus: string = CommonStatus.waitOpen
+  readonly closeStatus: string = CommonStatus.close
   upperThreshold = 300
 
   onUnload () {
@@ -310,15 +315,17 @@ export default class MessageVue extends Vue {
       this.inputFocus = true
     })
     // #endif
-    if (this.msgContent) {
+    const msgContent = this.msgContent || (this.chat.needPayOpen ? HintMsg.payOpenDefaultMsg : '')
+    if (msgContent) {
       // 点击发送后立即push
       if (this.user && this.user.phoneNum) {
-        if (this.chat.status === CommonStatus.waitOpen) {
-          this.openChatPromise().finally(() => {
+        //启用状态可以直接发送
+        if (this.chat.status === CommonStatus.enable) {
+          this.sendMsg(msgContent)
+        } else {
+          this.openChatPromise(msgContent).finally(() => {
             this.isOpeningChatDisableBtn = false
           })
-        } else {
-          this.sendMsg()
         }
       } else {
         BalaBala.unBindPhoneNum()
@@ -328,8 +335,8 @@ export default class MessageVue extends Vue {
     }
   }
 
-  sendMsg () {
-    const msg: MessageVO = new MessageVO(this.user, this.msgContent)
+  sendMsg (content) {
+    const msg: MessageVO = new MessageVO(this.user, content)
     this.msgContent = ''
     chatModule.pushMessageAction(msg)
   }
@@ -469,32 +476,33 @@ export default class MessageVue extends Vue {
   //正在开启Chat
   isOpeningChatDisableBtn = false
 
-  async openChatPromise () {
+  //1，如果为关闭，则显示发起开启，和待开启一样，只要状态不为代开起，就没有pay
+  //2.如果为代开起，付费，则需要点击开启，或者发送时提示是否要给对方发送并开启会话
+  //3. 如果为被关闭，则不显示，发送消息报错
+  // 先判断消息，然后那些状态那里无所谓，取消了也无所谓，就是消息不发送
+  //刚触发点击开启的方法
+  async openChatPromise (content) {
     if (!this.isOpeningChatDisableBtn) {
-      console.log(1)
       this.isOpeningChatDisableBtn = true
       try {
-        console.log(2)
+        //需要付费
         if (this.chat.needPayOpen) {
-          console.log(3)
-          console.log(this.user)
-          console.log(this.user.shell)
           const userShell = this.user.shell
+          //不需要充值提示
           if (userShell >= 10) {
-            console.log(4)
-            await this.openChatAndPrompt('会话未开启，是否消耗10个贝壳开启与 ' + this.chat.nickname + ' 的对话')
-            console.log(5)
+            await this.openChatAndPrompt('会话未开启，是否消耗10个贝壳开启与 ' + this.chat.nickname + ' 的对话，并给对方发送消息：' + content, content)
+            //需要充值提示
           } else {
-            console.log(6)
-            await UniUtil.action('会话未开启，您没有贝壳了，是否直接使用现金支付开启开启与 ' + this.chat.nickname + ' 的对话')
+            await UniUtil.action('会话未开启，您没有贝壳了，是否直接使用现金支付开启开启与 ' + this.chat.nickname + ' 的对话，并给对方发送消息：' + content, content)
             const provider = systemModule.isApp ? ProviderType.wx : systemModule.provider
-            console.log(7)
             await PlatformUtils.pay(provider, PayType.shell, 1)
-            await chatModule.openChatAction(this.msgContent)
-            console.log(8)
+            //校验了有用户后清空消息
+            this.msgContent = ''
+            await chatModule.openChatAction(content)
           }
+          //不需要付费
         } else {
-          await this.openChatAndPrompt('是否确认开启与 ' + this.chat.nickname + ' 的对话')
+          await this.openChatAndPrompt('是否确认开启与 ' + this.chat.nickname + ' 的对话，并给对方发送消息：' + content, content)
         }
         return
       } catch (e) {
@@ -506,16 +514,19 @@ export default class MessageVue extends Vue {
     throw Error()
   }
 
-  openChat () {
-    this.openChatPromise().finally(() => {
+  //只有待开启，需付费，才会触发此方法
+  payOpenChat () {
+    this.openChatPromise(this.msgContent || HintMsg.payOpenDefaultMsg).finally(() => {
       this.isOpeningChatDisableBtn = false
     })
   }
 
-  openChatAndPrompt (hintMsg: string) {
-    console.log(777)
+  //校验已通过，最后一个确认， 是否确认开启
+  openChatAndPrompt (hintMsg: string, content: string) {
     return UniUtil.action(hintMsg).then(() => {
-      return chatModule.openChatAction(this.msgContent)
+      //校验了有用户后清空消息
+      this.msgContent = ''
+      return chatModule.openChatAction(content)
     })
   }
 

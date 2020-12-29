@@ -6,7 +6,7 @@ import MessageVO from '@/model/message/MessageVO'
 
 export default class MessageAPI {
   static sendMsgAPI<T> (chatId: number, content: string) {
-    const msgAdd: MessageAddVO = new MessageAddVO(chatId, null, content)
+    const msgAdd: MessageAddVO = new MessageAddVO(chatId, content)
     return http.post <T>('message/sendMsg', msgAdd)
   }
 

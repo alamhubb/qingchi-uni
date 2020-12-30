@@ -1,14 +1,22 @@
 # 清池app前端项目
 
 ### 介绍
-清池app前端项目，日活3000已上线
+清池app前端项目，日活3000已上线，前后端均已开源
 
 ### 下载
 插件仅支持git方式下载，不支持zip方式
 
+### 前端源码地址
 [git地址](https://gitee.com/qingchiapp/qingchi-uni.git)
 
 [码云地址](https://gitee.com/qingchiapp/qingchi-uni)
+
+### 后端源码地址
+[git地址](https://gitee.com/qingchiapp/qingchi-web.git)
+[git地址](https://gitee.com/qingchiapp/qingchi-base.git)
+
+[码云地址](https://gitee.com/qingchiapp/qingchi-web)
+[码云地址](https://gitee.com/qingchiapp/qingchi-base)
 
 ### 体验
 
@@ -34,17 +42,13 @@ npm run serve
   <thead>
   <tr>
     <th>微信扫码体验</th>
-    <th>想要交流社交产品的朋友可以进群</th>
-    <th>个人微信，有问题可以咨询</th>
+    <th>个人微信，可以加我进微信群，有问题可以咨询</th>
   </tr>
   </thead>
   <tbody>
   <tr>
       <td align="center" valign="middle">
         <img width="222px" src="https://cdxapp-1257733245.cos.ap-beijing.myqcloud.com/qingchi/home/qingchiwxcode.jpg!thumbnail">
-      </td>
-      <td align="center" valign="middle">
-        <img width="222px" src="https://cdxapp-1257733245.cos.ap-beijing.myqcloud.com/qingchi/static/qqgroupcode.png">
       </td>
       <td align="center" valign="middle">
         <img width="222px" src="https://cdxapp-1257733245.cos.ap-beijing.myqcloud.com/qingchi/static/wxcode.png">

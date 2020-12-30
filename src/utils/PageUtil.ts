@@ -162,9 +162,7 @@ export default class PageUtil {
     // PageUtil.navigateTo(PagePath.userMatch)
   }
 
-  static toMessagePage (chat: ChatVO) {
-    //需要先清除，再跳转页面
-    chatModule.setChatAction(chat)
+  static toMessagePage () {
     PageUtil.navigateTo(PagePath.message)
   }
 
@@ -176,8 +174,5 @@ export default class PageUtil {
 
   static toUserContactInfoPage () {
     PageUtil.navigateTo(PagePath.userContactInfo)
-  }
-  static toMessageSetting () {
-    PageUtil.navigateTo(PagePath.messageSetting)
   }
 }

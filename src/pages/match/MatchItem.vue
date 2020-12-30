@@ -65,7 +65,8 @@
           <button class="uni-tip-button w40r" type="default" @click="closeDialogAndInitData" :plain="true">
             取消
           </button>
-          <button class="uni-tip-button w40r" type="primary" @click="addReport" :disabled="!reportType">确定
+          <button class="uni-tip-button w40r" type="primary" @click="addReport" :disabled="!reportType">
+            确定
           </button>
         </view>
       </view>

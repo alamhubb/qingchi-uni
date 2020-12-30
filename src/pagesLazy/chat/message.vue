@@ -8,12 +8,46 @@
         <q-icon icon="close-circle-fill" size="36" @click="closeShowMsgHint"></q-icon>
       </view>
     </view>
+
+
     <scroll-view scroll-y="true" class="cu-chat h100r"
                  @scrolltoupper="upper"
+                 :upper-threshold="upperThreshold"
                  :show-scrollbar="true"
-                 :scroll-into-view='topId'
                  :scroll-top="scrollTop"
     >
+      <!--    <view class="cu-chat">-->
+      <view v-if="chat.status === waitOpenStatus||chat.status === closeStatus" class="w100r h100r col-row-center">
+        <view class="uni-tip  mt-80px">
+          <view class="uni-tip-content text-bold">
+            <template v-if="chat.needPayOpen">
+              会话未开启，为避免用户被频繁恶意骚扰，只能给关注您的和给您发过消息的用户直接发送消息，给其他用户发送消息，需要支付10贝壳开启对话
+            </template>
+            <view v-else-if="chat.status === closeStatus" class="row-center">
+              您已关闭会话，发送消息即可再次开启对话
+            </view>
+            <view v-else class="row-center">
+              对方关注了您，发送消息即可开启对话
+            </view>
+          </view>
+
+          <view v-if="chat.needPayOpen" class="uni-tip-group-button">
+            <button class="uni-tip-button w40r" type="default" :plain="true" @click="goBack">
+              返回
+            </button>
+            <button class="uni-tip-button w40r" type="primary" @click="payOpenChat">
+              开启对话
+            </button>
+          </view>
+        </view>
+      </view>
+      <view v-else class="w100r row-center" :class="showMsgHint?'pt-70px':'pt-10px'">
+        <view v-if="chat.loadMore === noMore || messages.length===0" class="py-xs px bg-white bd-radius mt-sm">
+          会话已开启
+        </view>
+        <uni-load-more v-else :status="chat.loadMore"></uni-load-more>
+      </view>
+
       <view v-for="msg in messages" :id="'m'+msg.id" :key="msg.id"
             :class="[msg.type === systemMsgType?'row-center':'cu-item',msg.isMine?'self':'']">
         <block v-if="msg.type === systemMsgType">
@@ -70,6 +104,7 @@
           <view class="date">{{ msg.createTime | formatTime }}</view>
         </block>
       </view>
+      <!--    </view>-->
     </scroll-view>
 
     <view class="fixed-footer">
@@ -85,7 +120,7 @@
                :focus="inputFocus"
                @blur="inputBlur"
                @focus="inputFocusEvent"
-               @confirm="sendMsg"
+               @confirm="sendMsgClick"
                :hold-keyboard="true"
                :confirm-hold="true"
                confirm-type="send"
@@ -93,7 +128,7 @@
         <!--<view class="action" @click="showEmojiClick">
             <text class="cuIcon-emojifill text-grey"></text>
         </view>-->
-        <button class="cu-btn bg-green shadow" @touchend.prevent="sendMsg">发送</button>
+        <button class="cu-btn bg-green shadow" @touchend.prevent="sendMsgClick">发送</button>
       </view>
       <!--      <view v-show="showEmoji" class="w100vw bg-blue" :style="{height:keyboardHeight+'px'}"></view>-->
     </view>
@@ -139,7 +174,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import TalkItem from '@/pages/talk/TalkItem.vue'
 import ChatVO from '@/model/chat/ChatVO'
 import MessageVO from '@/model/message/MessageVO'
@@ -158,6 +193,14 @@ import BalaBala from '@/utils/BalaBala'
 import { chatModule, systemModule } from '@/plugins/store'
 import UserType from '@/const/UserType'
 import MsgUtil from '@/utils/MsgUtil'
+import CommonStatus from '@/const/CommonStatus'
+import ProviderType from '@/const/ProviderType'
+import PlatformUtils from '@/utils/PlatformUtils'
+import PayType from '@/const/PayType'
+import CommonUtil from '@/utils/CommonUtil'
+import NodesRef = UniApp.NodesRef
+import SelectorQuery = UniApp.SelectorQuery
+import HintMsg from '@/const/HintMsg'
 
 const chatStore = namespace('chat')
 const userStore = namespace('user')
@@ -172,15 +215,15 @@ export default class MessageVue extends Vue {
     deleteReasonDialog: any;
   }
 
-  @chatStore.State('messages') readonly messages: MessageVO []
-  @chatStore.State('chat') readonly chat: ChatVO
+  @chatStore.Getter('messages') readonly messages: MessageVO []
+  @chatStore.Getter('chat') readonly chat: ChatVO
   @chatStore.State('scrollTop') readonly scrollTop: number
   @userStore.State('user') user: UserVO
   screenHeight: number = systemModule.screenHeight
   windowHeight: number = systemModule.windowHeight
   msgContent = ''
   inputFocus = false
-  loadMore: string = LoadMoreType.more
+  noMore: string = LoadMoreType.noMore
   lazyLoadNum = 30
   topId = ''
   deleteReason: string = null
@@ -194,6 +237,9 @@ export default class MessageVue extends Vue {
   reportContentType: string = ReportContentType.message
   systemMsgType: string = MessageType.system
   showMsgHint: boolean = uni.getStorageSync(Constants.showMsgHintKey) !== 'false'
+  readonly waitOpenStatus: string = CommonStatus.waitOpen
+  readonly closeStatus: string = CommonStatus.close
+  upperThreshold = 300
 
   onUnload () {
     chatModule.scrollTop = 0
@@ -205,9 +251,10 @@ export default class MessageVue extends Vue {
   }
 
   upper () {
-    if (this.loadMore !== LoadMoreType.noMore) {
+    //只有为more才允许加载
+    if (this.chat.loadMore === LoadMoreType.more) {
       // 执行正在加载动画
-      this.loadMore = LoadMoreType.loading
+      this.chat.loadMore = LoadMoreType.loading
       this.queryMessages()
     }
   }
@@ -257,7 +304,7 @@ export default class MessageVue extends Vue {
     this.showEmoji = false */
   }
 
-  sendMsg () {
+  sendMsgClick () {
     // 微信支持 hold-keyboard
     // app和h5支持 @touchend.prevent
     // 只有qq需要特殊处理
@@ -268,18 +315,30 @@ export default class MessageVue extends Vue {
       this.inputFocus = true
     })
     // #endif
-    if (this.msgContent) {
+    const msgContent = this.msgContent || (this.chat.needPayOpen ? HintMsg.payOpenDefaultMsg : '')
+    if (msgContent) {
       // 点击发送后立即push
       if (this.user && this.user.phoneNum) {
-        const msg: MessageVO = new MessageVO(this.user, this.msgContent)
-        this.msgContent = ''
-        chatModule.pushMessageAction({ chatId: this.chat.id, msg: msg })
+        //启用状态可以直接发送
+        if (this.chat.status === CommonStatus.enable) {
+          this.sendMsg(msgContent)
+        } else {
+          this.openChatPromise(msgContent).finally(() => {
+            this.isOpeningChatDisableBtn = false
+          })
+        }
       } else {
         BalaBala.unBindPhoneNum()
       }
     } else {
       UniUtil.toast('不能发送空白内容')
     }
+  }
+
+  sendMsg (content) {
+    const msg: MessageVO = new MessageVO(this.user, content)
+    this.msgContent = ''
+    chatModule.pushMessageAction(msg)
   }
 
   confirmDeleteTalk (msg: MessageVO) {
@@ -324,7 +383,7 @@ export default class MessageVue extends Vue {
     /**
      * 这里有坑，如果使用加载更多，则加载更多msg后滚动会出现问题，滚动不到之前的那条，待修复的问题
      */
-    return this.loadMore !== LoadMoreType.more
+    return this.chat.loadMore !== LoadMoreType.more
   }
 
   get msgIds () {
@@ -341,17 +400,57 @@ export default class MessageVue extends Vue {
   }
 
   queryMessages () {
-    MessageAPI.queryMessagesAPI(this.msgIds).then((res: any) => {
-      const lastFirstMsgId: string = 'm' + this.messages[0].id
-      this.messages.unshift(...res.data)
-      this.topId = lastFirstMsgId
-      // 如果还有大于等于30个就还可以加载
-      if (res.data && res.data.length >= this.lazyLoadNum) {
-        this.loadMore = LoadMoreType.more
-      } else {
-        // 否则没有了
-        this.loadMore = LoadMoreType.noMore
-      }
+    MessageAPI.queryMessagesAPI(this.chat.id, this.msgIds).then((res) => {
+      const resMessages: MessageVO[] = res.data
+      //获取拼接消息之前，顶部消息的位置
+      const preFirstMsgId: string = '#m' + this.messages[0].id
+      const query: SelectorQuery = uni.createSelectorQuery().in(this)
+      // const nodeBox: NodesRef = query.select('.scrollView')
+      const nodeBox: NodesRef = query.select(preFirstMsgId)
+      nodeBox.boundingClientRect((preNodeRes) => {
+        const preTop = preNodeRes.top
+        // this.topId = lastFirstMsgId
+        // 如果还有大于等于30个就还可以加载
+        if (resMessages && resMessages.length >= this.lazyLoadNum) {
+          this.chat.loadMore = LoadMoreType.more
+        } else {
+          // 否则没有了
+          this.chat.loadMore = LoadMoreType.noMore
+        }
+        if (resMessages.length) {
+          this.messages.unshift(...resMessages)
+          //获取添加后的之前顶部位置，然后滚动到此位置
+          this.$nextTick(() => {
+            const query: SelectorQuery = uni.createSelectorQuery().in(this)
+            // const nodeBox: NodesRef = query.select('.scrollView')
+            const nodeBox: NodesRef = query.select(preFirstMsgId)
+            nodeBox.boundingClientRect((lastNodeRes) => {
+              chatModule.scrollTop = lastNodeRes.top - preTop
+            }).exec()
+          })
+        }
+      }).exec()
+      /*setTimeout(() => {
+              const query: SelectorQuery = uni.createSelectorQuery().in(this)
+              // const nodeBox: NodesRef = query.select('.scrollView')
+              const nodeBox: NodesRef = query.select(preFirstMsgId)
+              nodeBox.boundingClientRect((lastNodeRes) => {
+                if (res) {
+                  console.log(lastNodeRes)
+                  console.log(preTop)
+                  chatModule.scrollTop = lastNodeRes.top - preTop
+                  console.log(chatModule.scrollTop)
+                }
+              }).exec()
+              // this.topId = lastFirstMsgId
+              // 如果还有大于等于30个就还可以加载
+              if (res.data && res.data.length >= this.lazyLoadNum) {
+                this.chat.loadMore = LoadMoreType.more
+              } else {
+                // 否则没有了
+                this.chat.loadMore = LoadMoreType.noMore
+              }
+            }, 100)*/
     })
   }
 
@@ -372,6 +471,72 @@ export default class MessageVue extends Vue {
   openReportDialog () {
     this.closeMessageMoreDialog()
     this.$refs.reportDialog.openReport()
+  }
+
+  //正在开启Chat
+  isOpeningChatDisableBtn = false
+
+  //1，如果为关闭，则显示发起开启，和待开启一样，只要状态不为代开起，就没有pay
+  //2.如果为代开起，付费，则需要点击开启，或者发送时提示是否要给对方发送并开启会话
+  //3. 如果为被关闭，则不显示，发送消息报错
+  // 先判断消息，然后那些状态那里无所谓，取消了也无所谓，就是消息不发送
+  //刚触发点击开启的方法
+  async openChatPromise (content) {
+    if (!this.isOpeningChatDisableBtn) {
+      this.isOpeningChatDisableBtn = true
+      try {
+        //需要付费
+        if (this.chat.needPayOpen) {
+          const userShell = this.user.shell
+          //不需要充值提示
+          if (userShell >= 10) {
+            await this.openChatAndPrompt('会话未开启，是否消耗10个贝壳开启与 ' + this.chat.nickname + ' 的对话，并给对方发送消息：' + content, content)
+            //需要充值提示
+          } else {
+            await UniUtil.action('会话未开启，您没有贝壳了，是否直接使用现金支付开启开启与 ' + this.chat.nickname + ' 的对话，并给对方发送消息：' + content, content)
+            const provider = systemModule.isApp ? ProviderType.wx : systemModule.provider
+            await PlatformUtils.pay(provider, PayType.shell, 1)
+            //校验了有用户后清空消息
+            this.msgContent = ''
+            await chatModule.openChatAction(content)
+          }
+          //不需要付费
+        } else {
+          await this.openChatAndPrompt('是否确认开启与 ' + this.chat.nickname + ' 的对话，并给对方发送消息：' + content, content)
+        }
+        return
+      } catch (e) {
+        throw Error(e)
+      }
+    } else {
+      await UniUtil.toast('会话开启中，请稍等')
+    }
+    throw Error()
+  }
+
+  //只有待开启，需付费，才会触发此方法
+  payOpenChat () {
+    this.openChatPromise(this.msgContent || HintMsg.payOpenDefaultMsg).finally(() => {
+      this.isOpeningChatDisableBtn = false
+    })
+  }
+
+  //校验已通过，最后一个确认， 是否确认开启
+  openChatAndPrompt (hintMsg: string, content: string) {
+    return UniUtil.action(hintMsg).then(() => {
+      //校验了有用户后清空消息
+      this.msgContent = ''
+      return chatModule.openChatAction(content)
+    })
+  }
+
+  //开启聊天支付
+  shellPayForUserContact () {
+
+  }
+
+  goBack () {
+    PageUtil.goBack()
   }
 }
 </script>

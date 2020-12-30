@@ -6,6 +6,10 @@
 ### 下载
 插件仅支持git方式下载，不支持zip方式
 
+[git地址](https://gitee.com/qingchiapp/qingchi-uni.git)
+
+[码云地址](https://gitee.com/qingchiapp/qingchi-uni)
+
 ### 体验
 
 app已上架，应用宝、360、oppo、vivo、小米、阿里应用中心，大家可搜索 清池 自行下载。

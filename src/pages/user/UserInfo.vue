@@ -55,7 +55,7 @@
             </view>
             <view v-else-if="userProp.beFollow" class="row-col-center">
               <view class="bg-default text-sm px-xs text-gray">
-                关注了你
+                对方关注了您
               </view>
             </view>
           </view>
@@ -79,10 +79,12 @@
 
           <view v-if="!isMine" class="flex-row">
             <!--                不为自己且未关注-->
-            <!--<button class="cu-btn round bd-gray bg-white mr-sm" @click="toMessagePage">
+            <!--            不为ios，或者不为付费，则显示-->
+            <button v-if="!isIos||!userProp.chat.needPayOpen" class="cu-btn round bd-gray bg-white mr-sm"
+                    @click="toMessagePage">
               私信
-              <text v-if="userProp.showBuyMsg" class="ml-2px">(5B)</text>
-            </button>-->
+              <!-- <text v-if="userProp.chat.needPayOpen" class="ml-2px">(10B)</text>-->
+            </button>
             <button class="cu-btn round bd-blue px-12px bg-white" :class="'bd-'+getFollowStatusColor(followStatus)"
                     @click.stop="addFollow">
               {{ followStatus }}
@@ -353,7 +355,7 @@ import PayType from '@/const/PayType'
 import ProviderType from '@/const/ProviderType'
 import QIcon from '@/components/q-icon/q-icon.vue'
 import ChatVO from '@/model/chat/ChatVO'
-import MessageVO from '@/model/message/MessageVO'
+import ChatAPI from '@/api/ChatAPI'
 
 const userStore = namespace('user')
 const appStore = namespace('app')
@@ -393,9 +395,7 @@ export default class UserInfo extends Vue {
     //除了是否关注，还有是否已经发起过对话，chatuservo里面要保存还能再发几条
     //判断是否已经支付过了。3条，然后对方每次回复你都可以发三条，然后就需要再次支付，开启了支付
     //mock chat
-    const chat = ChatVO.creatChat(this.userProp)
-    PageUtil.toMessagePage(chat)
-
+    chatModule.userDetailToMessagePage(this.userProp.chat)
     //如果有chat读取，如果没有创建读取
     // chatModule.setChatAction(chat)
   }

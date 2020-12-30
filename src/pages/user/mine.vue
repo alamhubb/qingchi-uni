@@ -22,14 +22,14 @@
               清池 app
             </view>
           </q-row>
-          <q-row-item>
+          <!--<q-row-item>
             <navigator :url="messageSettingUrl" class="row-col-center flex-auto">
               <view class="row-col-center flex-auto">
                 消息设置
               </view>
               <q-icon icon="arrow-right" class="text-lg margin-right-sm"></q-icon>
             </navigator>
-          </q-row-item>
+          </q-row-item>-->
           <q-row-item>
             <navigator :url="suggestUrl" class="row-col-center flex-auto">
               <view class="row-col-center flex-auto">
@@ -200,10 +200,6 @@ export default class MineVue extends Vue {
 
   get homeUrl (): string {
     return SkipUrlConst.homeUrl()
-  }
-
-  get messageSettingUrl (): string {
-    return PagePath.messageSetting
   }
 
   get suggestUrl (): string {

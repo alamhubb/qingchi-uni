@@ -1,5 +1,9 @@
 # 清池app前端项目
 
+### 关键词
+uniapp chat Community Dating Social app
+聊天 社区 社交 交友 app
+
 ### 介绍
 清池交友app源码，日活3000已上线运营，前后端均已开源
 

@@ -11,16 +11,11 @@ uniapp chat Community Dating Social app
 插件仅支持git方式下载，不支持zip方式
 
 ### 前端源码地址
-[git地址](https://gitee.com/qingchiapp/qingchi-uni.git)
-
-[码云地址](https://gitee.com/qingchiapp/qingchi-uni)
+[git地址](https://github.com/qingchiapp/qingchi-uni.git)
 
 ### 后端源码地址
-[git地址](https://gitee.com/qingchiapp/qingchi-web.git)
-[git地址](https://gitee.com/qingchiapp/qingchi-base.git)
-
-[码云地址](https://gitee.com/qingchiapp/qingchi-web)
-[码云地址](https://gitee.com/qingchiapp/qingchi-base)
+[git地址](https://github.com/qingchiapp/qingchi-web.git)
+[git地址](https://github.com/qingchiapp/qingchi-base.git)
 
 ### 体验
 

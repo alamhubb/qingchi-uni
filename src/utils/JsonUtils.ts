@@ -15,4 +15,12 @@ export default class JsonUtils {
   public static log (object: any) {
     console.log(JSON.stringify(object))
   }
+
+  static toFormData(object: Object): FormData {
+    const formData = new FormData()
+    Object.keys(object).forEach((key) => {
+      formData.append(key, object[key])
+    })
+    return formData
+  }
 }

@@ -1,11 +1,19 @@
-# 清池app前端项目
+# 清池app交友社区
+
+#### 遵循MIT开源协议，免费商用
+
+#### 项目稳定开源，不会出现放弃维护的情况，因为已经上线维护，且有大量用户使用，项目会长期迭代和维护、长期支持，请放心使用
 
 ### 关键词
 uniapp chat Community Dating Social app
 聊天 社区 社交 交友 app
 
+### 技术架构
+* 前端 uniapp + vue + ts
+* 后端 java + springboot + mysql
+
 ### 介绍
-清池交友app源码，日活3000已上线运营，前后端均已开源
+清池交友社区源码，支持小程序和安卓app，日活3000已上线运营中，前后端均已开源
 
 ### 下载
 插件仅支持git方式下载，不支持zip方式
@@ -40,17 +48,21 @@ npm run serve
 <table>
   <thead>
   <tr>
-    <th>微信扫码体验</th>
     <th>个人微信，可以加我进微信群，有问题可以咨询</th>
+    <th>微信扫码体验（不支持ios）</th>
+    <th>QQ扫码体验（支持ios）</th>
   </tr>
   </thead>
   <tbody>
   <tr>
       <td align="center" valign="middle">
+        <img width="222px" src="https://cdxapp-1257733245.cos.ap-beijing.myqcloud.com/qingchi/static/wxcode.png">
+      </td>
+      <td align="center" valign="middle">
         <img width="222px" src="https://cdxapp-1257733245.cos.ap-beijing.myqcloud.com/qingchi/home/qingchiwxcode.jpg!thumbnail">
       </td>
       <td align="center" valign="middle">
-        <img width="222px" src="https://cdxapp-1257733245.cos.ap-beijing.myqcloud.com/qingchi/static/wxcode.png">
+         <img width="222px" src="https://cdxapp-1257733245.cos.ap-beijing.myqcloud.com/qingchi/home/qingchiqqcode.png!thumbnail">
       </td>
     </tr>
   <tr></tr>

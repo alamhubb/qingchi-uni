@@ -47,13 +47,14 @@
           <view class="uni-icon uni-icon-clear" v-if="location" @click="clearLocation"></view>
         </view>
 
-        <view class="cu-form-group">
-          <view class="title">
-            联系方式
-          </view>
-          <input :cursor-spacing="20" v-model="contactAccount" maxlength="30" placeholder="例如：vx:491369310"/>
-          <view class="uni-icon uni-icon-clear" v-if="contactAccount" @click="clearContactAccount"></view>
-        </view>
+        <!--        todo qq不支持联系方式，改为判断qq一件加好友-->
+        <!--        <view class="cu-form-group">
+                  <view class="title">
+                    联系方式
+                  </view>
+                  <input :cursor-spacing="20" v-model="contactAccount" maxlength="30" placeholder="例如：vx:491369310"/>
+                  <view class="uni-icon uni-icon-clear" v-if="contactAccount" @click="clearContactAccount"></view>
+                </view>-->
         <!--<view class="cu-form-group margin-top">
             <view class="title">
                 个人介绍

@@ -231,7 +231,8 @@
             </button>
           </view>
         </view>-->
-        <view v-if="isMine" class="q-solid-top q-box-row row-between-center" @click="toUserShell">
+<!--        todo 暂时注释掉支付功能，qq需要改用为米大师-->
+        <!--<view v-if="isMine" class="q-solid-top q-box-row row-between-center" @click="toUserShell">
           <view class="row-col-center">
             <q-icon class="text-green mr-xs" size="50" icon="mdi-bitcoin"/>
             <text class="text-lgg">我的贝壳（{{ mineUser.shell }}）</text>
@@ -240,7 +241,7 @@
             <text class="text-lgg text-gray text-lgg">充值</text>
             <q-icon class="text-gray" size="32" icon="arrow-right"/>
           </view>
-        </view>
+        </view>-->
       </view>
     </view>
 
@@ -422,9 +423,11 @@ export default class UserInfo extends Vue {
             UserAPI.getUserContactAPI(this.userProp.id).then((res) => {
               this.userProp.contactAccount = res.data
               this.userProp.showUserContact = true
-            }).catch(() => {
-              MsgUtil.sysErrMsg()
+            }).catch((e) => {
+              MsgUtil.sysErrMsg(e)
             })
+          }).catch((e) => {
+            MsgUtil.sysErrMsg(e)
           })
         }).finally(() => {
           this.showUserContactBtnDisabled = false

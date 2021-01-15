@@ -3,6 +3,7 @@ export default class HintMsg {
 
   static readonly iosDisablePayMsg: string = '由于ios相关规则限制，ios系统被禁止支持此类付费功能'
   static readonly notMpDisablePayMsg: string = '非小程序平台暂不支持此类支付功能'
+  static readonly notPayMsg: string = '因平台政策原因暂不支持支付功能'
 
   static readonly contactServiceMsg: string = '，请联系客服QQ：491369310'
 

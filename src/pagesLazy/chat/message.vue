@@ -31,14 +31,14 @@
             </view>
           </view>
 
-          <view v-if="chat.needPayOpen" class="uni-tip-group-button">
+          <!--<view v-if="chat.needPayOpen" class="uni-tip-group-button">
             <button class="uni-tip-button w40r" type="default" :plain="true" @click="goBack">
               返回
             </button>
             <button class="uni-tip-button w40r" type="primary" @click="payOpenChat">
               开启对话
             </button>
-          </view>
+          </view>-->
         </view>
       </view>
       <view v-else class="w100r row-center" :class="showMsgHint?'pt-70px':'pt-10px'">
@@ -174,11 +174,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 import TalkItem from '@/pages/talk/TalkItem.vue'
 import ChatVO from '@/model/chat/ChatVO'
 import MessageVO from '@/model/message/MessageVO'
-import { namespace } from 'vuex-class'
+import {namespace} from 'vuex-class'
 import UserVO from '@/model/user/UserVO'
 import LoadMoreType from '@/const/LoadMoreType'
 import Constants from '@/const/Constant'
@@ -190,7 +190,7 @@ import ReportDialog from '@/pagesLazy/ReportDialog.vue'
 import MessageType from '@/const/MessageType'
 import PageUtil from '@/utils/PageUtil'
 import BalaBala from '@/utils/BalaBala'
-import { chatModule, systemModule } from '@/plugins/store'
+import {chatModule, systemModule} from '@/plugins/store'
 import UserType from '@/const/UserType'
 import MsgUtil from '@/utils/MsgUtil'
 import CommonStatus from '@/const/CommonStatus'
@@ -206,7 +206,7 @@ const chatStore = namespace('chat')
 const userStore = namespace('user')
 
 @Component({
-  components: { ReportDialog, TalkItem }
+  components: {ReportDialog, TalkItem}
 })
 export default class MessageVue extends Vue {
   public $refs!: {
@@ -241,16 +241,16 @@ export default class MessageVue extends Vue {
   readonly closeStatus: string = CommonStatus.close
   upperThreshold = 300
 
-  onUnload () {
+  onUnload() {
     chatModule.scrollTop = 0
   }
 
-  openMessageMoreHandleDialog (message: MessageVO) {
+  openMessageMoreHandleDialog(message: MessageVO) {
     this.message = message
     this.$refs.messageMoreHandleDialog.open()
   }
 
-  upper () {
+  upper() {
     //只有为more才允许加载
     if (this.chat.loadMore === LoadMoreType.more) {
       // 执行正在加载动画
@@ -259,12 +259,12 @@ export default class MessageVue extends Vue {
     }
   }
 
-  closeShowMsgHint () {
+  closeShowMsgHint() {
     this.showMsgHint = false
     uni.setStorageSync(Constants.showMsgHintKey, 'false')
   }
 
-  banChange ({ detail }) {
+  banChange({detail}) {
     this.violation = detail.value
   }
 
@@ -290,11 +290,11 @@ export default class MessageVue extends Vue {
     this.inputFocus = true
   } */
 
-  inputFocusEvent () {
+  inputFocusEvent() {
     MsgUtil.cantPopupPromptToast()
   }
 
-  inputBlur () {
+  inputBlur() {
     if (this.inputFocus) {
       this.inputFocus = false
     }
@@ -304,7 +304,7 @@ export default class MessageVue extends Vue {
     this.showEmoji = false */
   }
 
-  sendMsgClick () {
+  sendMsgClick() {
     // 微信支持 hold-keyboard
     // app和h5支持 @touchend.prevent
     // 只有qq需要特殊处理
@@ -335,13 +335,13 @@ export default class MessageVue extends Vue {
     }
   }
 
-  sendMsg (content) {
+  sendMsg(content) {
     const msg: MessageVO = new MessageVO(this.user, content)
     this.msgContent = ''
     chatModule.pushMessageAction(msg)
   }
 
-  confirmDeleteTalk (msg: MessageVO) {
+  confirmDeleteTalk(msg: MessageVO) {
     if (this.user.userType === UserType.systemUser) {
       this.deleteMsgAction(this.curMsg)
     } else {
@@ -352,41 +352,41 @@ export default class MessageVue extends Vue {
     this.closeDeleteDialog()
   }
 
-  deleteMsgAction (msg: MessageVO) {
+  deleteMsgAction(msg: MessageVO) {
     chatModule.deleteMsgAction(msg.id)
     MessageAPI.deleteMsgAPI(msg.id, this.deleteReason, this.violation)
   }
 
-  openDeleteDialog () {
+  openDeleteDialog() {
     this.$refs.deleteReasonDialog.open()
   }
 
-  closeDeleteDialog () {
+  closeDeleteDialog() {
     this.$refs.deleteReasonDialog.close()
     this.initData()
   }
 
-  initData () {
+  initData() {
     this.curMsg = null
     this.deleteReason = ''
   }
 
-  toUserDetailVue (userId: number) {
+  toUserDetailVue(userId: number) {
     PageUtil.navigateTo(PagePath.userDetail + '?userId=' + userId)
   }
 
-  toVipVue () {
+  toVipVue() {
     PageUtil.toVipPage()
   }
 
-  get showLoadMore () {
+  get showLoadMore() {
     /**
      * 这里有坑，如果使用加载更多，则加载更多msg后滚动会出现问题，滚动不到之前的那条，待修复的问题
      */
     return this.chat.loadMore !== LoadMoreType.more
   }
 
-  get msgIds () {
+  get msgIds() {
     if (this.messages.length) {
       return this.messages.map(item => {
         if (item && item.id) {
@@ -399,7 +399,7 @@ export default class MessageVue extends Vue {
     return [0]
   }
 
-  queryMessages () {
+  queryMessages() {
     MessageAPI.queryMessagesAPI(this.chat.id, this.msgIds).then((res) => {
       const resMessages: MessageVO[] = res.data
       //获取拼接消息之前，顶部消息的位置
@@ -454,21 +454,21 @@ export default class MessageVue extends Vue {
     })
   }
 
-  copyText () {
+  copyText() {
     UniUtil.textCopy(this.message.content)
     this.closeMessageMoreDialog()
     this.initChooseCommentData()
   }
 
-  closeMessageMoreDialog () {
+  closeMessageMoreDialog() {
     this.$refs.messageMoreHandleDialog.close()
   }
 
-  initChooseCommentData () {
+  initChooseCommentData() {
     this.message = null
   }
 
-  openReportDialog () {
+  openReportDialog() {
     this.closeMessageMoreDialog()
     this.$refs.reportDialog.openReport()
   }
@@ -481,7 +481,7 @@ export default class MessageVue extends Vue {
   //3. 如果为被关闭，则不显示，发送消息报错
   // 先判断消息，然后那些状态那里无所谓，取消了也无所谓，就是消息不发送
   //刚触发点击开启的方法
-  async openChatPromise (content) {
+  async openChatPromise(content) {
     if (!this.isOpeningChatDisableBtn) {
       this.isOpeningChatDisableBtn = true
       try {
@@ -495,7 +495,11 @@ export default class MessageVue extends Vue {
           } else {
             await UniUtil.action('会话未开启，您没有贝壳了，是否直接使用现金支付开启开启与 ' + this.chat.nickname + ' 的对话，并给对方发送消息：' + content, content)
             const provider = systemModule.isApp ? ProviderType.wx : systemModule.provider
-            await PlatformUtils.pay(provider, PayType.shell, 1)
+            try {
+              await PlatformUtils.pay(provider, PayType.shell, 1)
+            } catch (e) {
+              UniUtil.hint(HintMsg.notPayMsg)
+            }
             //校验了有用户后清空消息
             this.msgContent = ''
             await chatModule.openChatAction(content)
@@ -515,14 +519,15 @@ export default class MessageVue extends Vue {
   }
 
   //只有待开启，需付费，才会触发此方法
-  payOpenChat () {
-    this.openChatPromise(this.msgContent || HintMsg.payOpenDefaultMsg).finally(() => {
+  payOpenChat() {
+    UniUtil.hint(HintMsg.notPayMsg)
+    /*this.openChatPromise(this.msgContent || HintMsg.payOpenDefaultMsg).finally(() => {
       this.isOpeningChatDisableBtn = false
-    })
+    })*/
   }
 
   //校验已通过，最后一个确认， 是否确认开启
-  openChatAndPrompt (hintMsg: string, content: string) {
+  openChatAndPrompt(hintMsg: string, content: string) {
     return UniUtil.action(hintMsg).then(() => {
       //校验了有用户后清空消息
       this.msgContent = ''
@@ -531,11 +536,11 @@ export default class MessageVue extends Vue {
   }
 
   //开启聊天支付
-  shellPayForUserContact () {
+  shellPayForUserContact() {
 
   }
 
-  goBack () {
+  goBack() {
     PageUtil.goBack()
   }
 }

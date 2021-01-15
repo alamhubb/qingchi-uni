@@ -424,10 +424,10 @@ export default class UserInfo extends Vue {
               this.userProp.contactAccount = res.data
               this.userProp.showUserContact = true
             }).catch((e) => {
-              MsgUtil.sysErrMsg(e)
+              UniUtil.error(e)
             })
-          }).catch((e) => {
-            MsgUtil.sysErrMsg(e)
+          }).catch(() => {
+            MsgUtil.notPay()
           })
         }).finally(() => {
           this.showUserContactBtnDisabled = false

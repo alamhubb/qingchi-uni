@@ -498,7 +498,7 @@ export default class MessageVue extends Vue {
             try {
               await PlatformUtils.pay(provider, PayType.shell, 1)
             } catch (e) {
-              UniUtil.hint(HintMsg.notPayMsg)
+              MsgUtil.notPay()
             }
             //校验了有用户后清空消息
             this.msgContent = ''
@@ -520,7 +520,7 @@ export default class MessageVue extends Vue {
 
   //只有待开启，需付费，才会触发此方法
   payOpenChat() {
-    UniUtil.hint(HintMsg.notPayMsg)
+    MsgUtil.notPay()
     /*this.openChatPromise(this.msgContent || HintMsg.payOpenDefaultMsg).finally(() => {
       this.isOpeningChatDisableBtn = false
     })*/

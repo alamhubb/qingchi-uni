@@ -70,7 +70,7 @@ export default class PlatformUtils {
 
   // 统一处理各平台的支付
   static userPay(provider: string, payType: string, amount?: number) {
-    UniUtil.hint(HintMsg.notPayMsg)
+    MsgUtil.notPay()
     /*return PlatformUtils.pay(provider, payType, amount).then(() => {
       UserStore.getMineUserAction().then(() => {
         UniUtil.hint(HintMsg.paySuccessMsg)
@@ -87,7 +87,7 @@ export default class PlatformUtils {
       MsgUtil.iosDisablePay()
       throw ''
     }
-    throw HintMsg.notPayMsg
+    throw ''
     /*return UserAPI.userPayAPI(provider, payType, amount).then((res) => {
       return PlatformUtils.cashPay(res.data)
     })*/

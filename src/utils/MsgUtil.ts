@@ -12,6 +12,10 @@ export default class MsgUtil {
     return UniUtil.hint(HintMsg.notMpDisablePayMsg)
   }
 
+  static notPay () {
+    return UniUtil.hint(HintMsg.notPayMsg)
+  }
+
   static payFailMsg () {
     return UniUtil.hint(HintMsg.payFailMsg)
   }

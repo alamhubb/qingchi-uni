@@ -1,5 +1,7 @@
+import ProviderType, { Provider } from '@/const/ProviderType'
+
 export default class LoginDataVO {
-  provider = ''
+  provider: Provider = ProviderType.qq
   platform = ''
 
   //设备id

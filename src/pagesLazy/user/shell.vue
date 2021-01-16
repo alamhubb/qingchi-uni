@@ -112,7 +112,7 @@ export default class ShellVue extends Vue {
   }
 
   userPay () {
-    //如果是app则默认微信支付，否则就是当前环境
+    //如果是app则默认微信支付，否则就是当前环境,app 微信，其他微信mp微信，qqmp，qq
     const provider = systemModule.isApp ? ProviderType.wx : systemModule.provider
     PlatformUtils.userPay(provider, PayType.shell, this.currentAmount)
   }

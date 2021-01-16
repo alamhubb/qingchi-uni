@@ -32,10 +32,11 @@ export default class LoginService {
    */
   static platformLogin (provider: Provider) {
     UniUtil.showLoading('登录中')
-    // 小程序平台登陆
+    // 小程序平台登陆，这里面有对logindata赋值
     return LoginService.getLoginData(provider).then((loginData: LoginDataVO) => {
       return UniUtil.getUserInfo(provider).then((infoRes) => {
         if (infoRes && infoRes.errMsg === Constants.loginSuccess) {
+          //如果小程序
           if (PlatformType.mp === loginData.platform) {
             Object.assign(loginData, infoRes.userInfo)
             if (systemModule.isMpWX) {

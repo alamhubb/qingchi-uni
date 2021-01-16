@@ -27,7 +27,7 @@ export default class SystemModule extends VuexModule {
   // ios android h5,默认安卓
   platform = PlatformType.android
   // 登陆平台
-  provider: Provider = 'qq'
+  provider: Provider = ProviderType.qq
   isIos = false
   systemInfo: GetSystemInfoResult = null
   screenHeight = 0

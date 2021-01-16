@@ -121,7 +121,7 @@
           <!--          已登录，绑定手机号-->
           <view v-if="user" class="mt-sm cu-bar bg-white row-around px">
             <button class="cu-btn bd-gray radius w35vw bg-white" @click="cancelBind">暂不绑定</button>
-            <view @click="bindPhoneNum">
+            <view @click="loginByPhoneNumAndBindPhoneNum">
               <button class="cu-btn bg-orange-plain radius w35vw">
                 绑定
               </button>
@@ -145,7 +145,7 @@
             <view class="mt px">
               <view class="row-center">
                 <!--          微信颜色-->
-                <view @click="bindPhoneNum" v-if="showPhoneView">
+                <view @click="loginByPhoneNumAndBindPhoneNum" v-if="showPhoneView">
                   <button :disabled="loginButtonDisabled"
                           class="bg-gradual-phone text-white text-lgg bd-none bg-active round w80vw">
                     <q-icon color="white" icon="mdi-cellphone-android" size="34" class="mr-sm"></q-icon>
@@ -194,7 +194,7 @@ import UCheckbox from 'uview-ui/components/u-checkbox/u-checkbox.vue'
 import UButton from 'uview-ui/components/u-button/u-button.vue'
 import QIcon from '@/components/q-icon/q-icon.vue'
 import SkipUrlConst from '@/const/SkipUrlConst'
-import ProviderType from '@/const/ProviderType'
+import ProviderType, { Provider } from '@/const/ProviderType'
 import LoginService from '@/pages/user/LoginService'
 import LoginDataVO from '@/model/login/LoginDataVO'
 import { systemModule } from '@/plugins/store'
@@ -236,7 +236,7 @@ export default class LoginVue extends Vue {
     this.providerLogin(ProviderType.wx)
   }
 
-  providerLogin (providerType) {
+  providerLogin (providerType: Provider) {
     if (this.qqLoginEnable) {
       this.qqLoginEnable = false
       LoginService.platformLogin(providerType).finally(() => {
@@ -349,7 +349,8 @@ export default class LoginVue extends Vue {
     PageUtil.goBack()
   }
 
-  bindPhoneNum () {
+  //手机号登陆和手机号绑定
+  loginByPhoneNumAndBindPhoneNum () {
     //再次校验
     if (!this.phoneNumberRight) {
       return UniUtil.toast('请输入正确的手机号')
@@ -363,6 +364,7 @@ export default class LoginVue extends Vue {
     if (!this.bindBtnDisabled) {
       this.bindBtnDisabled = true
       if (this.user) {
+        //手机号绑定
         UserAPI.bindPhoneNumAPI(this.phoneNum, this.authCode).then((res: any) => {
           UserStore.setMineUser(res.data)
           let msg = '绑定成功'
@@ -383,7 +385,6 @@ export default class LoginVue extends Vue {
         loginData.authCode = this.authCode
         loginData.provider = ProviderType.phone
         loginData.platform = systemModule.platform
-
         LoginAPI.platformLoginAPI(loginData).then(() => {
           // 提示验证码发送成功
           let msg = '登录成功'

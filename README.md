@@ -35,7 +35,7 @@
 #### 数据中台（数据交换中台）对标产品， 
 * [微博开放平台](https://open.weibo.com/wiki/%E5%BE%AE%E5%8D%9AAPI) ，开放思想类似
 * [DCloud换量联盟](https://ask.dcloud.net.cn/article/13300) ，交换思想类似
-* [微信统一登录接口](https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html) ，数据开放方式
+* [微信统一登录接口](https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html) ，数据开放方式类似
 
 ### 对标产品区别和对比
 

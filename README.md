@@ -1,8 +1,61 @@
-# 清池app交友社区
+# 清池app交友社区，社交领域开源框架
 
 #### 遵循MIT开源协议，免费商用
 
-#### 项目稳定开源，不会出现放弃维护的情况，因为已经上线运营，且有大量用户使用，项目会长期迭代和维护、长期支持，请放心使用
+## 核心功能
+* <font color=red>***重点*** ，为不同的社交软件之间的提供用户授权开放数据的交换互通功能</font>
+* 提供已上线运营的清池社交app源码
+* 提供社交领域的前后端基础业务组件和用户授权开放的用户数据
+
+### 产品介绍
+* 清池交友社区源码，支持小程序和安卓app，日活3000已上线运营中，前后端均已开源
+* 本项目已经历了三年的成长过程，未来还会持续维护下去，永不停更
+
+### 愿景，成为社交领域的基础开源框架，朝着（清池 in 社交）像（vue in 前端，spring in java，uni-app in 跨端开发）一样的存在而努力
+#### 致力于让社交软件爱好者可通过本项目快速开发一款高完成度的社交软件，并不断追求极致优化，永远朝着更好一点努力，学习springboot和vue-cli一样的0配置，开箱即用，渐进式框架思想
+
+###   功能介绍
+- [ ] <font color=red>***重点*** ，提供用户授权开放数据的交换互通功能，(类似于可支撑，探探和soul之间的用户互相聊天发送消息，评论动态的功能)，未支持</font>
+- [x] <font color=blue>清池app已运营的生产环境前端源码已开源(vue + uni-app)</font>，已支持
+- [x] <font color=blue>清池app已运营的生产环境后端源码已开源(java)</font>，已支持
+- [ ] 基础社交领域组件(动态列表组件、动态详情、聊天组件)，未支持
+- [ ] 提供用户社交(用户开放的朋友圈动态内容、个人信息内容)，未支持
+
+### 对标和相似产品介绍
+#### 业务中台对标产品
+* [discuz(社交解决方案)](https://discuz.com/)
+* [前端Paas中台](https://www.it120.cc/) ，部分思想类似 
+* [thinksns社交网站模板](https://www.thinksns.com/) ，部分功能相似
+* [有赞电商模板组件](https://vant-contrib.gitee.io/vant/#/zh-CN/address-edit) ，产品使用方式类似 
+
+#### 数据中台（数据交换中台）对标产品， 
+* [微博开放平台](https://open.weibo.com/wiki/%E5%BE%AE%E5%8D%9AAPI) ，开放思想类似
+* [DCloud换量联盟](https://ask.dcloud.net.cn/article/13300) ，交换思想类似
+* [微信统一登录接口](https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html) ，数据开放方式
+
+### 对标产品区别和对比
+
+#### 前台业务中台区别
+* [discuz(社交解决方案)](https://discuz.com/) ，[thinksns社交网站模板](https://www.thinksns.com/) 
+     * 他方缺点，php后端，不提供数据支持
+     * 我方优点，java后端，提供大量社交数据，完全开源免费
+* [前端Paas中台](https://www.it120.cc/)
+     * 他方缺点，非专注于社交领域，不提供数据支持
+     * 我方优点，专注社交领域，提供大量社交数据支持
+* [有赞电商模板组件](https://vant-contrib.gitee.io/vant/#/zh-CN/address-edit) 
+     * 他方缺点，全方向ui组件库，只负责UI展示
+     * 我方优点，专注社交领域，负责前端、后端、数据层，多端、多层基础业务组件支持
+
+#### 业务中台区别
+* [微博开放平台](https://open.weibo.com/wiki/%E5%BE%AE%E5%8D%9AAPI)
+     * 他方缺点，只支持微博一方数据，不支持三方数据写入
+     * 我方优点，支持符合接口规范、用户隐私协议的所有非敏感用户授权数据交换
+* [DCloud换量联盟](https://ask.dcloud.net.cn/article/13300)
+     * 他方缺点，他方缺点，仅支持广告
+     * 我方优点，专注社交领域数据互通交换，提供大量社交数据
+* [微信统一登录接口](https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html)
+     * 他方缺点，仅开放了登陆接口和用户名等极少用户信息
+     * 我方优点，开放更多社交领域数据，根据oauth2协议，可获取用户授权开放给指定应用的社交数据，如朋友圈动态，部分个人信息等
 
 ### 关键词
 uniapp chat Community Dating Social app
@@ -12,18 +65,16 @@ uniapp chat Community Dating Social app
 * 前端 uniapp + vue + ts
 * 后端 java + springboot + mysql
 
-### 介绍
-清池交友社区源码，支持小程序和安卓app，日活3000已上线运营中，前后端均已开源
 
 ### 下载
 插件仅支持git方式下载，不支持zip方式
 
 ### 前端源码地址
-[git地址](https://github.com/qingchiapp/qingchi-uni.git)
+[清池前端项目 git地址 qingchi-uni](https://github.com/qingchiapp/qingchi-uni.git)
 
 ### 后端源码地址
-[git地址](https://github.com/qingchiapp/qingchi-web.git)
-[git地址](https://github.com/qingchiapp/qingchi-base.git)
+* [清池后端web项目 git地址 qingchi-web](https://github.com/qingchiapp/qingchi-web.git)
+* [清池后端基础服务项目 git地址 qingchi-base](https://github.com/qingchiapp/qingchi-base.git)
 
 ### 体验
 
@@ -48,7 +99,7 @@ npm run serve
 <table>
   <thead>
   <tr>
-    <th>个人微信，可以加我进微信群，有问题可以咨询</th>
+    <th>我微信，可进社交软件app交流群，互相学习，讨论问题</th>
     <th>微信扫码体验（不支持ios）</th>
     <th>QQ扫码体验（支持ios）</th>
   </tr>

@@ -4,7 +4,7 @@
     <u-navbar>
       <view class="row-between w100r flex-auto">
         <view class="ml-xl text-bold text-lg">
-          {{title}}
+          {{ title }}
         </view>
         <view class="pr pl-xl" @click="showShare">
           <q-icon icon="more-dot-fill" size="50"></q-icon>
@@ -41,14 +41,15 @@ export default class WebBrowserVue extends Vue {
   }
 
   onLoad (params) {
-    this.webUrl = decodeURIComponent(params.url)
+    this.webUrl = 'https://mp.qingchiapp.com'
+    /*this.webUrl = decodeURIComponent(params.url)
     const title: string = params.title
     if (title) {
       this.title = title
       uni.setNavigationBarTitle({
         title: title
       })
-    }
+    }*/
   }
 
   onReady () {

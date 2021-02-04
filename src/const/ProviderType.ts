@@ -8,4 +8,4 @@ export type wx = 'weixin'
 export type qq = 'qq'
 export type phone = 'phone'
 
-export type Provider = wx | qq | phone
+export type Provider = wx | qq

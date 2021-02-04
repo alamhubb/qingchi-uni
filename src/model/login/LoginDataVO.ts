@@ -1,7 +1,7 @@
-import ProviderType, { Provider } from '@/const/ProviderType'
+import ProviderType from '@/const/ProviderType'
 
 export default class LoginDataVO {
-  provider: Provider = ProviderType.qq
+  provider: string = ProviderType.qq
   platform = ''
 
   //设备id

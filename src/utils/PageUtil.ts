@@ -101,7 +101,7 @@ export default class PageUtil {
   }
 
   static toVipPage () {
-    const isIos: boolean = systemModule.isIos
+    /*const isIos: boolean = systemModule.isIos
     if (isIos) {
       // 由于相关规范，iOS功能暂不可用
       MsgUtil.iosDisablePay()
@@ -112,7 +112,7 @@ export default class PageUtil {
       } else {
         BalaBala.unLoginMessage()
       }
-    }
+    }*/
   }
 
   static toShellPage () {

@@ -183,7 +183,7 @@
             复制
           </button>
         </view>-->
-        <view v-if="isMine && !userProp.contactAccount" class="q-box-row row-between-center bg-active"
+<!--        <view v-if="isMine && !userProp.contactAccount" class="q-box-row row-between-center bg-active"
               @click="$pageUtil.toUserContactInfoPage">
           <view class="row-col-center">
             <text class="text-lgg text-orange">他人获取您的联系方式时，您就能获得贝壳</text>
@@ -192,7 +192,7 @@
             <text class="text-lgg text-gray text-lgg">详情</text>
             <q-icon class="text-gray" size="32" icon="arrow-right"/>
           </view>
-        </view>
+        </view>-->
         <!-- 如果自己的话-->
         <!-- 左边格式不变，如果未填写则可以填写，填写之后可以选择开启或者关闭，填写后可选择隐藏展示。-->
         <!--        todo qq不支持联系方式，改为判断qq一件加好友-->

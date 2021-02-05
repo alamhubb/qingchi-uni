@@ -41,15 +41,15 @@ export default class WebBrowserVue extends Vue {
   }
 
   onLoad (params) {
-    this.webUrl = 'https://mp.qingchiapp.com'
-    /*this.webUrl = decodeURIComponent(params.url)
+    // this.webUrl = 'https://mp.qingchiapp.com'
+    this.webUrl = decodeURIComponent(params.url)
     const title: string = params.title
     if (title) {
       this.title = title
       uni.setNavigationBarTitle({
         title: title
       })
-    }*/
+    }
   }
 
   onReady () {

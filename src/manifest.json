@@ -220,7 +220,7 @@
         "router" : {
             "mode" : "history"
         },
-        "domain" : "www.qingchi1.com",
+        "domain" : "www.qingchiapp.com",
         "uniStatistics" : {
             "enable" : true
         }

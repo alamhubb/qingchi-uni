@@ -40,6 +40,13 @@
       <swiper class="flex-none h100r bg-default" :current="swiperCurrent"
               @change="talkSwiperChange">
         <swiper-item v-for="(item, swiperIndex) in talkTabs" :key="swiperIndex">
+          <!--
+          使用view实现的问题，没有scroll事件小程序上
+          <view class="h100r bg-default" :class="[scrollEnable?'overflow-scroll':'overflow-hidden']" :scroll-y="scrollEnable" @scrolltolower="onreachBottom"
+                :lower-threshold="800"
+                @scroll.native="talksScrollEvent"
+                @scroll="talksScrollEvent"
+          >-->
           <scroll-view class="h100r bg-default" :scroll-y="scrollEnable" @scrolltolower="onreachBottom"
                        :lower-threshold="800"
                        @scroll="talksScrollEvent">

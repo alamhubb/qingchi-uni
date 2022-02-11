@@ -59,7 +59,7 @@
     "cos-wx-sdk-v5": "^0.7.10",
     "flyio": "^0.6.2",
     "lodash": "^4.17.15",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "regenerator-runtime": "^0.12.1",
     "sass-loader": "^8.0.2",
     "uuid": "^7.0.3",
